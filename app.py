@@ -66,6 +66,7 @@ comp = sb.competitions()
 compname = comp['competition_name'].unique() 
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+server = app.server 
 app.config['suppress_callback_exceptions']=True
 colors = {
     'background': '#F9F9F9',
