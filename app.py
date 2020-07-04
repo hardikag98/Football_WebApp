@@ -4,21 +4,33 @@ Created on Thu Jun 25 22:28:30 2020
 
 @author: Admin
 """
+import matplotlib
+matplotlib.use('Agg')
 from statsbombpy import sb 
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import plotly.graph_objects as go
-#from ipywidgets import widgets
 from dash.dependencies import Input, Output
 import field 
 import pandas as pd 
+import numpy as np
 import functools 
+from graph import passingnetwork
+from passing_network import draw_pitch
+
+@functools.lru_cache(maxsize=25)
+def get_event_data(input1):
+    return sb.events(match_id = input1)
+
+@functools.lru_cache(maxsize=25)
+def get_lineup_data(input1):
+    return sb.lineups(match_id = input1)
 
 @functools.lru_cache(maxsize=20)
 def get_player_data(input1,input2):
     fig=field.drawfield()
-    events = sb.events(match_id = input1)
+    events = get_event_data(input1)
     playerdata = events[events['player']==input2]
     #pass data 
     playerpassdata = playerdata[(playerdata['type'] == "Pass")]
@@ -89,9 +101,10 @@ app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
                         dcc.Dropdown(id='season'),
                         html.P("Match:", className="control_label"),
                         dcc.Dropdown(id='match'),
+                        html.P("Team:", className="control_label"),
+                        dcc.Dropdown(id='team'),
                         html.P("Player:", className="control_label"),
                         dcc.Dropdown(id='player'),
-                        html.P(" ", className="control_label"),
                         dcc.Checklist(id='actions',
                             options=[
                             {'label': 'Passes', 'value': 'Passes'},
@@ -102,9 +115,21 @@ app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
                     ],
                     className="pretty_container four columns",
                     id="cross-filter-options",
-                    style={'border': 'thin lightgrey solid','padding': '30px 10px'}
+                    style={'width': '25%','border': 'thin lightgrey solid','padding': '10px'}
                 ),
-                dcc.Graph(id='fb-pitch', figure=pitch)
+                html.Div(
+                    [
+                        dcc.Tabs([
+                            dcc.Tab(label='Player Analysis', children=[
+                                    dcc.Graph(id='pitch1', figure=pitch)]),
+                            dcc.Tab(label='Passing network', children=[
+                                    html.Img(id='pitch2',src="data:image/png;base64,{}".format(
+                                            draw_pitch(empty_pitch=True)))]),
+                            ]),
+                        
+                    ],
+                    style={'width': '75%','padding': '10px'}
+                    ),
                 ],
                 style={"display": "flex", "flex-direction": "row",'backgroundColor': colors['background']})
         ])
@@ -129,23 +154,45 @@ def set_match_options(selected_comp,selected_seas):
             for index,i in matches.iterrows()]
 
 @app.callback(
-    Output('player', 'options'),
+    Output('team', 'options'),
     [Input('match', 'value')])
-def set_player_otions(selected_match):
-    lineup = sb.lineups(match_id = selected_match)
-    return [{'label': i, 'value': i} for i in 
-            lineup[list(lineup.keys())[0]].player_name
-            .append(lineup[list(lineup.keys())[1]].player_name)]
-    
+def team_options(selected_match):
+    return [{'label': i, 'value': i} for i in list(get_lineup_data(selected_match).keys())]
+
 @app.callback(
-    Output('fb-pitch', 'figure'),
+    Output('player', 'options'),
+    [Input('match', 'value'),
+     Input('team', 'value')])
+def player_options(selected_match,selected_team):
+    events = get_event_data(selected_match)
+    players = events[events.team==selected_team].player.unique()
+    lineups = get_lineup_data(selected_match)[selected_team]
+    players = set(players).intersection(set(lineups.player_name))
+    names_dict = {player[1]["player_name"]: player[1]["player_nickname"] for team in lineups for player in lineups.iterrows()}
+    options = []
+    for i in players:
+        if names_dict[i]!=None:
+            options.append({'label': names_dict[i], 'value': i})
+        else:
+            options.append({'label': i, 'value': i})
+    return options
+
+@app.callback(
+    Output('pitch2', 'src'),
+    [Input('match', 'value'),
+     Input('team', 'value')])
+def update_graph(selected_match,selected_team):
+    events = get_event_data(selected_match)
+    lineups = get_lineup_data(selected_match)
+    data = passingnetwork(selected_match,selected_team,events,lineups)
+    return "data:image/png;base64,{}".format(data)  
+
+@app.callback(
+    Output('pitch1', 'figure'),
     [Input('player', 'value'),
      Input('actions','value'),
      Input('match', 'value')])
 def update_figure(selected_player,selected_actions,selected_match):
-    #ctx = dash.callback_context
-    #if ctx.triggered[0]['prop_id']=='player.value':
-    
     (fig,passannotation,shotannotation,x1,y1,x2,y2,colors) = get_player_data(selected_match,selected_player)
     
     if 'Tackles' in selected_actions:
@@ -176,7 +223,6 @@ def update_figure(selected_player,selected_actions,selected_match):
         fig.layout.annotations = []
         
     return fig 
-
 
 if __name__ == '__main__':
     app.run_server(debug=True)

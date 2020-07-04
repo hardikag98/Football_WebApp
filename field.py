@@ -23,10 +23,10 @@ def drawfield(titl=""):
     fig.add_shape(type="circle",x0=51,y0=31,x1=69,y1=49)
     fig.add_trace(go.Scatter(x=[12,108,60],y=[40,40,40],mode="markers",
                              hoverinfo='skip',line=dict(color="white")))
-    fig.add_shape(type="rect",x0=120,y0=36,x1=122,y1=44)
-    fig.add_shape(type="rect",x0=0,y0=36,x1=-2,y1=44)
-    fig.update_xaxes(showgrid=False, zeroline=False,showticklabels=False,range=[-2.5, 122.5])
-    fig.update_yaxes(showgrid=False, zeroline=False,showticklabels=False,range=[-2, 82])
+    fig.add_shape(type="rect",x0=120,y0=36,x1=121,y1=44)
+    fig.add_shape(type="rect",x0=0,y0=36,x1=-1,y1=44)
+    fig.update_xaxes(showgrid=False, zeroline=False,showticklabels=False,range=[-1.1, 121.1])
+    fig.update_yaxes(showgrid=False, zeroline=False,showticklabels=False,range=[-1.5, 81.5])
     fig.update_shapes(dict(xref='x', yref='y')) 
     fig['layout']['yaxis']['autorange'] = "reversed"
     
@@ -37,7 +37,7 @@ def drawfield(titl=""):
                                         showscale=False,opacity=0.8,name='Heatmap',
                                         ybins=dict(start=-5,end=85,size=10),
                                         xbins=dict(start=-5,end=125,size=10)))
-    fig.update_layout(title=titl,autosize=False,width=900,height=600,
+    fig.update_layout(title=titl,autosize=False,width=1000,height=660,
                       margin=dict(l=10,b=10,r=10,t=10))
     #,plot_bgcolor='rgb(245,245,245)'
                                                                   
