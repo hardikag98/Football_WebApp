@@ -5,7 +5,6 @@ Created on Fri Jun 26 15:15:47 2020
 @author: Admin
 """
 import plotly.graph_objects as go
-from ipywidgets import widgets
 import plotly.io as pio
 
 pio.templates.default = "plotly_dark"
