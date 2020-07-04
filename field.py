@@ -38,6 +38,8 @@ def drawfield(titl=""):
                                         xbins=dict(start=-5,end=125,size=10)))
     fig.update_layout(title=titl,autosize=False,width=1000,height=660,
                       margin=dict(l=10,b=10,r=10,t=10))
+    fig.layout.xaxis.fixedrange = True
+    fig.layout.yaxis.fixedrange = True
     #,plot_bgcolor='rgb(245,245,245)'
                                                                   
     return fig
