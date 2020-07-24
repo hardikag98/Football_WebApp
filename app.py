@@ -85,7 +85,9 @@ colors = {
     'background': '#F9F9F9',
     'text': '#7FDBFF'
 }
-matplotsoccer.field(figsize=12,color='green',show=False)
+fig=plt.figure()
+fig.set_size_inches(10,8,forward=True)
+matplotsoccer.field(ax=fig.add_subplot(111),color='green',show=False)
 plt.tight_layout()
 buf = io.BytesIO()
 plt.savefig(buf, format = "png")
