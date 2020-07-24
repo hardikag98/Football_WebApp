@@ -12,7 +12,7 @@ import io
 import base64
 import socceraction.spadl as spadl
 import socceraction.spadl.statsbomb as statsbomb
-os.chdir('D:\\ML\\Dash2')
+#os.chdir('D:\\ML\\Dash2')
 datafolder = os.getcwd() + "/data-fifa"
 spadl_h5 = os.path.join(datafolder, "spadl-statsbomb.h5")
 #%%
@@ -45,7 +45,6 @@ def plotaction(match_id,number=5,w=1,h=1,zoom=False):
     goalindex=actions[(actions.type_name=='shot')|(actions.type_name=='shot_penalty')][(actions.result_name=='success')|(actions.result_name=='owngoal')].index
     goal=1
     h=h*len(goalindex)
-    #grid_size=(len(goalindex),1)
     fig=plt.figure()
     fig.set_size_inches(w,h,forward=True)
     homescore = 0
@@ -57,13 +56,8 @@ def plotaction(match_id,number=5,w=1,h=1,zoom=False):
         else:
             awayscore += 1 
         
-        #g = list(games[games.game_id == a.game_id.values[0]].itertuples())[0]
-        #minute = int((a.period_id.values[0]-1)*45 +a.time_seconds.values[0] // 60)
-        #game_info = f"{g.home_team_name} {g.home_score}-{g.away_score} {g.away_team_name} {minute + 1}'"
-        
         a["nice_time"] = a.apply(nice_time,axis=1)
         labels = a[["nice_time", "type_name", "player", "team_name"]]
-        #ax = plt.subplot(len(goalindex),1,goal)
         matplotsoccer.actions(
             location=a[["start_x", "start_y", "end_x", "end_y"]],
             action_type=a.type_name, team= a.team_name,

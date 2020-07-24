@@ -7,8 +7,8 @@ Created on Thu Jun 25 22:28:30 2020
 import matplotlib
 matplotlib.use('Agg')
 from statsbombpy import sb 
-import dash; import dash_core_components as dcc; import dash_html_components as html
-#import plotly.graph_objects as go
+import dash; import dash_core_components as dcc
+import dash_html_components as html
 from dash.dependencies import Input, Output
 import field ; import matplotsoccer; import matplotlib.pyplot as plt
 import pandas as pd ; import numpy as np
@@ -42,19 +42,20 @@ def get_player_data(input1,input2):
             color = "green"
         passannotation.append(dict(x=playerpassdata.loc[i,'pass']['end_location'][0],
                             y=playerpassdata.loc[i,'pass']['end_location'][1],text="",
-                            ax=playerpassdata.loc[i,'location'][0],ay=playerpassdata.loc[i,'location'][1],
-                            xref="x",yref="y",axref = "x",ayref = "y",showarrow=True,arrowhead=2,
-                            arrowcolor=color))
+                            ax=playerpassdata.loc[i,'location'][0],
+                            ay=playerpassdata.loc[i,'location'][1],
+                            xref="x",yref="y",axref = "x",ayref = "y",
+                            showarrow=True,arrowhead=2,arrowcolor=color))
     #Shot data
     playershotdata = playerdata[(playerdata['type'] == "Shot")] 
     shotannotation=[]
     for i in playershotdata.index.values:
         color='green' if playershotdata.loc[i,'shot']['outcome']['id']==97 else 'red'
         shotannotation.append(dict(x=playershotdata.loc[i,'shot']['end_location'][0],
-                                   y=playershotdata.loc[i,'shot']['end_location'][1],text=""
+                                   y=playershotdata.loc[i,'shot']['end_location'][1]
                       ,ax=playerdata.loc[i,'location'][0],ay=playerdata.loc[i,'location'][1],
-                      xref="x",yref="y",axref = "x",ayref = "y",showarrow=True,arrowhead=3,
-                      arrowcolor=color,arrowsize=1,arrowwidth=3))
+                      xref="x",yref="y",axref = "x",ayref = "y",showarrow=True,
+                      arrowcolor=color,arrowsize=1,arrowwidth=3,arrowhead=3,text=""))
     #Tackle data
     playerdueldata = playerdata[(playerdata['type'] == "Duel")] 
     colors=[]
@@ -85,6 +86,7 @@ colors = {
     'text': '#7FDBFF'
 }
 matplotsoccer.field(figsize=12,color='green',show=False)
+plt.tight_layout()
 buf = io.BytesIO()
 plt.savefig(buf, format = "png")
 data = base64.b64encode(buf.getbuffer()).decode("utf8")
@@ -131,14 +133,16 @@ app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
                                     html.Img(id='pitch2',src="data:image/png;base64,{}".format(
                                             draw_pitch(empty_pitch=True)))]),
                             dcc.Tab(label='Goals', children=[
-                                    html.Img(id='pitch3',src="data:image/png;base64,{}".format(data))])
+                                    html.Img(id='pitch3',
+                                             src="data:image/png;base64,{}".format(data))])
                             ]),
                         
                     ],
                     style={'width': '75%','padding': '10px'}
                     ),
                 ],
-                style={"display": "flex", "flex-direction": "row",'backgroundColor': colors['background']})
+                style={"display": "flex", "flex-direction": "row",
+                       'backgroundColor': colors['background']})
         ])
 
 @app.callback(
@@ -164,7 +168,8 @@ def set_match_options(selected_comp,selected_seas):
     Output('team', 'options'),
     [Input('match', 'value')])
 def team_options(selected_match):
-    return [{'label': i, 'value': i} for i in list(get_lineup_data(selected_match).keys())]
+    return [{'label': i, 'value': i} for i in 
+            list(get_lineup_data(selected_match).keys())]
 
 @app.callback(
     Output('player', 'options'),
@@ -175,7 +180,8 @@ def player_options(selected_match,selected_team):
     players = events[events.team==selected_team].player.unique()
     lineups = get_lineup_data(selected_match)[selected_team]
     players = set(players).intersection(set(lineups.player_name))
-    names_dict = {player[1]["player_name"]: player[1]["player_nickname"] for team in lineups for player in lineups.iterrows()}
+    names_dict = {player[1]["player_name"]: player[1]["player_nickname"] for 
+                  team in lineups for player in lineups.iterrows()}
     options = []
     for i in players:
         if names_dict[i]!=None:
@@ -207,7 +213,8 @@ def update_goals(selected_match):
      Input('actions','value'),
      Input('match', 'value')])
 def update_figure(selected_player,selected_actions,selected_match):
-    (fig,passannotation,shotannotation,x1,y1,x2,y2,colors) = get_player_data(selected_match,selected_player)
+    (fig,passannotation,shotannotation,x1,y1,x2,y2,colors) = get_player_data(
+            selected_match,selected_player)
     
     if 'Tackles' in selected_actions:
         fig.data[1].x = x1  
