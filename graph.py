@@ -11,7 +11,7 @@ from passing_network import draw_pitch, draw_pass_map
 import matplotlib.pyplot as plt
 import io
 import base64
-from pandas import json_normalize
+from pandas.io.json import json_normalize
 
 #%%
 def _statsbomb_to_point(location, max_width=120, max_height=80):
@@ -26,9 +26,16 @@ def passingnetwork(match_id,teamname,events,lineups):
                   team in lineups for player in lineups[team].iterrows()}
     eventsdict = events.to_dict('records')
     df_events = json_normalize(eventsdict, sep="_").assign(match_id=match_id)
-    first_red_card_minute = df_events[df_events.foul_committed_card_name.isin(
+
+    try:
+        first_red_card_minute = df_events[df_events.foul_committed_card_name.isin(
             ["Second Yellow", "Red Card"])].minute.min()
-    first_substitution_minute = df_events[df_events.type == "Substitution"].minute.min()
+    except:
+        first_red_card_minute = 200
+    try:
+        first_substitution_minute = df_events[df_events.type == "Substitution"].minute.min()
+    except:
+        first_substitution_minute = 200
     max_minute = df_events.minute.max()
     num_minutes = min(first_substitution_minute, first_red_card_minute, max_minute)
     

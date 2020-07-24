@@ -7,23 +7,23 @@ Created on Thu Jun 25 22:28:30 2020
 import matplotlib
 matplotlib.use('Agg')
 from statsbombpy import sb 
-import dash
-import dash_core_components as dcc
-import dash_html_components as html
-import plotly.graph_objects as go
+import dash; import dash_core_components as dcc; import dash_html_components as html
+#import plotly.graph_objects as go
 from dash.dependencies import Input, Output
-import field 
-import pandas as pd 
-import numpy as np
+import field ; import matplotsoccer; import matplotlib.pyplot as plt
+import pandas as pd ; import numpy as np
 import functools 
 from graph import passingnetwork
 from passing_network import draw_pitch
+from actionplot import plotaction
+import io
+import base64
 
-@functools.lru_cache(maxsize=25)
+@functools.lru_cache(maxsize=15)
 def get_event_data(input1):
     return sb.events(match_id = input1)
 
-@functools.lru_cache(maxsize=25)
+@functools.lru_cache(maxsize=15)
 def get_lineup_data(input1):
     return sb.lineups(match_id = input1)
 
@@ -84,6 +84,11 @@ colors = {
     'background': '#F9F9F9',
     'text': '#7FDBFF'
 }
+matplotsoccer.field(figsize=12,color='green',show=False)
+buf = io.BytesIO()
+plt.savefig(buf, format = "png")
+data = base64.b64encode(buf.getbuffer()).decode("utf8")
+plt.close()
 
 app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
     html.H1(children='Football  Analytics',style={'textAlign': 'center'}),
@@ -125,6 +130,8 @@ app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
                             dcc.Tab(label='Passing network', children=[
                                     html.Img(id='pitch2',src="data:image/png;base64,{}".format(
                                             draw_pitch(empty_pitch=True)))]),
+                            dcc.Tab(label='Goals', children=[
+                                    html.Img(id='pitch3',src="data:image/png;base64,{}".format(data))])
                             ]),
                         
                     ],
@@ -186,6 +193,13 @@ def update_graph(selected_match,selected_team):
     lineups = get_lineup_data(selected_match)
     data = passingnetwork(selected_match,selected_team,events,lineups)
     return "data:image/png;base64,{}".format(data)  
+
+@app.callback(
+    Output('pitch3', 'src'),
+    [Input('match', 'value')])
+def update_goals(selected_match): 
+    actions=plotaction(selected_match,w=10,h=8,zoom=False)
+    return "data:image/png;base64,{}".format(actions)
 
 @app.callback(
     Output('pitch1', 'figure'),

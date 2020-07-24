@@ -19,7 +19,7 @@ def drawfield(titl=""):
     fig.add_shape(type="rect",x0=0,y0=30,x1=6,y1=50)
     fig.add_shape(type="rect",x0=114,y0=30,x1=120,y1=50)
     fig.add_shape(type="line",x0=60,y0=0,x1=60,y1=80)
-    fig.add_shape(type="circle",x0=51,y0=31,x1=69,y1=49)
+    fig.add_shape(type="circle",x0=50,y0=30,x1=70,y1=50)
     fig.add_trace(go.Scatter(x=[12,108,60],y=[40,40,40],mode="markers",
                              hoverinfo='skip',line=dict(color="white")))
     fig.add_shape(type="rect",x0=120,y0=36,x1=121,y1=44)

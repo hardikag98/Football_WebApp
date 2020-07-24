@@ -7,7 +7,7 @@ Created on Sun Apr 19 2020
 """
 
 import matplotlib
-matplotlib.use('Agg')
+#matplotlib.use('Agg')
 from matplotlib.colors import Normalize
 import matplotlib.patches as patches
 import matplotlib.patheffects as pe
