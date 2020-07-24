@@ -23,5 +23,6 @@ tqdm==4.45.0
 matplotlib
 ipywidgets==7.5.1
 socceraction
+tables
 
 
