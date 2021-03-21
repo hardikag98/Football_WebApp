@@ -96,6 +96,8 @@ plt.close()
 
 app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
     html.H1(children='Football  Analytics',style={'textAlign': 'center'}),
+    html.H3(children='Note: Options in the team and player dropdown list can take a few seconds to load/update,',
+            style={'textAlign': 'left'}),
 
     html.Div(
             [
@@ -129,11 +131,11 @@ app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
                 html.Div(
                     [
                         dcc.Tabs([
-                            dcc.Tab(label='Player Analysis', children=[
-                                    dcc.Graph(id='pitch1', figure=pitch)]),
                             dcc.Tab(label='Passing network', children=[
                                     html.Img(id='pitch2',src="data:image/png;base64,{}".format(
                                             draw_pitch(empty_pitch=True)))]),
+                            dcc.Tab(label='Player Analysis', children=[
+                                    dcc.Graph(id='pitch1', figure=pitch)]),
                             dcc.Tab(label='Goals', children=[
                                     html.Img(id='pitch3',
                                              src="data:image/png;base64,{}".format(data))])
@@ -144,8 +146,11 @@ app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
                     ),
                 ],
                 style={"display": "flex", "flex-direction": "row",
-                       'backgroundColor': colors['background']})
-        ])
+                       'backgroundColor': colors['background']}),
+    
+    html.H5(children='Data Credits: Statsbomb',
+            style={'textAlign': 'left'})    
+    ])
 
 @app.callback(
     Output('season', 'options'),
