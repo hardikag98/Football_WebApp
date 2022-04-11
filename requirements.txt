@@ -21,10 +21,7 @@ plotly==4.8.1
 tqdm==4.45.0
 matplotlib
 ipywidgets==7.5.1
-<<<<<<< HEAD
 socceraction
 tables
-=======
->>>>>>> parent of c8372d9 (goals analysis added)
 
 
