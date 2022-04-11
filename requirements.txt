@@ -16,7 +16,7 @@ image==1.5.20
 imageio==2.8.0
 json5==0.8.5
 numpy==1.18.1
-pandas==1.0.3
+pandas
 plotly==4.8.1
 tqdm==4.45.0
 matplotlib
