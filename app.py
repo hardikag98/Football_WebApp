@@ -1,38 +1,28 @@
 import matplotlib
 matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import matplotsoccer
 from statsbombpy import sb 
-<<<<<<< HEAD
-import dash; import dash_core_components as dcc
-import dash_html_components as html
-=======
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import plotly.graph_objects as go
->>>>>>> parent of c8372d9 (goals analysis added)
 from dash.dependencies import Input, Output
 import field 
 import pandas as pd 
 import numpy as np
-import functools 
+import functools
 from graph import passingnetwork
 from passing_network import draw_pitch
+import io
+import base64
+from actionplot import plotaction
 
-<<<<<<< HEAD
-#Function to retrieve relevant event level data
-@functools.lru_cache(maxsize=15)
-def get_event_data(input1):
-    return sb.events(match_id = input1)
-
-#Function to retrieve relevant lineup data
-@functools.lru_cache(maxsize=15)
-=======
 @functools.lru_cache(maxsize=25)
 def get_event_data(input1):
     return sb.events(match_id = input1)
 
 @functools.lru_cache(maxsize=25)
->>>>>>> parent of c8372d9 (goals analysis added)
 def get_lineup_data(input1):
     return sb.lineups(match_id = input1)
 
@@ -95,7 +85,6 @@ colors = {
     'background': '#F9F9F9',
     'text': '#7FDBFF'
 }
-<<<<<<< HEAD
 fig=plt.figure()
 fig.set_size_inches(10,8,forward=True)
 matplotsoccer.field(ax=fig.add_subplot(111),color='green',show=False)
@@ -104,8 +93,6 @@ buf = io.BytesIO()
 plt.savefig(buf, format = "png")
 data = base64.b64encode(buf.getbuffer()).decode("utf8")
 plt.close()
-=======
->>>>>>> parent of c8372d9 (goals analysis added)
 
 #Defining app layout
 app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
@@ -148,14 +135,11 @@ app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
                             dcc.Tab(label='Passing network', children=[
                                     html.Img(id='pitch2',src="data:image/png;base64,{}".format(
                                             draw_pitch(empty_pitch=True)))]),
-<<<<<<< HEAD
                             dcc.Tab(label='Player Analysis', children=[
                                     dcc.Graph(id='pitch1', figure=pitch)]),
                             dcc.Tab(label='Goals', children=[
                                     html.Img(id='pitch3',
                                              src="data:image/png;base64,{}".format(data))])
-=======
->>>>>>> parent of c8372d9 (goals analysis added)
                             ]),
                         
                     ],
@@ -231,7 +215,6 @@ def update_graph(selected_match,selected_team):
 
 #Updating goals graph
 @app.callback(
-<<<<<<< HEAD
     Output('pitch3', 'src'),
     [Input('match', 'value')])
 def update_goals(selected_match): 
@@ -240,8 +223,6 @@ def update_goals(selected_match):
 
 #Updating player action graph
 @app.callback(
-=======
->>>>>>> parent of c8372d9 (goals analysis added)
     Output('pitch1', 'figure'),
     [Input('player', 'value'),
      Input('actions','value'),

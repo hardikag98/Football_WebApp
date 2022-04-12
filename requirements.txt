@@ -1,4 +1,4 @@
-git+https://github.com/statsbomb/statsbombpy.git#egg=statsbombpy
+git+https://github.com/hardikag98/statsbombpy.git#egg=statsbombpy
 Brotli==1.0.7
 cashier==1.3
 certifi==2020.6.20
@@ -12,9 +12,11 @@ Django==2.0.5
 Flask==1.1.2
 Flask-Compress==1.5.0
 gunicorn==20.0.4
+itsdangerous==2.0.1
 image==1.5.20
 imageio==2.8.0
 json5==0.8.5
+jinja2<3.1.0
 numpy
 pandas
 plotly==4.8.1
@@ -22,6 +24,8 @@ tqdm==4.45.0
 matplotlib
 ipywidgets==7.5.1
 socceraction
+werkzeug==2.0.3
 tables
+matplotsoccer==0.0.8
 
 
