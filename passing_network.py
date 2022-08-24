@@ -14,7 +14,7 @@ import matplotlib.patheffects as pe
 import matplotlib.pyplot as plt
 from matplotlib import cm
 import pandas as pd
-import numpy as np
+#import numpy as np
 import io
 import base64
 
@@ -46,14 +46,14 @@ def _point_to_meters(p):
     '''
     Convert a point's coordinates from a 0-1 range to meters.
     '''
-    return np.array([p[0]*width, p[1]*height])
+    return list([p[0]*width, p[1]*height])
 
 
 def _meters_to_point(p):
     '''
     Convert a point's coordinates from meters to a 0-1 range.
     '''
-    return np.array([p[0]/width, p[1]/height])
+    return list([p[0]/width, p[1]/height])
 
 
 def _change_range(value, old_range, new_range):

@@ -11,7 +11,7 @@ import dash; import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 import field ; import matplotsoccer; import matplotlib.pyplot as plt
-import pandas as pd ; import numpy as np
+import pandas as pd 
 import functools 
 from graph import passingnetwork
 from passing_network import draw_pitch
