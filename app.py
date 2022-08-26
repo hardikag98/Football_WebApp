@@ -7,8 +7,8 @@ Created on Thu Jun 25 22:28:30 2020
 import matplotlib
 matplotlib.use('Agg')
 from statsbombpy import sb 
-import dash; import dash_core_components as dcc
-import dash_html_components as html
+import dash; from dash import dcc
+from dash import html
 from dash.dependencies import Input, Output
 import field ; import matplotsoccer; import matplotlib.pyplot as plt
 import pandas as pd 
@@ -96,14 +96,14 @@ plt.close()
 
 app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
     html.H1(children='Football  Analytics',style={'textAlign': 'center'}),
-    html.H3(children='Note: Options in the team and player dropdown list can take a few seconds to load/update,',
+    html.H5(children='Note: Options in the team and player dropdown list can take a few seconds to load/update.',
             style={'textAlign': 'left'}),
 
     html.Div(
             [
                 html.Div(
                     [
-                        html.H3("Filters"),
+                        html.H3("Choose a team and player to analyse!"),
                         html.P("Competition:", className="control_label"),
                         dcc.Dropdown(id='competition',
                                      options=[{'label': i, 'value': i} for i in compname]
