@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Sun Apr 19 2020
-
-@author: Sergio Llana (@SergioMinuto90)
+@author: Hardy Agarwal
 """
 
 import matplotlib
@@ -74,7 +72,7 @@ def draw_pitch(min_x=0, max_x=1,empty_pitch=False):
 
     Returns
     -----------
-       ax : Matplotlib's axis object to keetp adding elements on the pitch.
+       ax : Matplotlib's axis object to keep adding elements on the pitch.
     """
     background_color = config["background_color"]
     lines_color = config["lines_color"]
@@ -132,11 +130,11 @@ def draw_pitch(min_x=0, max_x=1,empty_pitch=False):
                 alpha=0.8, lw=1.5, zorder=3, color=lines_color)
 
     # Plot circles
-    ax.add_patch(patches.Wedge((94.0, 34.0), 9, 130, 230, fill=True, edgecolor=lines_color,
-                               facecolor=lines_color, zorder=4, width=0.02, alpha=0.8))
+    #ax.add_patch(patches.Wedge((94.0, 34.0), 9, 130, 230, fill=True, edgecolor=lines_color,
+    #                           facecolor=lines_color, zorder=4, width=0.02, alpha=0.8))
 
-    ax.add_patch(patches.Wedge((11.0, 34.0), 9, 310, 50, fill=True, edgecolor=lines_color,
-                               facecolor=lines_color, zorder=4, width=0.02, alpha=0.8))
+    #ax.add_patch(patches.Wedge((11.0, 34.0), 9, 310, 50, fill=True, edgecolor=lines_color,
+    #                           facecolor=lines_color, zorder=4, width=0.02, alpha=0.8))
 
     ax.add_patch(patches.Wedge((52.5, 34), 9.5, 0, 360, fill=True, edgecolor=lines_color,
                                facecolor=lines_color, zorder=4, width=0.02, alpha=0.8))
@@ -237,7 +235,7 @@ def draw_pass_map(ax, player_position,
 
     if legend:
         ax.annotate(legend, xy=(0.01*width, 0.02*height),
-                    ha="left", va="bottom", zorder=7, fontsize=10, color=config["lines_color"])
+                    ha="left", va="bottom", zorder=7, fontsize=10, color=config["font_color"])
 
     if title:
         ax.set_title(title, loc="left")

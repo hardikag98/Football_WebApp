@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Jun 25 22:28:30 2020
-
-@author: Admin
+@author: Hardy Agarwal
 """
+
 import matplotlib
 matplotlib.use('Agg')
 from statsbombpy import sb 
 import dash; from dash import dcc
+#import dash_daq as daq
 from dash import html
 from dash.dependencies import Input, Output
-import field ; import matplotsoccer; import matplotlib.pyplot as plt
+import field 
+import MPS 
+import matplotlib.pyplot as plt
 import pandas as pd 
 import functools 
 from graph import passingnetwork
@@ -18,10 +20,41 @@ from passing_network import draw_pitch
 from actionplot import plotaction
 import io
 import base64
+import os
+import psycopg2
 
+#Establishing connection to the database
+conn = psycopg2.connect("DATABASE_URL_REMOVED", 
+                        sslmode='require')
+
+#Defining cursor
+cur = conn.cursor()
+
+#Get event data for a match from database
 @functools.lru_cache(maxsize=15)
 def get_event_data(input1):
-    return sb.events(match_id = input1)
+    events = sb.events(match_id = input1)
+    try:
+        cur.execute(f"""SELECT * from vaep
+                            where "gameID" = {input1};""")
+        data = cur.fetchall()
+        df_vaep = pd.DataFrame(data,columns=['GameID','period_id','timestamp','vaep_value'])
+    except:
+        cur.execute("ROLLBACK")
+        conn.commit()
+        cur.execute(f"""SELECT * from vaep
+                        where "gameID" = {input1};""")
+        data = cur.fetchall()
+        df_vaep = pd.DataFrame(data,columns=['GameID','period_id','timestamp','vaep_value'])
+    #pd.read_hdf(os.path.join("data-fifa", "vaeptime.h5"), "game_{0}".format(input1))
+
+    events.timestamp = pd.to_datetime(events.timestamp)
+    events.timestamp = events.timestamp.dt.time
+
+    df_vaep.timestamp = df_vaep.timestamp.dt.time
+
+    events = events.merge(df_vaep, left_on=['period','timestamp'], right_on=['period_id','timestamp'], how='left')
+    return events
 
 @functools.lru_cache(maxsize=15)
 def get_lineup_data(input1):
@@ -32,45 +65,97 @@ def get_player_data(input1,input2):
     fig=field.drawfield()
     events = get_event_data(input1)
     playerdata = events[events['player']==input2]
-    #pass data 
+    playerdata.loc[:,'second'] = [str(playerdata.loc[i,'second']) if len(str(playerdata.loc[i,'second']))==2 else '0'+str(playerdata.loc[i,'second']) for i in  playerdata.index.values]
+    
+
+    #PASS DATA
+    #Pass arrows
     playerpassdata = playerdata[(playerdata['type'] == "Pass")]
     passannotation=[]
+
+    #Pass points
+    px1=[]
+    py1=[]
+    pcolors=[]
+    ptime = []
+    pvaep = []
+
     for i in playerpassdata.index.values:
         try:
-            color = "red" if playerpassdata.loc[i,'pass']['outcome']['id'] == 9 else "green"
+            color = "red" if playerpassdata.loc[i,'pass']['outcome']['id'] == 9 else "blue"
         except KeyError:
-            color = "green"
+            color = "blue"
+        
         passannotation.append(dict(x=playerpassdata.loc[i,'pass']['end_location'][0],
-                            y=playerpassdata.loc[i,'pass']['end_location'][1],text="",
-                            ax=playerpassdata.loc[i,'location'][0],
-                            ay=playerpassdata.loc[i,'location'][1],
-                            xref="x",yref="y",axref = "x",ayref = "y",
-                            showarrow=True,arrowhead=2,arrowcolor=color))
-    #Shot data
+                                y=playerpassdata.loc[i,'pass']['end_location'][1],text="",
+                                ax=playerpassdata.loc[i,'location'][0],
+                                ay=playerpassdata.loc[i,'location'][1],
+                                xref="x",yref="y",axref = "x",ayref = "y",
+                                showarrow=True,arrowhead=2,arrowcolor=color))#,
+                                #hovertext='Time: '+ str(playerpassdata.loc[i,'minute'])+':'+str(playerpassdata.loc[i,'second'])+ ';\n' +
+                                #'VAEP: ' + str(round(playerpassdata.loc[i,'vaep_value'],3))))
+    
+        px1.append(playerpassdata.loc[i,'location'][0])
+        py1.append(playerpassdata.loc[i,'location'][1])
+        pcolors.append(color)
+        ptime.append(str(playerpassdata.loc[i,'minute'])+':'+str(playerpassdata.loc[i,'second']))
+        pvaep.append(str(round(playerpassdata.loc[i,'vaep_value'],3)))
+    passes = pd.DataFrame({'x1':px1,'y1':py1,'Colors':pcolors,'Time':ptime,'VAEP':pvaep})
+    passes.loc[:,'Hoverinfo'] = 'Time: ' + passes['Time'].astype(str)  + '<br>VAEP: ' + passes['VAEP'].astype(str) 
+
+    #SHOT DATA
+    #Shot arrows
     playershotdata = playerdata[(playerdata['type'] == "Shot")] 
     shotannotation=[]
+
+    #Shot points
+    sx1=[]
+    sy1=[]
+    scolors=[]
+    stime = []
+    svaep = []
+
     for i in playershotdata.index.values:
-        color='green' if playershotdata.loc[i,'shot']['outcome']['id']==97 else 'red'
+        color='blue' if playershotdata.loc[i,'shot']['outcome']['id']==97 else 'red'
         shotannotation.append(dict(x=playershotdata.loc[i,'shot']['end_location'][0],
-                                   y=playershotdata.loc[i,'shot']['end_location'][1]
-                      ,ax=playerdata.loc[i,'location'][0],ay=playerdata.loc[i,'location'][1],
-                      xref="x",yref="y",axref = "x",ayref = "y",showarrow=True,
-                      arrowcolor=color,arrowsize=1,arrowwidth=3,arrowhead=3,text=""))
+                                y=playershotdata.loc[i,'shot']['end_location'][1],
+                                ax=playerdata.loc[i,'location'][0],ay=playerdata.loc[i,'location'][1],
+                                xref="x",yref="y",axref = "x",ayref = "y",showarrow=True,
+                                arrowcolor=color,arrowsize=1,arrowwidth=4,arrowhead=4,text=""))#,
+                                #hovertext='Time: '+ str(playershotdata.loc[i,'minute'])+':'+str(playershotdata.loc[i,'second']) + ';\n' +
+                                #'VAEP: ' + str(round(playershotdata.loc[i,'vaep_value'],3))))
+
+        sx1.append(playerdata.loc[i,'location'][0])
+        sy1.append(playerdata.loc[i,'location'][1])
+        scolors.append(color)
+        stime.append(str(playershotdata.loc[i,'minute'])+':'+str(playershotdata.loc[i,'second']))
+        svaep.append(str(round(playershotdata.loc[i,'vaep_value'],3)))
+    shots = pd.DataFrame({'x1':sx1,'y1':sy1,'Colors':scolors,'Time':stime,'VAEP':svaep})
+    shots.loc[:,'Hoverinfo'] = 'Time: ' + shots['Time'].astype(str)  + '<br>VAEP: ' + shots['VAEP'].astype(str) 
+
     #Tackle data
     playerdueldata = playerdata[(playerdata['type'] == "Duel")] 
-    colors=[]
-    x1=[]
-    y1=[]
+    tcolors=[]
+    tx1=[]
+    ty1=[]
+    ttime = []
+    tvaep = []
     for i in playerdueldata.index.values:
         if playerdueldata.loc[i,'duel']['type']['id']==11:
-            color='red' if playerdueldata.loc[i,'duel']['outcome']['id']==14 else 'green'
-            colors.append(color)
-            x1.append(playerdueldata.loc[i,"location"][0])
-            y1.append(playerdueldata.loc[i,"location"][1])
+            color='red' if playerdueldata.loc[i,'duel']['outcome']['id']==14 else 'blue'
+            tcolors.append(color)
+            tx1.append(playerdueldata.loc[i,"location"][0])
+            ty1.append(playerdueldata.loc[i,"location"][1])
+            ttime.append(str(playerdueldata.loc[i,'minute'])+':'+str(playerdueldata.loc[i,'second']))
+            tvaep.append(str(round(playerdueldata.loc[i,'vaep_value'],3)))
+    tackles = pd.DataFrame({'x1':tx1,'y1':ty1,'Colors':tcolors,'Time':ttime,'VAEP':tvaep})
+    tackles.loc[:,'Hoverinfo'] = 'Time: ' + tackles['Time'].astype(str) + '<br>VAEP: ' + tackles['VAEP'].astype(str) 
             
+    #heatmap
     x2 = [i[0] for i in playerdata.location.dropna()]
     y2 = [i[1] for i in playerdata.location.dropna()]
-    return (fig,passannotation,shotannotation,x1,y1,x2,y2,colors)
+    heatmap=[x2,y2]
+    return (fig,passannotation,passes,shotannotation,shots,tackles,heatmap)
 
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -86,8 +171,8 @@ colors = {
     'text': '#7FDBFF'
 }
 fig=plt.figure()
-fig.set_size_inches(10,8,forward=True)
-matplotsoccer.field(ax=fig.add_subplot(111),color='green',show=False)
+fig.set_size_inches(6.7*1.5,6.7,forward=False)
+MPS.drawactionfield(ax=fig.add_subplot(111),color='white',linecolor='lightgrey',show=False)
 plt.tight_layout()
 buf = io.BytesIO()
 plt.savefig(buf, format = "png")
@@ -95,15 +180,19 @@ data = base64.b64encode(buf.getbuffer()).decode("utf8")
 plt.close()
 
 app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
-    html.H1(children='Football  Analytics',style={'textAlign': 'center'}),
-    html.H5(children='Note: Options in the team and player dropdown list can take a few seconds to load/update.',
-            style={'textAlign': 'left'}),
+    html.Div(style={'textAlign': 'center', 'margin': -2, 'padding':-10, 'font-size': 48}, children=[
+        html.B(children='Football  Analytics', )]),
+    html.H4(children='Visualizing football event data', style={'textAlign': 'center','margin': -2, 'padding':-10}),
+    html.Div(style={'textAlign': 'center','margin': -2, 'padding':-10, 'font-size': 26}, children=[
+        html.A('Hardy Agarwal', href='https://www.linkedin.com/in/hardy-agarwal/')]),
 
     html.Div(
             [
                 html.Div(
                     [
                         html.H3("Choose a team and player to analyse!"),
+                        html.P(children='Note: Options in the player dropdown list can take a few seconds to load/update.'),
+                        #    style={'textAlign': 'left'}),
                         html.P("Competition:", className="control_label"),
                         dcc.Dropdown(id='competition',
                                      options=[{'label': i, 'value': i} for i in compname]
@@ -114,8 +203,16 @@ app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
                         dcc.Dropdown(id='match'),
                         html.P("Team:", className="control_label"),
                         dcc.Dropdown(id='team'),
+                        html.P("Pass Value:", className="control_label"),
+                        dcc.RadioItems(id='passingnetwork',
+                                        options=['Count', 'VAEP'], 
+                                        #html.Link('VAEP',href='https://dl.acm.org/doi/10.1145/3292500.3330758')],
+                                        #'VAEP\n(Valuing Actions by Estimating Probabilities)'], 
+                                        value='Count'),
+                        html.A('(Valuing Actions by Estimating Probabilities)',href='https://dtai.cs.kuleuven.be/sports/vaep'),               
                         html.P("Player:", className="control_label"),
                         dcc.Dropdown(id='player'),
+                        html.P("Action:", className="control_label"),
                         dcc.Checklist(id='actions',
                             options=[
                             {'label': 'Passes', 'value': 'Passes'},
@@ -131,14 +228,14 @@ app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
                 html.Div(
                     [
                         dcc.Tabs([
-                            dcc.Tab(label='Passing network', children=[
-                                    html.Img(id='pitch2',src="data:image/png;base64,{}".format(
-                                            draw_pitch(empty_pitch=True)))]),
-                            dcc.Tab(label='Player Analysis', children=[
-                                    dcc.Graph(id='pitch1', figure=pitch)]),
                             dcc.Tab(label='Goals', children=[
                                     html.Img(id='pitch3',
-                                             src="data:image/png;base64,{}".format(data))])
+                                             src="data:image/png;base64,{}".format(data))]),
+                            dcc.Tab(label='Passing network', children=[
+                                    html.Img(id='pitch2',src="data:image/png;base64,{}".format(data))]),
+                                            #draw_pitch(empty_pitch=True)))]),
+                            dcc.Tab(label='Player Analysis', children=[
+                                    dcc.Graph(id='pitch1', figure=pitch)])
                             ]),
                         
                     ],
@@ -148,9 +245,13 @@ app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
                 style={"display": "flex", "flex-direction": "row",
                        'backgroundColor': colors['background']}),
     
-    html.H5(children='Data Credits: Statsbomb',
-            style={'textAlign': 'left'})    
-    ])
+    html.Div(['Data Source: ',html.A('StatsBomb', href='https://statsbomb.com/what-we-do/hub/free-data/')], 
+        style={'textAlign': 'left', 'font-size': '28px'})
+    ]) #,
+    #html.P("References:"),
+    #html.Div(['1) ',html.A('VAEP',href='https://dl.acm.org/doi/10.1145/3292500.3330758')], 
+    #    style={'textAlign': 'left'}) ])
+    
 
 @app.callback(
     Output('season', 'options'),
@@ -200,17 +301,19 @@ def player_options(selected_match,selected_team):
 @app.callback(
     Output('pitch2', 'src'),
     [Input('match', 'value'),
-     Input('team', 'value')])
-def update_graph(selected_match,selected_team):
+     Input('team', 'value') ,
+     Input('passingnetwork', 'value')])
+def update_graph(selected_match,selected_team,selected_passvalue):
     events = get_event_data(selected_match)
     lineups = get_lineup_data(selected_match)
-    data = passingnetwork(selected_match,selected_team,events,lineups)
+    data = passingnetwork(selected_match,selected_team,events,lineups,selected_passvalue)
     return "data:image/png;base64,{}".format(data)  
 
 @app.callback(
     Output('pitch3', 'src'),
     [Input('match', 'value')])
 def update_goals(selected_match): 
+    #print(selected_match)
     actions=plotaction(selected_match,w=10,h=8,zoom=False)
     return "data:image/png;base64,{}".format(actions)
 
@@ -220,29 +323,56 @@ def update_goals(selected_match):
      Input('actions','value'),
      Input('match', 'value')])
 def update_figure(selected_player,selected_actions,selected_match):
-    (fig,passannotation,shotannotation,x1,y1,x2,y2,colors) = get_player_data(
-            selected_match,selected_player)
+    (fig,passannotation,passes,shotannotation,shots,tackles,heatmap) = get_player_data(selected_match,selected_player)
     
     if 'Tackles' in selected_actions:
-        fig.data[1].x = x1  
-        fig.data[1].y = y1
-        fig.data[1].marker['color'] = colors
+        fig.data[0].x = tackles['x1']
+        fig.data[0].y = tackles['y1']
+        fig.data[0].marker['color'] = tackles['Colors']
+
+        fig.data[0].hovertext = tackles['Hoverinfo']
+
     else: 
-        fig.data[1].x = []
-        fig.data[1].y = []
-        fig.data[1].marker['color'] = []
+        fig.data[0].x = []
+        fig.data[0].y = []
+        fig.data[0].marker['color'] = []
         
     if 'Heatmap' in selected_actions:
-        fig.data[2].x = x2
-        fig.data[2].y = y2
+        fig.data[1].x = heatmap[0]
+        fig.data[1].y = heatmap[1]
     else:
+        fig.data[1].x = []
+        fig.data[1].y = []
+
+    if 'Passes' in selected_actions:
+        fig.data[2].x = passes['x1']
+        fig.data[2].y = passes['y1']
+        fig.data[2].marker['color'] = passes['Colors']
+
+        fig.data[2].hovertext = passes['Hoverinfo']
+
+    else: 
         fig.data[2].x = []
         fig.data[2].y = []
+        fig.data[2].marker['color'] = []
+
+    if 'Shots' in selected_actions:
+        fig.data[3].x = shots['x1']
+        fig.data[3].y = shots['y1']
+        fig.data[3].marker['color'] = shots['Colors']
+
+        fig.data[3].hovertext = shots['Hoverinfo']
+
+    else: 
+        fig.data[3].x = []
+        fig.data[3].y = []
+        fig.data[3].marker['color'] = []
         
-    fig.update_layout(showlegend=False)
+    #fig.update_layout(showlegend=True,legend_tracegroupgap=2,legend_orientation='h',
+    #    margin_autoexpand=True, height=860)
     
     if ('Shots' in selected_actions) & ('Passes' in selected_actions):
-        fig.layout.annotations = passannotation+ shotannotation
+        fig.layout.annotations = passannotation + shotannotation
     elif 'Shots' in selected_actions:
         fig.layout.annotations = shotannotation
     elif 'Passes' in selected_actions:

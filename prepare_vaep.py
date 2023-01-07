@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Jul 26 14:45:52 2020
-
-@author: Admin
+@author: Hardy Agarwal
 """
 import os
 import socceraction.vaep.features as fs

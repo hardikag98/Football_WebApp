@@ -46,7 +46,6 @@ lxml==4.9.1
 MarkupSafe==2.1.1
 matplotlib==3.5.3
 matplotlib-inline==0.1.6
-matplotsoccer @ git+https://github.com/hardikag98/matplotsoccer.git@8393f71163405e0b8019e85b8da01f9002451a88
 mypy-extensions==0.4.3
 nest-asyncio==1.5.5
 nose2==0.12.0
