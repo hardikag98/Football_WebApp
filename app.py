@@ -51,6 +51,7 @@ def get_event_data(input1):
     events.timestamp = pd.to_datetime(events.timestamp)
     events.timestamp = events.timestamp.dt.time
 
+    df_vaep.timestamp = pd.to_datetime(df_vaep.timestamp)
     df_vaep.timestamp = df_vaep.timestamp.dt.time
 
     events = events.merge(df_vaep, left_on=['period','timestamp'], right_on=['period_id','timestamp'], how='left')
@@ -74,11 +75,11 @@ def get_player_data(input1,input2):
     passannotation=[]
 
     #Pass points
-    px1=[]
-    py1=[]
-    pcolors=[]
-    ptime = []
-    pvaep = []
+    px1=[500]
+    py1=[50]
+    pcolors=['black']
+    ptime = ['00:00']
+    pvaep = ['0.0']
 
     for i in playerpassdata.index.values:
         try:
@@ -87,16 +88,16 @@ def get_player_data(input1,input2):
             color = "blue"
         
         passannotation.append(dict(x=playerpassdata.loc[i,'pass']['end_location'][0],
-                                y=playerpassdata.loc[i,'pass']['end_location'][1],text="",
+                                y=80-playerpassdata.loc[i,'pass']['end_location'][1],text="",
                                 ax=playerpassdata.loc[i,'location'][0],
-                                ay=playerpassdata.loc[i,'location'][1],
+                                ay=80-playerpassdata.loc[i,'location'][1],
                                 xref="x",yref="y",axref = "x",ayref = "y",
-                                showarrow=True,arrowhead=2,arrowcolor=color))#,
+                                showarrow=True,arrowhead=2,arrowcolor=color,opacity=0.7))#,
                                 #hovertext='Time: '+ str(playerpassdata.loc[i,'minute'])+':'+str(playerpassdata.loc[i,'second'])+ ';\n' +
                                 #'VAEP: ' + str(round(playerpassdata.loc[i,'vaep_value'],3))))
     
         px1.append(playerpassdata.loc[i,'location'][0])
-        py1.append(playerpassdata.loc[i,'location'][1])
+        py1.append(80-playerpassdata.loc[i,'location'][1])
         pcolors.append(color)
         ptime.append(str(playerpassdata.loc[i,'minute'])+':'+str(playerpassdata.loc[i,'second']))
         pvaep.append(str(round(playerpassdata.loc[i,'vaep_value'],3)))
@@ -109,24 +110,24 @@ def get_player_data(input1,input2):
     shotannotation=[]
 
     #Shot points
-    sx1=[]
-    sy1=[]
-    scolors=[]
-    stime = []
-    svaep = []
+    sx1=[500]
+    sy1=[50]
+    scolors=['black']
+    stime = ['00:00']
+    svaep = ['0.0']
 
     for i in playershotdata.index.values:
         color='blue' if playershotdata.loc[i,'shot']['outcome']['id']==97 else 'red'
         shotannotation.append(dict(x=playershotdata.loc[i,'shot']['end_location'][0],
-                                y=playershotdata.loc[i,'shot']['end_location'][1],
-                                ax=playerdata.loc[i,'location'][0],ay=playerdata.loc[i,'location'][1],
+                                y=80-playershotdata.loc[i,'shot']['end_location'][1],
+                                ax=playerdata.loc[i,'location'][0],ay=80-playerdata.loc[i,'location'][1],
                                 xref="x",yref="y",axref = "x",ayref = "y",showarrow=True,
-                                arrowcolor=color,arrowsize=1,arrowwidth=4,arrowhead=4,text=""))#,
+                                arrowcolor=color,arrowsize=1,arrowwidth=4,arrowhead=4,text="",opacity=0.7))#,
                                 #hovertext='Time: '+ str(playershotdata.loc[i,'minute'])+':'+str(playershotdata.loc[i,'second']) + ';\n' +
                                 #'VAEP: ' + str(round(playershotdata.loc[i,'vaep_value'],3))))
 
         sx1.append(playerdata.loc[i,'location'][0])
-        sy1.append(playerdata.loc[i,'location'][1])
+        sy1.append(80-playerdata.loc[i,'location'][1])
         scolors.append(color)
         stime.append(str(playershotdata.loc[i,'minute'])+':'+str(playershotdata.loc[i,'second']))
         svaep.append(str(round(playershotdata.loc[i,'vaep_value'],3)))
@@ -135,17 +136,17 @@ def get_player_data(input1,input2):
 
     #Tackle data
     playerdueldata = playerdata[(playerdata['type'] == "Duel")] 
-    tcolors=[]
-    tx1=[]
-    ty1=[]
-    ttime = []
-    tvaep = []
+    tx1=[500]
+    ty1=[50]
+    tcolors=['black']
+    ttime = ['00:00']
+    tvaep = ['0.0']
     for i in playerdueldata.index.values:
         if playerdueldata.loc[i,'duel']['type']['id']==11:
             color='red' if playerdueldata.loc[i,'duel']['outcome']['id']==14 else 'blue'
             tcolors.append(color)
             tx1.append(playerdueldata.loc[i,"location"][0])
-            ty1.append(playerdueldata.loc[i,"location"][1])
+            ty1.append(80-playerdueldata.loc[i,"location"][1])
             ttime.append(str(playerdueldata.loc[i,'minute'])+':'+str(playerdueldata.loc[i,'second']))
             tvaep.append(str(round(playerdueldata.loc[i,'vaep_value'],3)))
     tackles = pd.DataFrame({'x1':tx1,'y1':ty1,'Colors':tcolors,'Time':ttime,'VAEP':tvaep})
@@ -153,7 +154,7 @@ def get_player_data(input1,input2):
             
     #heatmap
     x2 = [i[0] for i in playerdata.location.dropna()]
-    y2 = [i[1] for i in playerdata.location.dropna()]
+    y2 = [80-i[1] for i in playerdata.location.dropna()]
     heatmap=[x2,y2]
     return (fig,passannotation,passes,shotannotation,shots,tackles,heatmap)
 
@@ -184,7 +185,7 @@ app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
         html.B(children='Football  Analytics', )]),
     html.H4(children='Visualizing football event data', style={'textAlign': 'center','margin': -2, 'padding':-10}),
     html.Div(style={'textAlign': 'center','margin': -2, 'padding':-10, 'font-size': 26}, children=[
-        html.A('Hardy Agarwal', href='https://www.linkedin.com/in/hardy-agarwal/')]),
+        html.A('Hardik Agarwal', href='https://www.linkedin.com/in/hardy-agarwal/')]),
 
     html.Div(
             [
@@ -195,8 +196,7 @@ app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
                         #    style={'textAlign': 'left'}),
                         html.P("Competition:", className="control_label"),
                         dcc.Dropdown(id='competition',
-                                     options=[{'label': i, 'value': i} for i in compname]
-                                     ),
+                                     options=[{'label': i, 'value': i} for i in compname]),
                         html.P("Season:", className="control_label"),
                         dcc.Dropdown(id='season'),
                         html.P("Match:", className="control_label"),
@@ -246,7 +246,7 @@ app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
                        'backgroundColor': colors['background']}),
     
     html.Div(['Data Source: ',html.A('StatsBomb', href='https://statsbomb.com/what-we-do/hub/free-data/')], 
-        style={'textAlign': 'left', 'font-size': '28px'})
+        style={'textAlign': 'left', 'font-size': '22px'})
     ]) #,
     #html.P("References:"),
     #html.Div(['1) ',html.A('VAEP',href='https://dl.acm.org/doi/10.1145/3292500.3330758')], 

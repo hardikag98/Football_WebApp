@@ -7,7 +7,7 @@ import plotly.io as pio
 
 pio.templates.default = "none"
 
-def drawfield(title="Hover over actions to see timestamp and VAEP value"):
+def drawfield(title="Hover over actions to see timestamp and VAEP value <br> Defence <------> Attack"):
     fig = go.FigureWidget()
 
     # Add field
@@ -35,13 +35,14 @@ def drawfield(title="Hover over actions to see timestamp and VAEP value"):
     fig.add_shape(type="rect",x0=120,y0=36,x1=120.5,y1=44,line=dict(color='lightgrey'))
     
     fig.update_xaxes(showgrid=False, zeroline=False, ticks='',showticklabels=False,range=[-1, 121])
-    fig.update_yaxes(showgrid=False, zeroline=False, ticks='',showticklabels=False,range=[-0.5, 80.5])
+    fig.update_yaxes(showgrid=False, zeroline=False, ticks='',showticklabels=False,range=[-1, 81])
     fig.update_shapes(dict(xref='x', yref='y')) 
-    fig['layout']['yaxis']['autorange'] = "reversed"
+    #fig['layout']['yaxis']['autorange'] = "reversed"
     
-    fig.add_trace(go.Scatter(x=[], y=[],mode='markers',name='Tackles',
-                             marker=dict(color=[],symbol=4,size=16),
-                             hoverinfo='text',showlegend=True))
+    fig.add_trace(go.Scatter(x=[], y=[],mode='markers',name='Tackles',opacity=0.7,
+                             marker=dict(color='black',symbol=4,size=16),
+                             hoverinfo='text',showlegend=True,legendgroup='Marker',
+                             legendgrouptitle_text='Symbol:',legendrank=5))
 
     fig.add_trace(go.Histogram2dContour(x=[],y=[],colorscale='OrRd',line=dict(width=0),
                                         contours=dict(coloring="heatmap"),hoverinfo='skip',
@@ -49,27 +50,38 @@ def drawfield(title="Hover over actions to see timestamp and VAEP value"):
                                         ybins=dict(start=-5,end=85,size=10),
                                         xbins=dict(start=-5,end=125,size=10)))
 
-    fig.add_trace(go.Scatter(x=[], y=[],mode='markers',name='Passes',
+    fig.add_trace(go.Scatter(x=[], y=[],mode='markers',name='Passes',opacity=0.7,
                              marker=dict(color=[],symbol=300,size=16),
-                             hoverinfo='text'))
+                             hoverinfo='text',legendgroup='Marker',
+                             legendgrouptitle_text='Symbol:',legendrank=3))
 
-    fig.add_trace(go.Scatter(x=[], y=[],mode='markers',name='Shots',
+    fig.add_trace(go.Scatter(x=[], y=[],mode='markers',name='Shots',opacity=0.7,
                              marker=dict(color=[],symbol=302,size=16),
-                             hoverinfo='text'))
+                             hoverinfo='text',legendgroup='Marker',
+                             legendgrouptitle_text='Symbol:',legendrank=4))
 
-    fig.update_layout(title=title,title_xanchor='right',title_yanchor='middle', title_font_color='grey', title_pad_t=10,
-                      width=1000,height=720,autosize=False,
-                      margin=dict(l=10,b=10,r=10,t=25),margin_autoexpand=True,
+    fig.add_trace(go.Scatter(x=[40], y=[60],mode='markers',name='Successful',
+                             marker=dict(color=['blue'],symbol=1,size=16),
+                             hoverinfo='text',visible='legendonly', showlegend=True,
+                             legendgroup='Color',legendgrouptitle_text='Color:',legendrank=1))
+
+    fig.add_trace(go.Scatter(x=[40], y=[60],mode='markers',name='Failed',
+                             marker=dict(color=['red'],symbol=1,size=16),
+                             hoverinfo='text',visible='legendonly', showlegend=True,
+                             legendgroup='Color',legendgrouptitle_text='Color:',legendrank=2))
+
+    fig.update_layout(title=title,title_xanchor='auto',title_yanchor='bottom', title_font_color='grey', title_pad_t=10,
+                      width=1120,height=680,autosize=False,
+                      margin=dict(l=10,b=10,r=10,t=40), 
                       showlegend=True, 
-                      legend=dict(orientation="h", tracegroupgap=2, 
-                                  yanchor="bottom", xanchor="right",
-                                  y=1.005, x=1,
-                                  title_text='Actions:', 
+                      legend=dict(orientation="v", tracegroupgap=2, 
+                                xanchor="right", #yanchor="bottom",
+                                  y=0.98, x=1.12, itemclick=False, itemdoubleclick=False,
                                   ))
 
     fig.update_layout()
-    #fig.layout.xaxis.fixedrange = Tru
-    #fig.layout.yaxis.fixedrange = True
+    fig.layout.xaxis.fixedrange = True
+    fig.layout.yaxis.fixedrange = True
     #,plot_bgcolor='rgb(245,245,245)'
                                                                   
     return fig
