@@ -31,7 +31,7 @@ conn = psycopg2.connect("DATABASE_URL_REMOVED",
 cur = conn.cursor()
 
 #Get event data for a match from database
-@functools.lru_cache(maxsize=15)
+@functools.lru_cache(maxsize=10)
 def get_event_data(input1):
     events = sb.events(match_id = input1)
     try:
@@ -40,8 +40,7 @@ def get_event_data(input1):
         data = cur.fetchall()
         df_vaep = pd.DataFrame(data,columns=['GameID','period_id','timestamp','vaep_value'])
     except:
-        cur.execute("ROLLBACK")
-        conn.commit()
+        cur = conn.cursor()
         cur.execute(f"""SELECT * from vaep
                         where "gameID" = {input1};""")
         data = cur.fetchall()
@@ -57,11 +56,11 @@ def get_event_data(input1):
     events = events.merge(df_vaep, left_on=['period','timestamp'], right_on=['period_id','timestamp'], how='left')
     return events
 
-@functools.lru_cache(maxsize=15)
+@functools.lru_cache(maxsize=10)
 def get_lineup_data(input1):
     return sb.lineups(match_id = input1)
 
-@functools.lru_cache(maxsize=20)
+@functools.lru_cache(maxsize=10)
 def get_player_data(input1,input2):
     fig=field.drawfield()
     events = get_event_data(input1)
@@ -182,10 +181,10 @@ plt.close()
 
 app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
     html.Div(style={'textAlign': 'center', 'margin': -2, 'padding':-10, 'font-size': 48}, children=[
-        html.B(children='Football  Analytics', )]),
+        html.B(children='Football  Analytics' )]),
     html.H4(children='Visualizing football event data', style={'textAlign': 'center','margin': -2, 'padding':-10}),
     html.Div(style={'textAlign': 'center','margin': -2, 'padding':-10, 'font-size': 26}, children=[
-        html.A('Hardik Agarwal', href='https://www.linkedin.com/in/hardy-agarwal/')]),
+        html.A('Hardik Agarwal', href='https://www.linkedin.com/in/hardy-agarwal/', target="_blank")]),
 
     html.Div(
             [
@@ -201,22 +200,25 @@ app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
                         dcc.Dropdown(id='season'),
                         html.P("Match:", className="control_label"),
                         dcc.Dropdown(id='match'),
+                        html.Div([html.B(children='Passing Network',
+                                style={'margin': 0, 'padding': 0, 'font-size': 16})]),
                         html.P("Team:", className="control_label"),
                         dcc.Dropdown(id='team'),
                         html.P("Pass Value:", className="control_label"),
                         dcc.RadioItems(id='passingnetwork',
                                         options=['Count', 'VAEP'], 
-                                        #html.Link('VAEP',href='https://dl.acm.org/doi/10.1145/3292500.3330758')],
-                                        #'VAEP\n(Valuing Actions by Estimating Probabilities)'], 
                                         value='Count'),
-                        html.A('(Valuing Actions by Estimating Probabilities)',href='https://dtai.cs.kuleuven.be/sports/vaep'),               
+                        html.A('(Valuing Actions by Estimating Probabilities)',
+                                href='https://dtai.cs.kuleuven.be/sports/vaep', target="_blank"), 
+                        html.Div([html.B(children='Player Analysis' ,
+                                style={'margin': 0, 'padding': 0, 'font-size': 16})]),              
                         html.P("Player:", className="control_label"),
                         dcc.Dropdown(id='player'),
                         html.P("Action:", className="control_label"),
                         dcc.Checklist(id='actions',
                             options=[
-                            {'label': 'Passes', 'value': 'Passes'},
-                            {'label': 'Shots', 'value': 'Shots'},
+                            {'label': 'Passes',  'value': 'Passes'},
+                            {'label': 'Shots',   'value': 'Shots'},
                             {'label': 'Tackles', 'value': 'Tackles'},
                             {'label': 'Heatmap', 'value': 'Heatmap'}
                             ]),
@@ -232,7 +234,11 @@ app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
                                     html.Img(id='pitch3',
                                              src="data:image/png;base64,{}".format(data))]),
                             dcc.Tab(label='Passing network', children=[
-                                    html.Img(id='pitch2',src="data:image/png;base64,{}".format(data))]),
+                                    html.Img(id='pitch2',src="data:image/png;base64,{}".format(data)),
+                                    html.P("""This graph displays passing network among players in the starting lineup of the selected team. 
+                                            Only successful passes until the time of a change among the players (due to substitution/red card) are considered.
+                                            If there are less than 11 nodes in the network, this is due to a player not having completed any successful passes in that time period.
+                                            """)]), 
                                             #draw_pitch(empty_pitch=True)))]),
                             dcc.Tab(label='Player Analysis', children=[
                                     dcc.Graph(id='pitch1', figure=pitch)])
@@ -245,9 +251,8 @@ app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
                 style={"display": "flex", "flex-direction": "row",
                        'backgroundColor': colors['background']}),
     
-    html.Div(['Data Source: ',html.A('StatsBomb', href='https://statsbomb.com/what-we-do/hub/free-data/')], 
-        style={'textAlign': 'left', 'font-size': '22px'})
-    ]) #,
+    html.Div(['Data Source: ',html.A('StatsBomb', href='https://statsbomb.com/what-we-do/hub/free-data/', 
+                target="_blank")], style={'textAlign': 'left', 'font-size': '22px'})]) #,
     #html.P("References:"),
     #html.Div(['1) ',html.A('VAEP',href='https://dl.acm.org/doi/10.1145/3292500.3330758')], 
     #    style={'textAlign': 'left'}) ])
@@ -269,7 +274,7 @@ def set_match_options(selected_comp,selected_seas):
     compid = comp[comp.competition_name==str(selected_comp)]['competition_id'].iloc[0]
     matches = sb.matches(competition_id=compid, season_id=
                          selected_seas)[['home_team','away_team','match_id']]
-    return [{'label': i.home_team+' vs '+i.away_team, 'value': i.match_id} 
+    return [{'label': i.home_team +' vs '+ i.away_team, 'value': i.match_id} 
             for index,i in matches.iterrows()]
 
 @app.callback(
@@ -313,7 +318,6 @@ def update_graph(selected_match,selected_team,selected_passvalue):
     Output('pitch3', 'src'),
     [Input('match', 'value')])
 def update_goals(selected_match): 
-    #print(selected_match)
     actions=plotaction(selected_match,w=10,h=8,zoom=False)
     return "data:image/png;base64,{}".format(actions)
 
