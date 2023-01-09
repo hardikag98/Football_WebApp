@@ -194,11 +194,14 @@ def draw_pass_map(ax, player_position,
         for pair_key, row in pair_stats.iterrows():
             player1, player2 = pair_key.split("_")
 
-            player1_x = player_position.loc[player1]["origin_pos_x"]
-            player1_y = player_position.loc[player1]["origin_pos_y"]
+            try:
+                player1_x = player_position.loc[player1]["origin_pos_x"]
+                player1_y = player_position.loc[player1]["origin_pos_y"]
 
-            player2_x = player_position.loc[player2]["origin_pos_x"]
-            player2_y = player_position.loc[player2]["origin_pos_y"]
+                player2_x = player_position.loc[player2]["origin_pos_x"]
+                player2_y = player_position.loc[player2]["origin_pos_y"]
+            except Exception as e:
+                continue
 
             num_passes = row["num_passes"]
             pass_value = row["pass_value"]

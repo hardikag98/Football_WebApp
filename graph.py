@@ -63,12 +63,14 @@ def passingnetwork(match_id,teamname,events,lineups,passvalue='count'):
     
     player_position = df_passes.groupby("player_name").agg({"origin_pos_x": "median", 
                                     "origin_pos_y": "median"})
-    if player_position.shape[0]<11:
-        player_left_out = set(df_passes.pass_recipient_name).difference(set(df_passes.player_name))
-        player_pos_additional = df_passes[df_passes.pass_recipient_name==player_left_out].groupby("pass_recipient_name").agg({"origin_pos_x": "median", 
-                                    "origin_pos_y": "median"})
-        player_position = pd.concat([player_position, player_pos_additional]) 
-    
+    #if player_position.shape[0]<11:
+    #    player_left_out = set(df_passes.pass_recipient_name).difference(set(df_passes.player_name))
+    #    player_pos_additional = df_passes[df_passes.pass_recipient_name==player_left_out].groupby("pass_recipient_name").agg({"origin_pos_x": "median", 
+    #                                "origin_pos_y": "median"})
+    #    print(player_position)    
+    #    print(player_pos_additional)                           
+    #    player_position = pd.concat([player_position, player_pos_additional]) 
+    #print(player_position)
     if passvalue=='Count':
         player_pass_count = df_passes.groupby("player_name").size().to_frame("num_passes")
         player_pass_value = df_passes.groupby("player_name").size().to_frame("pass_value")
