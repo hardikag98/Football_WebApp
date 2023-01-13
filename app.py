@@ -30,6 +30,9 @@ conn = psycopg2.connect("DATABASE_URL_REMOVED",
 #Defining cursor
 cur = conn.cursor()
 
+datafolder = os.getcwd() + "/data-fifa"
+spadl_h5 = os.path.join(datafolder, "spadl-statsbomb.h5")
+
 #Get event data for a match from database
 @functools.lru_cache(maxsize=10)
 def get_event_data(input1):
@@ -161,9 +164,6 @@ def get_player_data(input1,input2):
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 pitch=field.drawfield()
 #comp = sb.competitions()
-
-datafolder = os.getcwd() + "/data-fifa"
-spadl_h5 = os.path.join(datafolder, "spadl-statsbomb.h5")
 
 with pd.HDFStore(spadl_h5) as spadlstore:
     comp = spadlstore["competitions"]
