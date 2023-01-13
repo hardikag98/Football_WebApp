@@ -23,7 +23,12 @@ def _statsbomb_to_point(location, max_width=120, max_height=80):
 
 #%%
 def passingnetwork(match_id,teamname,events,lineups,passvalue='count'):
-    names_dict = {player[1]["player_name"]: player[1]["player_nickname"] for 
+    #Orginal code to use players nicknames
+    #names_dict = {player[1]["player_name"]: player[1]["player_nickname"] for 
+    #              team in lineups for player in lineups[team].iterrows()}
+
+    #Use full name instead of nicknames
+    names_dict = {player[1]["player_name"]: player[1]["player_name"] for 
                   team in lineups for player in lineups[team].iterrows()}
 
     eventsdict = events.to_dict('records')

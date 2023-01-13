@@ -44,9 +44,12 @@ def plotaction(match_id,number=5,w=1,h=1,zoom=False):
                 .merge(spadlstore["teams"], how="left")
                 )
     
-    # use nickname if available else use full name
-    actions["player"] = actions[["nickname","player_name"]].apply(
-            lambda x: x[0] if x[0] else x[1],axis=1)
+    try:
+        # use nickname if available else use full name
+        actions["player"] = actions[["nickname","player_name"]].apply(
+                lambda x: x[0] if x[0] else x[1],axis=1)
+    except:
+        actions["player"] = actions["player_name"]
     
     goalindex=actions[(actions.type_name=='shot')|(actions.type_name=='shot_penalty')][(actions.result_name=='success')|(actions.result_name=='owngoal')].index
     if len(goalindex)==0:

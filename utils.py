@@ -1,6 +1,5 @@
 import os
 import pandas as pd 
-import h5py
 #%%
 
 datafolder = os.getcwd() + "/data-fifa"

@@ -18,7 +18,7 @@ import functools
 from graph import passingnetwork
 from passing_network import draw_pitch
 from actionplot import plotaction
-from utils import get_comp_names, get_matches
+#from utils import get_comp_names, get_matches
 import io
 import base64
 import os
@@ -69,7 +69,6 @@ def get_player_data(input1,input2):
     playerdata = events[events['player']==input2]
     playerdata.loc[:,'second'] = [str(playerdata.loc[i,'second']) if len(str(playerdata.loc[i,'second']))==2 else '0'+str(playerdata.loc[i,'second']) for i in  playerdata.index.values]
     
-
     #PASS DATA
     #Pass arrows
     playerpassdata = playerdata[(playerdata['type'] == "Pass")]
@@ -163,10 +162,8 @@ def get_player_data(input1,input2):
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 pitch=field.drawfield()
 #comp = sb.competitions()
-
-comp, compname = get_comp_names()
-#print(comp)
-#compname = comp['competition_name'].unique() 
+comp = pd.read_csv('games.csv')
+compname = comp['competition_name'].unique()
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 server = app.server 
@@ -264,9 +261,10 @@ app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
     Output('season', 'options'),
     [Input('competition', 'value')])
 def set_season_options(selected_comp):
+    seasons = comp[comp['competition_name']==
+                 str(selected_comp)][['season_name','season_id']].drop_duplicates()
     return [{'label': i['season_name'], 'value': i['season_id']} for index,i in 
-            comp[comp['competition_name']==
-                 str(selected_comp)][['season_name','season_id']].iterrows()]
+            seasons.iterrows()]
     
 @app.callback(
     Output('match', 'options'),
@@ -279,7 +277,8 @@ def set_match_options(selected_comp,selected_seas):
     #                     selected_seas)[['home_team','away_team','match_id']]
 
     ##Using SPADL data from utils
-    matches = get_matches(selected_comp, selected_seas)
+    #matches = get_matches(selected_comp, selected_seas)
+    matches = comp[(comp.competition_name==str(selected_comp))&(comp.season_id==selected_seas)]
     return [{'label': i.home_team_name +' vs '+ i.away_team_name, 'value': i.game_id} 
             for index,i in matches.iterrows()]
 
@@ -299,7 +298,9 @@ def player_options(selected_match,selected_team):
     players = events[events.team==selected_team].player.unique()
     lineups = get_lineup_data(selected_match)[selected_team]
     players = set(players).intersection(set(lineups.player_name))
-    names_dict = {player[1]["player_name"]: player[1]["player_nickname"] for 
+    #names_dict = {player[1]["player_name"]: player[1]["player_nickname"] for 
+    #              team in lineups for player in lineups.iterrows()}
+    names_dict = {player[1]["player_name"]: player[1]["player_name"] for 
                   team in lineups for player in lineups.iterrows()}
     options = []
     for i in players:
