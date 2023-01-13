@@ -160,7 +160,13 @@ def get_player_data(input1,input2):
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 pitch=field.drawfield()
-comp = sb.competitions()
+#comp = sb.competitions()
+
+datafolder = os.getcwd() + "/data-fifa"
+spadl_h5 = os.path.join(datafolder, "spadl-statsbomb.h5")
+
+with pd.HDFStore(spadl_h5) as spadlstore:
+    comp = spadlstore["competitions"]
 compname = comp['competition_name'].unique() 
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
@@ -253,9 +259,6 @@ app.layout = html.Div(style={'backgroundColor': colors['background']},children=[
     
     html.Div(['Data Source: ',html.A('StatsBomb', href='https://statsbomb.com/what-we-do/hub/free-data/', 
                 target="_blank")], style={'textAlign': 'left', 'font-size': '22px'})]) #,
-    #html.P("References:"),
-    #html.Div(['1) ',html.A('VAEP',href='https://dl.acm.org/doi/10.1145/3292500.3330758')], 
-    #    style={'textAlign': 'left'}) ])
     
 
 @app.callback(
@@ -271,10 +274,21 @@ def set_season_options(selected_comp):
     [Input('competition', 'value'),
      Input('season', 'value')])
 def set_match_options(selected_comp,selected_seas):
-    compid = comp[comp.competition_name==str(selected_comp)]['competition_id'].iloc[0]
-    matches = sb.matches(competition_id=compid, season_id=
-                         selected_seas)[['home_team','away_team','match_id']]
-    return [{'label': i.home_team +' vs '+ i.away_team, 'value': i.match_id} 
+    ##Using Statsbomb API
+    #compid = comp[comp.competition_name==str(selected_comp)]['competition_id'].iloc[0]
+    #matches = sb.matches(competition_id=compid, season_id=
+    #                     selected_seas)[['home_team','away_team','match_id']]
+
+    ##Using SPADL data
+    with pd.HDFStore(spadl_h5) as spadlstore:
+        games = (
+            spadlstore["games"]
+            .merge(spadlstore["competitions"], how='left')
+            .merge(spadlstore["teams"].add_prefix('home_'), how='left')
+            .merge(spadlstore["teams"].add_prefix('away_'), how='left'))
+    matches = games[(games.competition_name==str(selected_comp)) & 
+            (games.season_id==selected_seas)][['home_team_name','away_team_name','game_id']]
+    return [{'label': i.home_team_name +' vs '+ i.away_team_name, 'value': i.game_id} 
             for index,i in matches.iterrows()]
 
 @app.callback(
