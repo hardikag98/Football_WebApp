@@ -18,10 +18,12 @@ import functools
 from graph import passingnetwork
 from passing_network import draw_pitch
 from actionplot import plotaction
+from utils import get_comp_names, get_matches
 import io
 import base64
 import os
 import psycopg2
+
 
 #Establishing connection to the database
 conn = psycopg2.connect("DATABASE_URL_REMOVED", 
@@ -29,9 +31,6 @@ conn = psycopg2.connect("DATABASE_URL_REMOVED",
 
 #Defining cursor
 cur = conn.cursor()
-
-datafolder = os.getcwd() + "/data-fifa"
-spadl_h5 = os.path.join(datafolder, "spadl-statsbomb.h5")
 
 #Get event data for a match from database
 @functools.lru_cache(maxsize=10)
@@ -165,9 +164,9 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 pitch=field.drawfield()
 #comp = sb.competitions()
 
-with pd.HDFStore(spadl_h5) as spadlstore:
-    comp = spadlstore["competitions"]
-compname = comp['competition_name'].unique() 
+comp, compname = get_comp_names()
+#print(comp)
+#compname = comp['competition_name'].unique() 
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 server = app.server 
@@ -279,15 +278,8 @@ def set_match_options(selected_comp,selected_seas):
     #matches = sb.matches(competition_id=compid, season_id=
     #                     selected_seas)[['home_team','away_team','match_id']]
 
-    ##Using SPADL data
-    with pd.HDFStore(spadl_h5) as spadlstore:
-        games = (
-            spadlstore["games"]
-            .merge(spadlstore["competitions"], how='left')
-            .merge(spadlstore["teams"].add_prefix('home_'), how='left')
-            .merge(spadlstore["teams"].add_prefix('away_'), how='left'))
-    matches = games[(games.competition_name==str(selected_comp)) & 
-            (games.season_id==selected_seas)][['home_team_name','away_team_name','game_id']]
+    ##Using SPADL data from utils
+    matches = get_matches(selected_comp, selected_seas)
     return [{'label': i.home_team_name +' vs '+ i.away_team_name, 'value': i.game_id} 
             for index,i in matches.iterrows()]
 
