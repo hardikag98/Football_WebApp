@@ -23,6 +23,7 @@ def nice_time(row):
     return f"{minute}m{second}s"
 
 def plotaction(match_id,number=5,w=1,h=1,zoom=False):
+    #with h5py.File(spadl_h5, "r") as spadlstore:
     with pd.HDFStore(spadl_h5) as spadlstore:
         games = (
             spadlstore["games"]

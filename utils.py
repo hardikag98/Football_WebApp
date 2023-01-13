@@ -1,17 +1,20 @@
 import os
 import pandas as pd 
+import h5py
 #%%
 
 datafolder = os.getcwd() + "/data-fifa"
 spadl_h5 = os.path.join(datafolder, "spadl-statsbomb.h5")
 
 def get_comp_names():
+    #with h5py.File(spadl_h5, "r") as spadlstore:
     with pd.HDFStore(spadl_h5) as spadlstore:
         comp = spadlstore["competitions"]
     compname = comp['competition_name'].unique() 
     return (comp,compname)
 
 def get_matches(selected_comp,selected_seas):
+    #with h5py.File(spadl_h5, "r") as spadlstore:
     with pd.HDFStore(spadl_h5) as spadlstore:
         games = (
             spadlstore["games"]
