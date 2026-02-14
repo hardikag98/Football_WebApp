@@ -1,7 +1,52 @@
-.DS_Store
-.rtf
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Jupyter
 .ipynb_checkpoints/
-.ipynb
-.csv
-.cache
-.pyc
+*.ipynb
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# App cache
+.cache/
+
+# Large data files (not needed for deployment — StatsBomb data is fetched live)
+data-fifa/
+
+# Old/unused app versions
+local_vaep_app.py
+no_vaep_app.py
+prepare_vaep.py
+environment.yml

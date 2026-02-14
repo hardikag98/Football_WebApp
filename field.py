@@ -7,8 +7,8 @@ import plotly.io as pio
 
 pio.templates.default = "none"
 
-def drawfield(title="Hover over actions to see timestamp and VAEP value <br> Defence <------> Attack"):
-    fig = go.FigureWidget()
+def drawfield(title="Hover over actions to see timestamp <br> Defence <------> Attack"):
+    fig = go.Figure()
 
     # Add field
     #Full pitch outline
