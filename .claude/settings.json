@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allowedTools": [
+      "Bash(git *)",
+      "Bash(npm *)"
+    ]
+  }
+}
