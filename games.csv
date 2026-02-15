@@ -1,0 +1,1243 @@
+game_id,season_id,season_name,competition_name,home_team_name,away_team_name
+22912,4,2018/2019,Champions League,Tottenham Hotspur,Liverpool
+18245,1,2017/2018,Champions League,Real Madrid,Liverpool
+18244,2,2016/2017,Champions League,Juventus,Real Madrid
+18243,27,2015/2016,Champions League,Real Madrid,Atlético Madrid
+18242,26,2014/2015,Champions League,Juventus,Barcelona
+18241,25,2013/2014,Champions League,Real Madrid,Atlético Madrid
+18240,24,2012/2013,Champions League,Borussia Dortmund,Bayern Munich
+18237,23,2011/2012,Champions League,Bayern Munich,Chelsea
+18236,22,2010/2011,Champions League,Barcelona,Manchester United
+18235,21,2009/2010,Champions League,Bayern Munich,Inter Milan
+3750201,41,2008/2009,Champions League,Barcelona,Manchester United
+3750200,39,2006/2007,Champions League,AC Milan,Liverpool
+2302764,37,2004/2005,Champions League,AC Milan,Liverpool
+3752619,44,2003/2004,Champions League,AS Monaco,FC Porto
+3775648,90,2020/2021,FA Women's Super League,Aston Villa,Arsenal WFC
+3775609,90,2020/2021,FA Women's Super League,Arsenal WFC,West Ham United LFC
+3775633,90,2020/2021,FA Women's Super League,Aston Villa,Tottenham Hotspur Women
+3775570,90,2020/2021,FA Women's Super League,Brighton & Hove Albion WFC,Everton LFC
+3775581,90,2020/2021,FA Women's Super League,Chelsea FCW,Aston Villa
+3775579,90,2020/2021,FA Women's Super League,Reading WFC,Brighton & Hove Albion WFC
+3775544,90,2020/2021,FA Women's Super League,Aston Villa,West Ham United LFC
+3775622,90,2020/2021,FA Women's Super League,Manchester United,Tottenham Hotspur Women
+3775553,90,2020/2021,FA Women's Super League,Birmingham City WFC,West Ham United LFC
+3775584,90,2020/2021,FA Women's Super League,Arsenal WFC,Birmingham City WFC
+3775618,90,2020/2021,FA Women's Super League,Reading WFC,Birmingham City WFC
+3775641,90,2020/2021,FA Women's Super League,Aston Villa,Birmingham City WFC
+3775636,90,2020/2021,FA Women's Super League,Bristol City WFC,Birmingham City WFC
+3775653,90,2020/2021,FA Women's Super League,Birmingham City WFC,Everton LFC
+3775654,90,2020/2021,FA Women's Super League,Birmingham City WFC,Bristol City WFC
+3775643,90,2020/2021,FA Women's Super League,West Ham United LFC,Birmingham City WFC
+3764237,90,2020/2021,FA Women's Super League,Birmingham City WFC,Manchester United
+3775594,90,2020/2021,FA Women's Super League,Manchester United,Birmingham City WFC
+3775560,90,2020/2021,FA Women's Super League,Arsenal WFC,Aston Villa
+3775624,90,2020/2021,FA Women's Super League,Manchester United,Manchester City WFC
+3764240,90,2020/2021,FA Women's Super League,Bristol City WFC,Everton LFC
+3764233,90,2020/2021,FA Women's Super League,Arsenal WFC,Reading WFC
+3775585,90,2020/2021,FA Women's Super League,Brighton & Hove Albion WFC,Bristol City WFC
+3775593,90,2020/2021,FA Women's Super League,Chelsea FCW,Reading WFC
+3775602,90,2020/2021,FA Women's Super League,West Ham United LFC,Reading WFC
+3775620,90,2020/2021,FA Women's Super League,Everton LFC,West Ham United LFC
+3764232,90,2020/2021,FA Women's Super League,Manchester United,Chelsea FCW
+3775559,90,2020/2021,FA Women's Super League,Arsenal WFC,Everton LFC
+3775606,90,2020/2021,FA Women's Super League,Reading WFC,Chelsea FCW
+3775567,90,2020/2021,FA Women's Super League,Chelsea FCW,Manchester United
+3775638,90,2020/2021,FA Women's Super League,Brighton & Hove Albion WFC,Tottenham Hotspur Women
+3775607,90,2020/2021,FA Women's Super League,Bristol City WFC,Reading WFC
+3764230,90,2020/2021,FA Women's Super League,Tottenham Hotspur Women,West Ham United LFC
+3764241,90,2020/2021,FA Women's Super League,Manchester City WFC,Brighton & Hove Albion WFC
+3764235,90,2020/2021,FA Women's Super League,Chelsea FCW,Bristol City WFC
+3764239,90,2020/2021,FA Women's Super League,Everton LFC,Tottenham Hotspur Women
+3764236,90,2020/2021,FA Women's Super League,Reading WFC,Aston Villa
+3764231,90,2020/2021,FA Women's Super League,Brighton & Hove Albion WFC,Birmingham City WFC
+3764234,90,2020/2021,FA Women's Super League,Aston Villa,Manchester City WFC
+3775543,90,2020/2021,FA Women's Super League,Brighton & Hove Albion WFC,Arsenal WFC
+3775551,90,2020/2021,FA Women's Super League,Manchester United,Arsenal WFC
+3775540,90,2020/2021,FA Women's Super League,Aston Villa,Bristol City WFC
+3775550,90,2020/2021,FA Women's Super League,Everton LFC,Chelsea FCW
+3775545,90,2020/2021,FA Women's Super League,Manchester City WFC,Tottenham Hotspur Women
+3775556,90,2020/2021,FA Women's Super League,Brighton & Hove Albion WFC,Aston Villa
+3775575,90,2020/2021,FA Women's Super League,Aston Villa,Everton LFC
+3775562,90,2020/2021,FA Women's Super League,Manchester United,Brighton & Hove Albion WFC
+3775561,90,2020/2021,FA Women's Super League,West Ham United LFC,Manchester United
+3775582,90,2020/2021,FA Women's Super League,Everton LFC,Brighton & Hove Albion WFC
+3775558,90,2020/2021,FA Women's Super League,Reading WFC,Manchester United
+3775552,90,2020/2021,FA Women's Super League,Tottenham Hotspur Women,Everton LFC
+3775557,90,2020/2021,FA Women's Super League,Arsenal WFC,Brighton & Hove Albion WFC
+3775564,90,2020/2021,FA Women's Super League,Manchester City WFC,Reading WFC
+3775569,90,2020/2021,FA Women's Super League,Bristol City WFC,Arsenal WFC
+3775548,90,2020/2021,FA Women's Super League,Chelsea FCW,Arsenal WFC
+3775568,90,2020/2021,FA Women's Super League,Birmingham City WFC,Aston Villa
+3775563,90,2020/2021,FA Women's Super League,Manchester United,Everton LFC
+3775555,90,2020/2021,FA Women's Super League,Tottenham Hotspur Women,Chelsea FCW
+3775549,90,2020/2021,FA Women's Super League,Birmingham City WFC,Tottenham Hotspur Women
+3775572,90,2020/2021,FA Women's Super League,Birmingham City WFC,Chelsea FCW
+3775577,90,2020/2021,FA Women's Super League,Everton LFC,Arsenal WFC
+3775541,90,2020/2021,FA Women's Super League,Manchester United,Aston Villa
+3775588,90,2020/2021,FA Women's Super League,Tottenham Hotspur Women,Brighton & Hove Albion WFC
+3775586,90,2020/2021,FA Women's Super League,Arsenal WFC,Tottenham Hotspur Women
+3775592,90,2020/2021,FA Women's Super League,Tottenham Hotspur Women,Reading WFC
+3775580,90,2020/2021,FA Women's Super League,Brighton & Hove Albion WFC,Chelsea FCW
+3775591,90,2020/2021,FA Women's Super League,West Ham United LFC,Chelsea FCW
+3775590,90,2020/2021,FA Women's Super League,Everton LFC,Birmingham City WFC
+3775571,90,2020/2021,FA Women's Super League,Aston Villa,Reading WFC
+3775589,90,2020/2021,FA Women's Super League,Reading WFC,Arsenal WFC
+3775578,90,2020/2021,FA Women's Super League,Reading WFC,Everton LFC
+3775596,90,2020/2021,FA Women's Super League,Bristol City WFC,Manchester City WFC
+3775576,90,2020/2021,FA Women's Super League,Manchester City WFC,Chelsea FCW
+3775574,90,2020/2021,FA Women's Super League,Manchester City WFC,Birmingham City WFC
+3775573,90,2020/2021,FA Women's Super League,West Ham United LFC,Manchester City WFC
+3775597,90,2020/2021,FA Women's Super League,Arsenal WFC,Manchester United
+3775611,90,2020/2021,FA Women's Super League,Chelsea FCW,Manchester City WFC
+3775628,90,2020/2021,FA Women's Super League,Manchester United,West Ham United LFC
+3775612,90,2020/2021,FA Women's Super League,Birmingham City WFC,Reading WFC
+3775627,90,2020/2021,FA Women's Super League,Arsenal WFC,Chelsea FCW
+3775644,90,2020/2021,FA Women's Super League,Tottenham Hotspur Women,Manchester United
+3775637,90,2020/2021,FA Women's Super League,Bristol City WFC,Aston Villa
+3775631,90,2020/2021,FA Women's Super League,Bristol City WFC,Tottenham Hotspur Women
+3775621,90,2020/2021,FA Women's Super League,Reading WFC,Bristol City WFC
+3775615,90,2020/2021,FA Women's Super League,Tottenham Hotspur Women,Aston Villa
+3775610,90,2020/2021,FA Women's Super League,Manchester United,Bristol City WFC
+3775616,90,2020/2021,FA Women's Super League,Bristol City WFC,West Ham United LFC
+3775632,90,2020/2021,FA Women's Super League,Everton LFC,Manchester City WFC
+3775629,90,2020/2021,FA Women's Super League,Brighton & Hove Albion WFC,Manchester City WFC
+3775619,90,2020/2021,FA Women's Super League,Brighton & Hove Albion WFC,Reading WFC
+3775600,90,2020/2021,FA Women's Super League,Arsenal WFC,Manchester City WFC
+3775605,90,2020/2021,FA Women's Super League,Chelsea FCW,Tottenham Hotspur Women
+3775626,90,2020/2021,FA Women's Super League,Manchester City WFC,Aston Villa
+3775614,90,2020/2021,FA Women's Super League,Bristol City WFC,Chelsea FCW
+3775603,90,2020/2021,FA Women's Super League,Brighton & Hove Albion WFC,West Ham United LFC
+3775625,90,2020/2021,FA Women's Super League,Manchester City WFC,Bristol City WFC
+3775613,90,2020/2021,FA Women's Super League,Tottenham Hotspur Women,Arsenal WFC
+3775598,90,2020/2021,FA Women's Super League,Reading WFC,Tottenham Hotspur Women
+3775601,90,2020/2021,FA Women's Super League,Bristol City WFC,Manchester United
+3775630,90,2020/2021,FA Women's Super League,Birmingham City WFC,Arsenal WFC
+3775651,90,2020/2021,FA Women's Super League,Manchester City WFC,West Ham United LFC
+3775635,90,2020/2021,FA Women's Super League,West Ham United LFC,Everton LFC
+3775650,90,2020/2021,FA Women's Super League,Chelsea FCW,West Ham United LFC
+3775647,90,2020/2021,FA Women's Super League,Birmingham City WFC,Brighton & Hove Albion WFC
+3775659,90,2020/2021,FA Women's Super League,Reading WFC,Manchester City WFC
+3775657,90,2020/2021,FA Women's Super League,Arsenal WFC,Bristol City WFC
+3775649,90,2020/2021,FA Women's Super League,Reading WFC,West Ham United LFC
+3775645,90,2020/2021,FA Women's Super League,Chelsea FCW,Everton LFC
+3775639,90,2020/2021,FA Women's Super League,Manchester City WFC,Everton LFC
+3775642,90,2020/2021,FA Women's Super League,Aston Villa,Brighton & Hove Albion WFC
+3775646,90,2020/2021,FA Women's Super League,Aston Villa,Chelsea FCW
+3775655,90,2020/2021,FA Women's Super League,West Ham United LFC,Bristol City WFC
+3775640,90,2020/2021,FA Women's Super League,Manchester United,Reading WFC
+3775658,90,2020/2021,FA Women's Super League,Manchester City WFC,Manchester United
+3775623,90,2020/2021,FA Women's Super League,West Ham United LFC,Brighton & Hove Albion WFC
+3775566,90,2020/2021,FA Women's Super League,Aston Villa,Manchester United
+3775546,90,2020/2021,FA Women's Super League,Tottenham Hotspur Women,Bristol City WFC
+3775547,90,2020/2021,FA Women's Super League,Birmingham City WFC,Manchester City WFC
+3775587,90,2020/2021,FA Women's Super League,Everton LFC,Manchester United
+3775595,90,2020/2021,FA Women's Super League,Bristol City WFC,Brighton & Hove Albion WFC
+3775604,90,2020/2021,FA Women's Super League,Tottenham Hotspur Women,Manchester City WFC
+3775634,90,2020/2021,FA Women's Super League,Everton LFC,Aston Villa
+3775617,90,2020/2021,FA Women's Super League,Brighton & Hove Albion WFC,Manchester United
+3775565,90,2020/2021,FA Women's Super League,Chelsea FCW,Birmingham City WFC
+3775583,90,2020/2021,FA Women's Super League,Manchester City WFC,Arsenal WFC
+3775542,90,2020/2021,FA Women's Super League,Everton LFC,Bristol City WFC
+3775608,90,2020/2021,FA Women's Super League,West Ham United LFC,Tottenham Hotspur Women
+3775599,90,2020/2021,FA Women's Super League,West Ham United LFC,Aston Villa
+3775554,90,2020/2021,FA Women's Super League,Everton LFC,Reading WFC
+3775652,90,2020/2021,FA Women's Super League,Chelsea FCW,Brighton & Hove Albion WFC
+3764238,90,2020/2021,FA Women's Super League,West Ham United LFC,Arsenal WFC
+2275136,42,2019/2020,FA Women's Super League,Manchester City WFC,Manchester United
+2275154,42,2019/2020,FA Women's Super League,Chelsea FCW,Manchester United
+2275150,42,2019/2020,FA Women's Super League,West Ham United LFC,Manchester United
+2275146,42,2019/2020,FA Women's Super League,Manchester United,Everton LFC
+2275142,42,2019/2020,FA Women's Super League,Manchester United,Bristol City WFC
+2275137,42,2019/2020,FA Women's Super League,Manchester United,Tottenham Hotspur Women
+2275153,42,2019/2020,FA Women's Super League,Reading WFC,Manchester United
+2275151,42,2019/2020,FA Women's Super League,Brighton & Hove Albion WFC,Manchester United
+2275144,42,2019/2020,FA Women's Super League,Everton LFC,Manchester United
+2275088,42,2019/2020,FA Women's Super League,Bristol City WFC,Birmingham City WFC
+2275110,42,2019/2020,FA Women's Super League,Birmingham City WFC,Liverpool WFC
+2275044,42,2019/2020,FA Women's Super League,Arsenal WFC,Manchester City WFC
+2275105,42,2019/2020,FA Women's Super League,Manchester City WFC,Chelsea FCW
+2275063,42,2019/2020,FA Women's Super League,Chelsea FCW,Arsenal WFC
+2275054,42,2019/2020,FA Women's Super League,Brighton & Hove Albion WFC,Liverpool WFC
+2275072,42,2019/2020,FA Women's Super League,Chelsea FCW,Reading WFC
+2275085,42,2019/2020,FA Women's Super League,Tottenham Hotspur Women,Manchester City WFC
+2275113,42,2019/2020,FA Women's Super League,West Ham United LFC,Brighton & Hove Albion WFC
+2275099,42,2019/2020,FA Women's Super League,Liverpool WFC,Reading WFC
+2275057,42,2019/2020,FA Women's Super League,Chelsea FCW,West Ham United LFC
+2275075,42,2019/2020,FA Women's Super League,Reading WFC,Tottenham Hotspur Women
+2275077,42,2019/2020,FA Women's Super League,Tottenham Hotspur Women,West Ham United LFC
+2275036,42,2019/2020,FA Women's Super League,Everton LFC,Reading WFC
+2275117,42,2019/2020,FA Women's Super League,Everton LFC,Arsenal WFC
+2275092,42,2019/2020,FA Women's Super League,Birmingham City WFC,Manchester City WFC
+2275040,42,2019/2020,FA Women's Super League,Brighton & Hove Albion WFC,West Ham United LFC
+2275122,42,2019/2020,FA Women's Super League,Reading WFC,Bristol City WFC
+2275045,42,2019/2020,FA Women's Super League,Liverpool WFC,Chelsea FCW
+2275093,42,2019/2020,FA Women's Super League,Birmingham City WFC,Chelsea FCW
+2275097,42,2019/2020,FA Women's Super League,Manchester City WFC,Brighton & Hove Albion WFC
+2275084,42,2019/2020,FA Women's Super League,West Ham United LFC,Chelsea FCW
+2275089,42,2019/2020,FA Women's Super League,Arsenal WFC,Birmingham City WFC
+2275116,42,2019/2020,FA Women's Super League,Manchester City WFC,Liverpool WFC
+2275127,42,2019/2020,FA Women's Super League,Reading WFC,Everton LFC
+2275104,42,2019/2020,FA Women's Super League,Arsenal WFC,Bristol City WFC
+2275052,42,2019/2020,FA Women's Super League,Brighton & Hove Albion WFC,Chelsea FCW
+2275037,42,2019/2020,FA Women's Super League,Manchester City WFC,Arsenal WFC
+2275027,42,2019/2020,FA Women's Super League,Brighton & Hove Albion WFC,Everton LFC
+2275078,42,2019/2020,FA Women's Super League,Manchester City WFC,Everton LFC
+2275080,42,2019/2020,FA Women's Super League,Chelsea FCW,Bristol City WFC
+2275098,42,2019/2020,FA Women's Super League,Brighton & Hove Albion WFC,Arsenal WFC
+2275156,42,2019/2020,FA Women's Super League,Manchester United,Arsenal WFC
+2275139,42,2019/2020,FA Women's Super League,Tottenham Hotspur Women,Manchester United
+2275070,42,2019/2020,FA Women's Super League,Liverpool WFC,Bristol City WFC
+2275051,42,2019/2020,FA Women's Super League,Everton LFC,Brighton & Hove Albion WFC
+2275050,42,2019/2020,FA Women's Super League,Reading WFC,Birmingham City WFC
+2275029,42,2019/2020,FA Women's Super League,Bristol City WFC,Liverpool WFC
+2275090,42,2019/2020,FA Women's Super League,Arsenal WFC,Chelsea FCW
+2275042,42,2019/2020,FA Women's Super League,Manchester City WFC,West Ham United LFC
+2275157,42,2019/2020,FA Women's Super League,Manchester United,Reading WFC
+2275108,42,2019/2020,FA Women's Super League,Bristol City WFC,Chelsea FCW
+2275082,42,2019/2020,FA Women's Super League,Tottenham Hotspur Women,Arsenal WFC
+2275138,42,2019/2020,FA Women's Super League,Manchester United,Liverpool WFC
+2275049,42,2019/2020,FA Women's Super League,West Ham United LFC,Reading WFC
+2275132,42,2019/2020,FA Women's Super League,Chelsea FCW,Tottenham Hotspur Women
+2275061,42,2019/2020,FA Women's Super League,Bristol City WFC,Brighton & Hove Albion WFC
+2275096,42,2019/2020,FA Women's Super League,Arsenal WFC,West Ham United LFC
+2275033,42,2019/2020,FA Women's Super League,Bristol City WFC,Tottenham Hotspur Women
+2275107,42,2019/2020,FA Women's Super League,Reading WFC,Manchester City WFC
+2275130,42,2019/2020,FA Women's Super League,Chelsea FCW,Manchester City WFC
+2275034,42,2019/2020,FA Women's Super League,Tottenham Hotspur Women,Liverpool WFC
+2275026,42,2019/2020,FA Women's Super League,Bristol City WFC,Manchester City WFC
+2275041,42,2019/2020,FA Women's Super League,Everton LFC,Bristol City WFC
+2275094,42,2019/2020,FA Women's Super League,West Ham United LFC,Birmingham City WFC
+2275106,42,2019/2020,FA Women's Super League,Manchester City WFC,Bristol City WFC
+2275073,42,2019/2020,FA Women's Super League,Tottenham Hotspur Women,Everton LFC
+2275038,42,2019/2020,FA Women's Super League,Reading WFC,West Ham United LFC
+2275131,42,2019/2020,FA Women's Super League,Everton LFC,Manchester City WFC
+2275062,42,2019/2020,FA Women's Super League,Liverpool WFC,Arsenal WFC
+2275048,42,2019/2020,FA Women's Super League,West Ham United LFC,Tottenham Hotspur Women
+2275121,42,2019/2020,FA Women's Super League,Arsenal WFC,Brighton & Hove Albion WFC
+2275065,42,2019/2020,FA Women's Super League,Brighton & Hove Albion WFC,Birmingham City WFC
+2275079,42,2019/2020,FA Women's Super League,Arsenal WFC,Liverpool WFC
+2275103,42,2019/2020,FA Women's Super League,Liverpool WFC,West Ham United LFC
+2275140,42,2019/2020,FA Women's Super League,Manchester United,Brighton & Hove Albion WFC
+2275126,42,2019/2020,FA Women's Super League,Everton LFC,Tottenham Hotspur Women
+2275102,42,2019/2020,FA Women's Super League,Brighton & Hove Albion WFC,Reading WFC
+2275109,42,2019/2020,FA Women's Super League,Birmingham City WFC,Tottenham Hotspur Women
+2275091,42,2019/2020,FA Women's Super League,Tottenham Hotspur Women,Brighton & Hove Albion WFC
+2275030,42,2019/2020,FA Women's Super League,Brighton & Hove Albion WFC,Tottenham Hotspur Women
+2275133,42,2019/2020,FA Women's Super League,West Ham United LFC,Liverpool WFC
+2275083,42,2019/2020,FA Women's Super League,Birmingham City WFC,Bristol City WFC
+2275120,42,2019/2020,FA Women's Super League,Birmingham City WFC,Everton LFC
+2275028,42,2019/2020,FA Women's Super League,Manchester City WFC,Birmingham City WFC
+2275086,42,2019/2020,FA Women's Super League,Reading WFC,Arsenal WFC
+2275056,42,2019/2020,FA Women's Super League,Liverpool WFC,Everton LFC
+2275074,42,2019/2020,FA Women's Super League,Chelsea FCW,Birmingham City WFC
+7298,4,2018/2019,FA Women's Super League,Manchester City WFC,Chelsea FCW
+19778,4,2018/2019,FA Women's Super League,Manchester City WFC,Birmingham City WFC
+19771,4,2018/2019,FA Women's Super League,Birmingham City WFC,Yeovil Town LFC
+19736,4,2018/2019,FA Women's Super League,Chelsea FCW,Arsenal WFC
+19745,4,2018/2019,FA Women's Super League,Brighton & Hove Albion WFC,Yeovil Town LFC
+19772,4,2018/2019,FA Women's Super League,Chelsea FCW,Reading WFC
+19730,4,2018/2019,FA Women's Super League,Chelsea FCW,Brighton & Hove Albion WFC
+19794,4,2018/2019,FA Women's Super League,Chelsea FCW,Bristol City WFC
+19820,4,2018/2019,FA Women's Super League,Reading WFC,Chelsea FCW
+19766,4,2018/2019,FA Women's Super League,Arsenal WFC,Brighton & Hove Albion WFC
+19734,4,2018/2019,FA Women's Super League,Everton LFC,Brighton & Hove Albion WFC
+19717,4,2018/2019,FA Women's Super League,Arsenal WFC,Liverpool WFC
+19718,4,2018/2019,FA Women's Super League,Birmingham City WFC,Everton LFC
+19810,4,2018/2019,FA Women's Super League,Liverpool WFC,Bristol City WFC
+19743,4,2018/2019,FA Women's Super League,Birmingham City WFC,Chelsea FCW
+19740,4,2018/2019,FA Women's Super League,West Ham United LFC,Liverpool WFC
+19716,4,2018/2019,FA Women's Super League,Reading WFC,Yeovil Town LFC
+19800,4,2018/2019,FA Women's Super League,Arsenal WFC,Bristol City WFC
+19739,4,2018/2019,FA Women's Super League,Brighton & Hove Albion WFC,Manchester City WFC
+19748,4,2018/2019,FA Women's Super League,Chelsea FCW,Liverpool WFC
+19822,4,2018/2019,FA Women's Super League,Yeovil Town LFC,Birmingham City WFC
+19785,4,2018/2019,FA Women's Super League,Arsenal WFC,Chelsea FCW
+19749,4,2018/2019,FA Women's Super League,Arsenal WFC,Birmingham City WFC
+19751,4,2018/2019,FA Women's Super League,West Ham United LFC,Chelsea FCW
+19764,4,2018/2019,FA Women's Super League,Yeovil Town LFC,Manchester City WFC
+19773,4,2018/2019,FA Women's Super League,Everton LFC,Liverpool WFC
+19783,4,2018/2019,FA Women's Super League,Chelsea FCW,Everton LFC
+19747,4,2018/2019,FA Women's Super League,Manchester City WFC,Reading WFC
+19769,4,2018/2019,FA Women's Super League,Brighton & Hove Albion WFC,West Ham United LFC
+19770,4,2018/2019,FA Women's Super League,Manchester City WFC,Arsenal WFC
+19757,4,2018/2019,FA Women's Super League,Bristol City WFC,Brighton & Hove Albion WFC
+19742,4,2018/2019,FA Women's Super League,Yeovil Town LFC,Bristol City WFC
+19777,4,2018/2019,FA Women's Super League,Yeovil Town LFC,West Ham United LFC
+19758,4,2018/2019,FA Women's Super League,Yeovil Town LFC,Reading WFC
+19802,4,2018/2019,FA Women's Super League,Yeovil Town LFC,Brighton & Hove Albion WFC
+19803,4,2018/2019,FA Women's Super League,West Ham United LFC,Everton LFC
+19746,4,2018/2019,FA Women's Super League,Everton LFC,West Ham United LFC
+19811,4,2018/2019,FA Women's Super League,Arsenal WFC,Everton LFC
+19805,4,2018/2019,FA Women's Super League,Chelsea FCW,West Ham United LFC
+19752,4,2018/2019,FA Women's Super League,Liverpool WFC,Manchester City WFC
+19775,4,2018/2019,FA Women's Super League,Reading WFC,Liverpool WFC
+19760,4,2018/2019,FA Women's Super League,Chelsea FCW,Yeovil Town LFC
+19787,4,2018/2019,FA Women's Super League,Birmingham City WFC,Bristol City WFC
+19733,4,2018/2019,FA Women's Super League,Birmingham City WFC,Manchester City WFC
+19765,4,2018/2019,FA Women's Super League,Liverpool WFC,Birmingham City WFC
+19792,4,2018/2019,FA Women's Super League,Bristol City WFC,Yeovil Town LFC
+19732,4,2018/2019,FA Women's Super League,Liverpool WFC,Reading WFC
+19744,4,2018/2019,FA Women's Super League,Bristol City WFC,Arsenal WFC
+19799,4,2018/2019,FA Women's Super League,Liverpool WFC,Chelsea FCW
+19753,4,2018/2019,FA Women's Super League,Reading WFC,Bristol City WFC
+19735,4,2018/2019,FA Women's Super League,Manchester City WFC,West Ham United LFC
+19720,4,2018/2019,FA Women's Super League,Bristol City WFC,Chelsea FCW
+19719,4,2018/2019,FA Women's Super League,West Ham United LFC,Reading WFC
+19715,4,2018/2019,FA Women's Super League,Brighton & Hove Albion WFC,Bristol City WFC
+19723,4,2018/2019,FA Women's Super League,Everton LFC,Manchester City WFC
+19722,4,2018/2019,FA Women's Super League,Yeovil Town LFC,Arsenal WFC
+19727,4,2018/2019,FA Women's Super League,Reading WFC,Birmingham City WFC
+19731,4,2018/2019,FA Women's Super League,West Ham United LFC,Yeovil Town LFC
+19714,4,2018/2019,FA Women's Super League,Chelsea FCW,Manchester City WFC
+19728,4,2018/2019,FA Women's Super League,Manchester City WFC,Bristol City WFC
+19726,4,2018/2019,FA Women's Super League,Everton LFC,Chelsea FCW
+19725,4,2018/2019,FA Women's Super League,Brighton & Hove Albion WFC,Liverpool WFC
+19738,4,2018/2019,FA Women's Super League,Bristol City WFC,Birmingham City WFC
+19759,4,2018/2019,FA Women's Super League,Everton LFC,Arsenal WFC
+19750,4,2018/2019,FA Women's Super League,Yeovil Town LFC,Everton LFC
+19761,4,2018/2019,FA Women's Super League,Bristol City WFC,Liverpool WFC
+19762,4,2018/2019,FA Women's Super League,Brighton & Hove Albion WFC,Reading WFC
+19763,4,2018/2019,FA Women's Super League,Birmingham City WFC,West Ham United LFC
+19768,4,2018/2019,FA Women's Super League,West Ham United LFC,Bristol City WFC
+19767,4,2018/2019,FA Women's Super League,Reading WFC,Everton LFC
+19776,4,2018/2019,FA Women's Super League,Brighton & Hove Albion WFC,Chelsea FCW
+19737,4,2018/2019,FA Women's Super League,Liverpool WFC,Yeovil Town LFC
+19790,4,2018/2019,FA Women's Super League,Manchester City WFC,Brighton & Hove Albion WFC
+19793,4,2018/2019,FA Women's Super League,Liverpool WFC,West Ham United LFC
+19789,4,2018/2019,FA Women's Super League,Chelsea FCW,Birmingham City WFC
+19791,4,2018/2019,FA Women's Super League,Reading WFC,Arsenal WFC
+19795,4,2018/2019,FA Women's Super League,Reading WFC,West Ham United LFC
+19797,4,2018/2019,FA Women's Super League,Arsenal WFC,Yeovil Town LFC
+19780,4,2018/2019,FA Women's Super League,Liverpool WFC,Brighton & Hove Albion WFC
+19781,4,2018/2019,FA Women's Super League,West Ham United LFC,Arsenal WFC
+19779,4,2018/2019,FA Women's Super League,Bristol City WFC,Manchester City WFC
+19798,4,2018/2019,FA Women's Super League,Manchester City WFC,Everton LFC
+19782,4,2018/2019,FA Women's Super League,Birmingham City WFC,Reading WFC
+19784,4,2018/2019,FA Women's Super League,Brighton & Hove Albion WFC,Everton LFC
+19786,4,2018/2019,FA Women's Super League,West Ham United LFC,Manchester City WFC
+19774,4,2018/2019,FA Women's Super League,Everton LFC,Bristol City WFC
+19755,4,2018/2019,FA Women's Super League,Manchester City WFC,Chelsea FCW
+19806,4,2018/2019,FA Women's Super League,Bristol City WFC,Reading WFC
+19807,4,2018/2019,FA Women's Super League,Manchester City WFC,Liverpool WFC
+19788,4,2018/2019,FA Women's Super League,Yeovil Town LFC,Liverpool WFC
+19808,4,2018/2019,FA Women's Super League,Everton LFC,Yeovil Town LFC
+19804,4,2018/2019,FA Women's Super League,Birmingham City WFC,Arsenal WFC
+19813,4,2018/2019,FA Women's Super League,West Ham United LFC,Birmingham City WFC
+19816,4,2018/2019,FA Women's Super League,Birmingham City WFC,Liverpool WFC
+19809,4,2018/2019,FA Women's Super League,Reading WFC,Brighton & Hove Albion WFC
+19815,4,2018/2019,FA Women's Super League,Brighton & Hove Albion WFC,Arsenal WFC
+19817,4,2018/2019,FA Women's Super League,Everton LFC,Reading WFC
+19818,4,2018/2019,FA Women's Super League,Manchester City WFC,Yeovil Town LFC
+19819,4,2018/2019,FA Women's Super League,West Ham United LFC,Brighton & Hove Albion WFC
+19821,4,2018/2019,FA Women's Super League,Arsenal WFC,Manchester City WFC
+19801,4,2018/2019,FA Women's Super League,Reading WFC,Manchester City WFC
+19741,4,2018/2019,FA Women's Super League,Arsenal WFC,Reading WFC
+19756,4,2018/2019,FA Women's Super League,Everton LFC,Birmingham City WFC
+19754,4,2018/2019,FA Women's Super League,Liverpool WFC,Arsenal WFC
+19724,4,2018/2019,FA Women's Super League,Arsenal WFC,West Ham United LFC
+19814,4,2018/2019,FA Women's Super League,Bristol City WFC,West Ham United LFC
+19729,4,2018/2019,FA Women's Super League,Bristol City WFC,Everton LFC
+19796,4,2018/2019,FA Women's Super League,Brighton & Hove Albion WFC,Birmingham City WFC
+7548,3,2018,FIFA World Cup,Brazil,Costa Rica
+7578,3,2018,FIFA World Cup,Egypt,Uruguay
+7553,3,2018,FIFA World Cup,South Korea,Mexico
+7544,3,2018,FIFA World Cup,Uruguay,Saudi Arabia
+7536,3,2018,FIFA World Cup,Belgium,Panama
+7555,3,2018,FIFA World Cup,Poland,Colombia
+7546,3,2018,FIFA World Cup,France,Peru
+7539,3,2018,FIFA World Cup,Poland,Senegal
+7538,3,2018,FIFA World Cup,Sweden,South Korea
+7576,3,2018,FIFA World Cup,Portugal,Spain
+7565,3,2018,FIFA World Cup,Serbia,Brazil
+7551,3,2018,FIFA World Cup,Germany,Sweden
+7550,3,2018,FIFA World Cup,Serbia,Switzerland
+7537,3,2018,FIFA World Cup,Tunisia,England
+7580,3,2018,FIFA World Cup,France,Argentina
+8650,3,2018,FIFA World Cup,Brazil,Belgium
+7581,3,2018,FIFA World Cup,Croatia,Denmark
+7549,3,2018,FIFA World Cup,Nigeria,Iceland
+7529,3,2018,FIFA World Cup,Croatia,Nigeria
+7534,3,2018,FIFA World Cup,Germany,Mexico
+7562,3,2018,FIFA World Cup,Australia,Peru
+7571,3,2018,FIFA World Cup,Senegal,Colombia
+7569,3,2018,FIFA World Cup,Panama,Tunisia
+7568,3,2018,FIFA World Cup,Switzerland,Costa Rica
+7530,3,2018,FIFA World Cup,France,Australia
+7558,3,2018,FIFA World Cup,Uruguay,Russia
+7583,3,2018,FIFA World Cup,Brazil,Mexico
+7547,3,2018,FIFA World Cup,Denmark,Australia
+7535,3,2018,FIFA World Cup,Costa Rica,Serbia
+7584,3,2018,FIFA World Cup,Belgium,Japan
+7545,3,2018,FIFA World Cup,Argentina,Croatia
+8649,3,2018,FIFA World Cup,Uruguay,France
+8658,3,2018,FIFA World Cup,France,Croatia
+7561,3,2018,FIFA World Cup,Iceland,Croatia
+7531,3,2018,FIFA World Cup,Argentina,Iceland
+7582,3,2018,FIFA World Cup,Spain,Russia
+7552,3,2018,FIFA World Cup,Belgium,Tunisia
+7532,3,2018,FIFA World Cup,Peru,Denmark
+7560,3,2018,FIFA World Cup,Spain,Morocco
+7533,3,2018,FIFA World Cup,Brazil,Switzerland
+7564,3,2018,FIFA World Cup,Nigeria,Argentina
+7579,3,2018,FIFA World Cup,Uruguay,Portugal
+7572,3,2018,FIFA World Cup,Japan,Poland
+7577,3,2018,FIFA World Cup,Morocco,Iran
+7543,3,2018,FIFA World Cup,Iran,Spain
+7525,3,2018,FIFA World Cup,Russia,Saudi Arabia
+7542,3,2018,FIFA World Cup,Portugal,Morocco
+7566,3,2018,FIFA World Cup,Mexico,Sweden
+7557,3,2018,FIFA World Cup,Iran,Portugal
+7554,3,2018,FIFA World Cup,England,Panama
+7570,3,2018,FIFA World Cup,England,Belgium
+7585,3,2018,FIFA World Cup,Colombia,England
+7586,3,2018,FIFA World Cup,Sweden,Switzerland
+8656,3,2018,FIFA World Cup,Croatia,England
+8651,3,2018,FIFA World Cup,Sweden,England
+7567,3,2018,FIFA World Cup,South Korea,Germany
+7541,3,2018,FIFA World Cup,Colombia,Japan
+8655,3,2018,FIFA World Cup,France,Belgium
+8657,3,2018,FIFA World Cup,Belgium,England
+7540,3,2018,FIFA World Cup,Russia,Egypt
+8652,3,2018,FIFA World Cup,Russia,Croatia
+7563,3,2018,FIFA World Cup,Denmark,France
+7556,3,2018,FIFA World Cup,Japan,Senegal
+7559,3,2018,FIFA World Cup,Saudi Arabia,Egypt
+3827767,108,2021/2022,Indian Super league,Hyderabad,Kerala Blasters
+3827335,108,2021/2022,Indian Super league,Kerala Blasters,Jamshedpur
+3827336,108,2021/2022,Indian Super league,ATK Mohun Bagan,Hyderabad
+3827338,108,2021/2022,Indian Super league,Hyderabad,ATK Mohun Bagan
+3827337,108,2021/2022,Indian Super league,Jamshedpur,Kerala Blasters
+3817856,108,2021/2022,Indian Super league,ATK Mohun Bagan,Jamshedpur
+3817891,108,2021/2022,Indian Super league,East Bengal,Bengaluru
+3817870,108,2021/2022,Indian Super league,Goa,Kerala Blasters
+3817899,108,2021/2022,Indian Super league,Jamshedpur,Odisha
+3817866,108,2021/2022,Indian Super league,Kerala Blasters,Mumbai City
+3817889,108,2021/2022,Indian Super league,Chennaiyin,ATK Mohun Bagan
+3817887,108,2021/2022,Indian Super league,Hyderabad,Mumbai City
+3817872,108,2021/2022,Indian Super league,Bengaluru,Odisha
+3817900,108,2021/2022,Indian Super league,Chennaiyin,Jamshedpur
+3817855,108,2021/2022,Indian Super league,Kerala Blasters,ATK Mohun Bagan
+3817863,108,2021/2022,Indian Super league,Hyderabad,Goa
+3817877,108,2021/2022,Indian Super league,NorthEast United,Bengaluru
+3817901,108,2021/2022,Indian Super league,Jamshedpur,Mumbai City
+3817880,108,2021/2022,Indian Super league,Odisha,Chennaiyin
+3817902,108,2021/2022,Indian Super league,Kerala Blasters,East Bengal
+3817862,108,2021/2022,Indian Super league,Mumbai City,Odisha
+3817873,108,2021/2022,Indian Super league,ATK Mohun Bagan,NorthEast United
+3817869,108,2021/2022,Indian Super league,Bengaluru,Hyderabad
+3817881,108,2021/2022,Indian Super league,Jamshedpur,Kerala Blasters
+3817895,108,2021/2022,Indian Super league,Chennaiyin,Goa
+3817884,108,2021/2022,Indian Super league,Hyderabad,ATK Mohun Bagan
+3817896,108,2021/2022,Indian Super league,East Bengal,Odisha
+3817852,108,2021/2022,Indian Super league,Chennaiyin,Mumbai City
+3817883,108,2021/2022,Indian Super league,Bengaluru,Jamshedpur
+3817886,108,2021/2022,Indian Super league,Kerala Blasters,NorthEast United
+3817864,108,2021/2022,Indian Super league,Mumbai City,ATK Mohun Bagan
+3817882,108,2021/2022,Indian Super league,East Bengal,Chennaiyin
+3817894,108,2021/2022,Indian Super league,Goa,Odisha
+3817871,108,2021/2022,Indian Super league,NorthEast United,Hyderabad
+3817861,108,2021/2022,Indian Super league,Kerala Blasters,Bengaluru
+3817888,108,2021/2022,Indian Super league,ATK Mohun Bagan,East Bengal
+3817875,108,2021/2022,Indian Super league,Jamshedpur,Goa
+3817868,108,2021/2022,Indian Super league,Bengaluru,Chennaiyin
+3817867,108,2021/2022,Indian Super league,Mumbai City,NorthEast United
+3813313,108,2021/2022,Indian Super league,ATK Mohun Bagan,Odisha
+3817890,108,2021/2022,Indian Super league,Goa,NorthEast United
+3813302,108,2021/2022,Indian Super league,Jamshedpur,NorthEast United
+3817857,108,2021/2022,Indian Super league,Hyderabad,Jamshedpur
+3817898,108,2021/2022,Indian Super league,Goa,Mumbai City
+3817893,108,2021/2022,Indian Super league,East Bengal,NorthEast United
+3817854,108,2021/2022,Indian Super league,ATK Mohun Bagan,Bengaluru
+3817892,108,2021/2022,Indian Super league,Odisha,ATK Mohun Bagan
+3817859,108,2021/2022,Indian Super league,NorthEast United,Jamshedpur
+3817858,108,2021/2022,Indian Super league,Kerala Blasters,Chennaiyin
+3817897,108,2021/2022,Indian Super league,Hyderabad,Kerala Blasters
+3817885,108,2021/2022,Indian Super league,Mumbai City,East Bengal
+3817878,108,2021/2022,Indian Super league,East Bengal,Hyderabad
+3817876,108,2021/2022,Indian Super league,Chennaiyin,NorthEast United
+3813305,108,2021/2022,Indian Super league,Kerala Blasters,Hyderabad
+3813266,108,2021/2022,Indian Super league,Goa,Chennaiyin
+3813271,108,2021/2022,Indian Super league,Kerala Blasters,Goa
+3813311,108,2021/2022,Indian Super league,Jamshedpur,Chennaiyin
+3813303,108,2021/2022,Indian Super league,ATK Mohun Bagan,Goa
+3813304,108,2021/2022,Indian Super league,Hyderabad,East Bengal
+3813306,108,2021/2022,Indian Super league,NorthEast United,ATK Mohun Bagan
+3813283,108,2021/2022,Indian Super league,Chennaiyin,Bengaluru
+3813275,108,2021/2022,Indian Super league,Kerala Blasters,Jamshedpur
+3813278,108,2021/2022,Indian Super league,Chennaiyin,Kerala Blasters
+3813295,108,2021/2022,Indian Super league,Hyderabad,Odisha
+3813296,108,2021/2022,Indian Super league,NorthEast United,Kerala Blasters
+3813282,108,2021/2022,Indian Super league,Mumbai City,Kerala Blasters
+3813269,108,2021/2022,Indian Super league,Odisha,Jamshedpur
+3817879,108,2021/2022,Indian Super league,Chennaiyin,Hyderabad
+3817874,108,2021/2022,Indian Super league,Bengaluru,Goa
+3817865,108,2021/2022,Indian Super league,NorthEast United,Odisha
+3817860,108,2021/2022,Indian Super league,Odisha,Hyderabad
+3817853,108,2021/2022,Indian Super league,Goa,East Bengal
+3817851,108,2021/2022,Indian Super league,Odisha,Kerala Blasters
+3817850,108,2021/2022,Indian Super league,Jamshedpur,East Bengal
+3817849,108,2021/2022,Indian Super league,Mumbai City,Bengaluru
+3817848,108,2021/2022,Indian Super league,Goa,ATK Mohun Bagan
+3813318,108,2021/2022,Indian Super league,NorthEast United,Mumbai City
+3813287,108,2021/2022,Indian Super league,Bengaluru,ATK Mohun Bagan
+3813270,108,2021/2022,Indian Super league,Mumbai City,Goa
+3813307,108,2021/2022,Indian Super league,Jamshedpur,Bengaluru
+3813279,108,2021/2022,Indian Super league,Chennaiyin,Odisha
+3813281,108,2021/2022,Indian Super league,ATK Mohun Bagan,Chennaiyin
+3813274,108,2021/2022,Indian Super league,Bengaluru,Mumbai City
+3813285,108,2021/2022,Indian Super league,Goa,Bengaluru
+3813317,108,2021/2022,Indian Super league,Odisha,East Bengal
+3813316,108,2021/2022,Indian Super league,NorthEast United,Goa
+3813315,108,2021/2022,Indian Super league,Goa,Jamshedpur
+3813314,108,2021/2022,Indian Super league,ATK Mohun Bagan,Kerala Blasters
+3813312,108,2021/2022,Indian Super league,ATK Mohun Bagan,Mumbai City
+3813310,108,2021/2022,Indian Super league,East Bengal,Kerala Blasters
+3813309,108,2021/2022,Indian Super league,Hyderabad,Chennaiyin
+3813308,108,2021/2022,Indian Super league,Odisha,Goa
+3813301,108,2021/2022,Indian Super league,Odisha,NorthEast United
+3813300,108,2021/2022,Indian Super league,Kerala Blasters,Odisha
+3813299,108,2021/2022,Indian Super league,Hyderabad,Bengaluru
+3813298,108,2021/2022,Indian Super league,East Bengal,Jamshedpur
+3813297,108,2021/2022,Indian Super league,Bengaluru,NorthEast United
+3813294,108,2021/2022,Indian Super league,NorthEast United,Chennaiyin
+3813293,108,2021/2022,Indian Super league,Bengaluru,East Bengal
+3813292,108,2021/2022,Indian Super league,Bengaluru,Kerala Blasters
+3813291,108,2021/2022,Indian Super league,East Bengal,ATK Mohun Bagan
+3813290,108,2021/2022,Indian Super league,Hyderabad,NorthEast United
+3813289,108,2021/2022,Indian Super league,Odisha,Bengaluru
+3813288,108,2021/2022,Indian Super league,Jamshedpur,Hyderabad
+3813286,108,2021/2022,Indian Super league,Mumbai City,Chennaiyin
+3813284,108,2021/2022,Indian Super league,Mumbai City,Jamshedpur
+3813280,108,2021/2022,Indian Super league,Chennaiyin,East Bengal
+3813277,108,2021/2022,Indian Super league,Mumbai City,Hyderabad
+3813276,108,2021/2022,Indian Super league,NorthEast United,East Bengal
+3813273,108,2021/2022,Indian Super league,Odisha,Mumbai City
+3813272,108,2021/2022,Indian Super league,Goa,Hyderabad
+3813268,108,2021/2022,Indian Super league,Jamshedpur,ATK Mohun Bagan
+3813267,108,2021/2022,Indian Super league,East Bengal,Goa
+3813265,108,2021/2022,Indian Super league,East Bengal,Mumbai City
+3813264,108,2021/2022,Indian Super league,ATK Mohun Bagan,Hyderabad
+3773631,90,2020/2021,La Liga,Real Betis,Barcelona
+3773665,90,2020/2021,La Liga,Osasuna,Barcelona
+3773497,90,2020/2021,La Liga,Real Madrid,Barcelona
+3773660,90,2020/2021,La Liga,Barcelona,Levante
+3773593,90,2020/2021,La Liga,Barcelona,Villarreal
+3773466,90,2020/2021,La Liga,Celta Vigo,Barcelona
+3773585,90,2020/2021,La Liga,Barcelona,Real Madrid
+3773552,90,2020/2021,La Liga,Huesca,Barcelona
+3773672,90,2020/2021,La Liga,Barcelona,Sevilla
+3773386,90,2020/2021,La Liga,Deportivo Alavés,Barcelona
+3773565,90,2020/2021,La Liga,Granada,Barcelona
+3773587,90,2020/2021,La Liga,Getafe,Barcelona
+3773656,90,2020/2021,La Liga,Atlético Madrid,Barcelona
+3773377,90,2020/2021,La Liga,Barcelona,Valencia
+3773457,90,2020/2021,La Liga,Barcelona,Celta Vigo
+3773586,90,2020/2021,La Liga,Barcelona,Granada
+3773372,90,2020/2021,La Liga,Barcelona,Atlético Madrid
+3773387,90,2020/2021,La Liga,Levante,Barcelona
+3773695,90,2020/2021,La Liga,Valencia,Barcelona
+3773369,90,2020/2021,La Liga,Barcelona,Huesca
+3773661,90,2020/2021,La Liga,Barcelona,Getafe
+3773597,90,2020/2021,La Liga,Real Sociedad,Barcelona
+3773523,90,2020/2021,La Liga,Barcelona,Real Sociedad
+3773571,90,2020/2021,La Liga,Real Valladolid,Barcelona
+3773428,90,2020/2021,La Liga,Cádiz,Barcelona
+3764661,90,2020/2021,La Liga,Athletic Club,Barcelona
+3773526,90,2020/2021,La Liga,Barcelona,Deportivo Alavés
+3773474,90,2020/2021,La Liga,Barcelona,Real Valladolid
+3773625,90,2020/2021,La Liga,Sevilla,Barcelona
+3773403,90,2020/2021,La Liga,Barcelona,Athletic Club
+3773547,90,2020/2021,La Liga,Barcelona,Osasuna
+3773415,90,2020/2021,La Liga,Barcelona,Cádiz
+3764440,90,2020/2021,La Liga,Barcelona,Elche
+3773689,90,2020/2021,La Liga,Villarreal,Barcelona
+3773477,90,2020/2021,La Liga,Barcelona,Real Betis
+303731,42,2019/2020,La Liga,Barcelona,Eibar
+303532,42,2019/2020,La Liga,Barcelona,Leganés
+303516,42,2019/2020,La Liga,Celta Vigo,Barcelona
+303596,42,2019/2020,La Liga,Barcelona,Real Madrid
+303430,42,2019/2020,La Liga,Barcelona,Villarreal
+303725,42,2019/2020,La Liga,Villarreal,Barcelona
+303504,42,2019/2020,La Liga,Levante,Barcelona
+303451,42,2019/2020,La Liga,Barcelona,Mallorca
+303664,42,2019/2020,La Liga,Real Sociedad,Barcelona
+303682,42,2019/2020,La Liga,Barcelona,Levante
+303400,42,2019/2020,La Liga,Valencia,Barcelona
+303634,42,2019/2020,La Liga,Barcelona,Osasuna
+303421,42,2019/2020,La Liga,Deportivo Alavés,Barcelona
+303493,42,2019/2020,La Liga,Barcelona,Athletic Club
+303680,42,2019/2020,La Liga,Real Valladolid,Barcelona
+303479,42,2019/2020,La Liga,Barcelona,Real Sociedad
+303615,42,2019/2020,La Liga,Barcelona,Espanyol
+303696,42,2019/2020,La Liga,Barcelona,Atlético Madrid
+303487,42,2019/2020,La Liga,Barcelona,Celta Vigo
+303600,42,2019/2020,La Liga,Barcelona,Real Valladolid
+303548,42,2019/2020,La Liga,Mallorca,Barcelona
+303652,42,2019/2020,La Liga,Espanyol,Barcelona
+303674,42,2019/2020,La Liga,Sevilla,Barcelona
+303470,42,2019/2020,La Liga,Real Madrid,Barcelona
+303700,42,2019/2020,La Liga,Eibar,Barcelona
+303707,42,2019/2020,La Liga,Real Betis,Barcelona
+303666,42,2019/2020,La Liga,Granada,Barcelona
+303715,42,2019/2020,La Liga,Leganés,Barcelona
+303377,42,2019/2020,La Liga,Barcelona,Getafe
+303524,42,2019/2020,La Liga,Atlético Madrid,Barcelona
+303517,42,2019/2020,La Liga,Barcelona,Deportivo Alavés
+303610,42,2019/2020,La Liga,Barcelona,Granada
+303473,42,2019/2020,La Liga,Barcelona,Sevilla
+15998,4,2018/2019,La Liga,Leganés,Barcelona
+16029,4,2018/2019,La Liga,Barcelona,Sevilla
+16073,4,2018/2019,La Liga,Atlético Madrid,Barcelona
+16086,4,2018/2019,La Liga,Espanyol,Barcelona
+16190,4,2018/2019,La Liga,Sevilla,Barcelona
+16109,4,2018/2019,La Liga,Barcelona,Celta Vigo
+16120,4,2018/2019,La Liga,Getafe,Barcelona
+16182,4,2018/2019,La Liga,Barcelona,Real Valladolid
+16215,4,2018/2019,La Liga,Real Betis,Barcelona
+16173,4,2018/2019,La Liga,Athletic Club,Barcelona
+16265,4,2018/2019,La Liga,Barcelona,Real Sociedad
+15946,4,2018/2019,La Liga,Barcelona,Deportivo Alavés
+16157,4,2018/2019,La Liga,Barcelona,Valencia
+16136,4,2018/2019,La Liga,Barcelona,Leganés
+16248,4,2018/2019,La Liga,Barcelona,Atlético Madrid
+16056,4,2018/2019,La Liga,Barcelona,Real Betis
+16289,4,2018/2019,La Liga,Barcelona,Levante
+16079,4,2018/2019,La Liga,Barcelona,Villarreal
+16149,4,2018/2019,La Liga,Girona,Barcelona
+16275,4,2018/2019,La Liga,Deportivo Alavés,Barcelona
+15973,4,2018/2019,La Liga,Barcelona,Huesca
+16317,4,2018/2019,La Liga,Eibar,Barcelona
+16131,4,2018/2019,La Liga,Barcelona,Eibar
+16205,4,2018/2019,La Liga,Barcelona,Rayo Vallecano
+16095,4,2018/2019,La Liga,Levante,Barcelona
+16306,4,2018/2019,La Liga,Barcelona,Getafe
+16010,4,2018/2019,La Liga,Barcelona,Athletic Club
+15986,4,2018/2019,La Liga,Barcelona,Girona
+16240,4,2018/2019,La Liga,Villarreal,Barcelona
+15978,4,2018/2019,La Liga,Real Sociedad,Barcelona
+16023,4,2018/2019,La Liga,Valencia,Barcelona
+16196,4,2018/2019,La Liga,Real Madrid,Barcelona
+15956,4,2018/2019,La Liga,Real Valladolid,Barcelona
+16231,4,2018/2019,La Liga,Barcelona,Espanyol
+9855,1,2017/2018,La Liga,Barcelona,Athletic Club
+9827,1,2017/2018,La Liga,Las Palmas,Barcelona
+9799,1,2017/2018,La Liga,Eibar,Barcelona
+9636,1,2017/2018,La Liga,Barcelona,Las Palmas
+9609,1,2017/2018,La Liga,Barcelona,Eibar
+9575,1,2017/2018,La Liga,Barcelona,Real Betis
+9928,1,2017/2018,La Liga,Barcelona,Villarreal
+9736,1,2017/2018,La Liga,Real Madrid,Barcelona
+9742,1,2017/2018,La Liga,Barcelona,Levante
+9765,1,2017/2018,La Liga,Real Betis,Barcelona
+9880,1,2017/2018,La Liga,Barcelona,Valencia
+9924,1,2017/2018,La Liga,Barcelona,Real Madrid
+9661,1,2017/2018,La Liga,Athletic Club,Barcelona
+9592,1,2017/2018,La Liga,Barcelona,Espanyol
+9870,1,2017/2018,La Liga,Barcelona,Leganés
+9783,1,2017/2018,La Liga,Espanyol,Barcelona
+9700,1,2017/2018,La Liga,Barcelona,Celta Vigo
+9860,1,2017/2018,La Liga,Sevilla,Barcelona
+9695,1,2017/2018,La Liga,Valencia,Barcelona
+9794,1,2017/2018,La Liga,Barcelona,Getafe
+9717,1,2017/2018,La Liga,Villarreal,Barcelona
+9673,1,2017/2018,La Liga,Barcelona,Sevilla
+9650,1,2017/2018,La Liga,Barcelona,Málaga
+9620,1,2017/2018,La Liga,Girona,Barcelona
+9837,1,2017/2018,La Liga,Barcelona,Atlético Madrid
+9912,1,2017/2018,La Liga,Deportivo La Coruna,Barcelona
+9811,1,2017/2018,La Liga,Barcelona,Girona
+9642,1,2017/2018,La Liga,Atlético Madrid,Barcelona
+9774,1,2017/2018,La Liga,Barcelona,Deportivo Alavés
+9602,1,2017/2018,La Liga,Getafe,Barcelona
+9948,1,2017/2018,La Liga,Barcelona,Real Sociedad
+9682,1,2017/2018,La Liga,Leganés,Barcelona
+9581,1,2017/2018,La Liga,Deportivo Alavés,Barcelona
+9726,1,2017/2018,La Liga,Barcelona,Deportivo La Coruna
+9754,1,2017/2018,La Liga,Real Sociedad,Barcelona
+9889,1,2017/2018,La Liga,Celta Vigo,Barcelona
+266989,2,2016/2017,La Liga,Sevilla,Barcelona
+266357,2,2016/2017,La Liga,Osasuna,Barcelona
+267569,2,2016/2017,La Liga,Real Madrid,Barcelona
+267212,2,2016/2017,La Liga,Leganés,Barcelona
+266669,2,2016/2017,La Liga,Barcelona,Deportivo Alavés
+266892,2,2016/2017,La Liga,Athletic Club,Barcelona
+267220,2,2016/2017,La Liga,Barcelona,Atlético Madrid
+267670,2,2016/2017,La Liga,Barcelona,Real Betis
+266516,2,2016/2017,La Liga,Real Betis,Barcelona
+267039,2,2016/2017,La Liga,Las Palmas,Barcelona
+266477,2,2016/2017,La Liga,Villarreal,Barcelona
+267101,2,2016/2017,La Liga,Barcelona,Osasuna
+266440,2,2016/2017,La Liga,Barcelona,Valencia
+266033,2,2016/2017,La Liga,Valencia,Barcelona
+267660,2,2016/2017,La Liga,Deportivo La Coruna,Barcelona
+266273,2,2016/2017,La Liga,Deportivo Alavés,Barcelona
+267395,2,2016/2017,La Liga,Barcelona,Las Palmas
+266874,2,2016/2017,La Liga,Barcelona,Athletic Club
+266731,2,2016/2017,La Liga,Eibar,Barcelona
+266528,2,2016/2017,La Liga,Barcelona,Espanyol
+266280,2,2016/2017,La Liga,Barcelona,Sevilla
+267432,2,2016/2017,La Liga,Barcelona,Eibar
+267076,2,2016/2017,La Liga,Barcelona,Real Madrid
+267590,2,2016/2017,La Liga,Málaga,Barcelona
+267373,2,2016/2017,La Liga,Barcelona,Real Sociedad
+267077,2,2016/2017,La Liga,Espanyol,Barcelona
+266952,2,2016/2017,La Liga,Barcelona,Villarreal
+267464,2,2016/2017,La Liga,Atlético Madrid,Barcelona
+266299,2,2016/2017,La Liga,Barcelona,Celta Vigo
+266191,2,2016/2017,La Liga,Real Sociedad,Barcelona
+265952,2,2016/2017,La Liga,Barcelona,Sporting Gijón
+267492,2,2016/2017,La Liga,Barcelona,Deportivo La Coruna
+267596,2,2016/2017,La Liga,Barcelona,Leganés
+267058,2,2016/2017,La Liga,Barcelona,Granada
+266498,27,2015/2016,La Liga,Barcelona,Getafe
+266986,27,2015/2016,La Liga,Real Betis,Barcelona
+267533,27,2015/2016,La Liga,Barcelona,Real Madrid
+266310,27,2015/2016,La Liga,Deportivo La Coruna,Barcelona
+267576,27,2015/2016,La Liga,Barcelona,Atlético Madrid
+266653,27,2015/2016,La Liga,Rayo Vallecano,Barcelona
+265944,27,2015/2016,La Liga,Barcelona,Sporting Gijón
+265894,27,2015/2016,La Liga,Málaga,Barcelona
+265958,27,2015/2016,La Liga,Barcelona,Espanyol
+267611,27,2015/2016,La Liga,Barcelona,Las Palmas
+267422,27,2015/2016,La Liga,Barcelona,Málaga
+266236,27,2015/2016,La Liga,Athletic Club,Barcelona
+267274,27,2015/2016,La Liga,Valencia,Barcelona
+266961,27,2015/2016,La Liga,Barcelona,Deportivo La Coruna
+266885,27,2015/2016,La Liga,Barcelona,Real Sociedad
+266815,27,2015/2016,La Liga,Sporting Gijón,Barcelona
+267506,27,2015/2016,La Liga,Granada,Barcelona
+266664,27,2015/2016,La Liga,Real Sociedad,Barcelona
+266106,27,2015/2016,La Liga,Villarreal,Barcelona
+266670,27,2015/2016,La Liga,Espanyol,Barcelona
+266149,27,2015/2016,La Liga,Barcelona,Athletic Club
+266620,27,2015/2016,La Liga,Barcelona,Granada
+266056,27,2015/2016,La Liga,Eibar,Barcelona
+267327,27,2015/2016,La Liga,Barcelona,Real Betis
+266166,27,2015/2016,La Liga,Atlético Madrid,Barcelona
+266160,27,2015/2016,La Liga,Levante,Barcelona
+265839,27,2015/2016,La Liga,Barcelona,Sevilla
+266424,27,2015/2016,La Liga,Real Madrid,Barcelona
+266467,27,2015/2016,La Liga,Celta Vigo,Barcelona
+267273,27,2015/2016,La Liga,Las Palmas,Barcelona
+266490,27,2015/2016,La Liga,Barcelona,Levante
+266254,27,2015/2016,La Liga,Barcelona,Celta Vigo
+266557,27,2015/2016,La Liga,Barcelona,Valencia
+267183,26,2014/2015,La Liga,Barcelona,Real Madrid
+265835,26,2014/2015,La Liga,Barcelona,Sevilla
+266838,26,2014/2015,La Liga,Málaga,Barcelona
+265963,26,2014/2015,La Liga,Barcelona,Getafe
+266117,26,2014/2015,La Liga,Barcelona,Granada
+266916,26,2014/2015,La Liga,Barcelona,Rayo Vallecano
+267197,26,2014/2015,La Liga,Barcelona,Deportivo La Coruna
+70264,26,2014/2015,La Liga,Getafe,Barcelona
+70273,26,2014/2015,La Liga,Barcelona,Athletic Club
+267301,26,2014/2015,La Liga,Barcelona,Celta Vigo
+265896,26,2014/2015,La Liga,Barcelona,Eibar
+265866,26,2014/2015,La Liga,Córdoba,Barcelona
+267400,26,2014/2015,La Liga,Barcelona,Almería
+266406,26,2014/2015,La Liga,Villarreal,Barcelona
+267085,26,2014/2015,La Liga,Real Madrid,Barcelona
+267561,26,2014/2015,La Liga,Rayo Vallecano,Barcelona
+266148,26,2014/2015,La Liga,Barcelona,Málaga
+266045,26,2014/2015,La Liga,Barcelona,Real Sociedad
+70303,26,2014/2015,La Liga,Barcelona,Atlético Madrid
+266240,26,2014/2015,La Liga,Real Sociedad,Barcelona
+267597,26,2014/2015,La Liga,Barcelona,Villarreal
+266794,26,2014/2015,La Liga,Elche,Barcelona
+267343,26,2014/2015,La Liga,Granada,Barcelona
+266631,26,2014/2015,La Liga,Atlético Madrid,Barcelona
+266320,26,2014/2015,La Liga,Barcelona,Espanyol
+266230,26,2014/2015,La Liga,Deportivo La Coruna,Barcelona
+266525,26,2014/2015,La Liga,Barcelona,Valencia
+266560,26,2014/2015,La Liga,Valencia,Barcelona
+266846,26,2014/2015,La Liga,Barcelona,Córdoba
+266531,26,2014/2015,La Liga,Espanyol,Barcelona
+266921,26,2014/2015,La Liga,Barcelona,Elche
+267499,26,2014/2015,La Liga,Almería,Barcelona
+266741,26,2014/2015,La Liga,Barcelona,Levante
+266871,26,2014/2015,La Liga,Athletic Club,Barcelona
+266967,26,2014/2015,La Liga,Eibar,Barcelona
+266929,26,2014/2015,La Liga,Celta Vigo,Barcelona
+266770,26,2014/2015,La Liga,Levante,Barcelona
+266142,26,2014/2015,La Liga,Sevilla,Barcelona
+267368,25,2013/2014,La Liga,Barcelona,Real Betis
+70301,25,2013/2014,La Liga,Barcelona,Sevilla
+70298,25,2013/2014,La Liga,Valencia,Barcelona
+70302,25,2013/2014,La Liga,Rayo Vallecano,Barcelona
+70291,25,2013/2014,La Liga,Barcelona,Málaga
+267138,25,2013/2014,La Liga,Granada,Barcelona
+267520,25,2013/2014,La Liga,Barcelona,Real Sociedad
+70289,25,2013/2014,La Liga,Villarreal,Barcelona
+266066,25,2013/2014,La Liga,Barcelona,Almería
+267675,25,2013/2014,La Liga,Sevilla,Barcelona
+70288,25,2013/2014,La Liga,Levante,Barcelona
+266074,25,2013/2014,La Liga,Barcelona,Osasuna
+267567,25,2013/2014,La Liga,Barcelona,Athletic Club
+266201,25,2013/2014,La Liga,Elche,Barcelona
+266274,25,2013/2014,La Liga,Barcelona,Celta Vigo
+70293,25,2013/2014,La Liga,Barcelona,Real Madrid
+265918,25,2013/2014,La Liga,Barcelona,Rayo Vallecano
+70277,25,2013/2014,La Liga,Barcelona,Levante
+70283,25,2013/2014,La Liga,Barcelona,Espanyol
+70306,25,2013/2014,La Liga,Espanyol,Barcelona
+266256,25,2013/2014,La Liga,Barcelona,Atlético Madrid
+266613,25,2013/2014,La Liga,Barcelona,Valencia
+266491,25,2013/2014,La Liga,Barcelona,Getafe
+265830,25,2013/2014,La Liga,Atlético Madrid,Barcelona
+265857,25,2013/2014,La Liga,Real Madrid,Barcelona
+266883,25,2013/2014,La Liga,Real Betis,Barcelona
+266603,25,2013/2014,La Liga,Real Valladolid,Barcelona
+265837,25,2013/2014,La Liga,Real Sociedad,Barcelona
+266462,25,2013/2014,La Liga,Osasuna,Barcelona
+267192,25,2013/2014,La Liga,Celta Vigo,Barcelona
+266420,25,2013/2014,La Liga,Almería,Barcelona
+266015,24,2012/2013,La Liga,Real Valladolid,Barcelona
+70270,24,2012/2013,La Liga,Barcelona,Granada
+70281,24,2012/2013,La Liga,Barcelona,Real Betis
+70308,24,2012/2013,La Liga,Barcelona,Celta Vigo
+70282,24,2012/2013,La Liga,Valencia,Barcelona
+266724,24,2012/2013,La Liga,Mallorca,Barcelona
+70272,24,2012/2013,La Liga,Real Madrid,Barcelona
+70304,24,2012/2013,La Liga,Deportivo La Coruna,Barcelona
+70280,24,2012/2013,La Liga,Levante,Barcelona
+70296,24,2012/2013,La Liga,Barcelona,Atlético Madrid
+70297,24,2012/2013,La Liga,Barcelona,Getafe
+266433,24,2012/2013,La Liga,Barcelona,Espanyol
+70256,24,2012/2013,La Liga,Celta Vigo,Barcelona
+70259,24,2012/2013,La Liga,Barcelona,Real Sociedad
+70260,24,2012/2013,La Liga,Barcelona,Osasuna
+70263,24,2012/2013,La Liga,Barcelona,Athletic Club
+70276,24,2012/2013,La Liga,Rayo Vallecano,Barcelona
+70287,24,2012/2013,La Liga,Real Sociedad,Barcelona
+70284,24,2012/2013,La Liga,Atlético Madrid,Barcelona
+70275,24,2012/2013,La Liga,Sevilla,Barcelona
+70286,24,2012/2013,La Liga,Barcelona,Valencia
+70309,24,2012/2013,La Liga,Barcelona,Real Zaragoza
+70300,24,2012/2013,La Liga,Barcelona,Real Madrid
+70295,24,2012/2013,La Liga,Real Betis,Barcelona
+70307,24,2012/2013,La Liga,Barcelona,Rayo Vallecano
+70305,24,2012/2013,La Liga,Barcelona,Deportivo La Coruna
+266827,24,2012/2013,La Liga,Málaga,Barcelona
+267502,24,2012/2013,La Liga,Athletic Club,Barcelona
+70271,24,2012/2013,La Liga,Barcelona,Sevilla
+70294,24,2012/2013,La Liga,Granada,Barcelona
+70262,24,2012/2013,La Liga,Osasuna,Barcelona
+70292,24,2012/2013,La Liga,Getafe,Barcelona
+69328,23,2011/2012,La Liga,Barcelona,Valencia
+69329,23,2011/2012,La Liga,Barcelona,Sevilla
+70219,23,2011/2012,La Liga,Real Zaragoza,Barcelona
+69331,23,2011/2012,La Liga,Barcelona,Real Zaragoza
+69337,23,2011/2012,La Liga,Atlético Madrid,Barcelona
+69322,23,2011/2012,La Liga,Racing Santander,Barcelona
+69316,23,2011/2012,La Liga,Barcelona,Real Sociedad
+69332,23,2011/2012,La Liga,Barcelona,Rayo Vallecano
+69335,23,2011/2012,La Liga,Málaga,Barcelona
+69330,23,2011/2012,La Liga,Athletic Club,Barcelona
+69297,23,2011/2012,La Liga,Barcelona,Atlético Madrid
+69325,23,2011/2012,La Liga,Mallorca,Barcelona
+69324,23,2011/2012,La Liga,Barcelona,Real Madrid
+70225,23,2011/2012,La Liga,Barcelona,Granada
+69293,23,2011/2012,La Liga,Barcelona,Racing Santander
+70223,23,2011/2012,La Liga,Valencia,Barcelona
+69333,23,2011/2012,La Liga,Barcelona,Levante
+69264,23,2011/2012,La Liga,Real Sociedad,Barcelona
+69343,23,2011/2012,La Liga,Barcelona,Getafe
+69340,23,2011/2012,La Liga,Barcelona,Málaga
+69265,23,2011/2012,La Liga,Sporting Gijón,Barcelona
+69319,23,2011/2012,La Liga,Real Betis,Barcelona
+69334,23,2011/2012,La Liga,Real Madrid,Barcelona
+69327,23,2011/2012,La Liga,Barcelona,Real Betis
+69315,23,2011/2012,La Liga,Getafe,Barcelona
+69336,23,2011/2012,La Liga,Osasuna,Barcelona
+69326,23,2011/2012,La Liga,Sevilla,Barcelona
+69268,23,2011/2012,La Liga,Barcelona,Villarreal
+69320,23,2011/2012,La Liga,Barcelona,Espanyol
+69312,23,2011/2012,La Liga,Espanyol,Barcelona
+69314,23,2011/2012,La Liga,Barcelona,Mallorca
+69318,23,2011/2012,La Liga,Granada,Barcelona
+69338,23,2011/2012,La Liga,Villarreal,Barcelona
+70220,23,2011/2012,La Liga,Barcelona,Osasuna
+70224,23,2011/2012,La Liga,Rayo Vallecano,Barcelona
+70221,23,2011/2012,La Liga,Levante,Barcelona
+69323,23,2011/2012,La Liga,Barcelona,Athletic Club
+69276,22,2010/2011,La Liga,Barcelona,Atlético Madrid
+69304,22,2010/2011,La Liga,Villarreal,Barcelona
+69307,22,2010/2011,La Liga,Osasuna,Barcelona
+69271,22,2010/2011,La Liga,Barcelona,Osasuna
+69305,22,2010/2011,La Liga,Barcelona,Almería
+69278,22,2010/2011,La Liga,Barcelona,Málaga
+69275,22,2010/2011,La Liga,Espanyol,Barcelona
+69295,22,2010/2011,La Liga,Barcelona,Racing Santander
+69270,22,2010/2011,La Liga,Getafe,Barcelona
+69303,22,2010/2011,La Liga,Barcelona,Getafe
+69245,22,2010/2011,La Liga,Real Madrid,Barcelona
+69287,22,2010/2011,La Liga,Barcelona,Hércules
+69296,22,2010/2011,La Liga,Hércules,Barcelona
+69260,22,2010/2011,La Liga,Barcelona,Valencia
+69269,22,2010/2011,La Liga,Atlético Madrid,Barcelona
+69246,22,2010/2011,La Liga,Real Sociedad,Barcelona
+69302,22,2010/2011,La Liga,Barcelona,Real Sociedad
+69282,22,2010/2011,La Liga,Barcelona,Athletic Club
+69274,22,2010/2011,La Liga,Valencia,Barcelona
+69283,22,2010/2011,La Liga,Mallorca,Barcelona
+69280,22,2010/2011,La Liga,Deportivo La Coruna,Barcelona
+69286,22,2010/2011,La Liga,Racing Santander,Barcelona
+69291,22,2010/2011,La Liga,Sevilla,Barcelona
+69236,22,2010/2011,La Liga,Barcelona,Mallorca
+69234,22,2010/2011,La Liga,Barcelona,Espanyol
+69272,22,2010/2011,La Liga,Levante,Barcelona
+69308,22,2010/2011,La Liga,Barcelona,Villarreal
+69299,22,2010/2011,La Liga,Barcelona,Real Madrid
+69300,22,2010/2011,La Liga,Barcelona,Real Zaragoza
+69289,22,2010/2011,La Liga,Barcelona,Sevilla
+69263,22,2010/2011,La Liga,Real Zaragoza,Barcelona
+69306,22,2010/2011,La Liga,Almería,Barcelona
+69248,22,2010/2011,La Liga,Sporting Gijón,Barcelona
+69243,21,2009/2010,La Liga,Barcelona,Sevilla
+69241,21,2009/2010,La Liga,Barcelona,Tenerife
+69239,21,2009/2010,La Liga,Sevilla,Barcelona
+69257,21,2009/2010,La Liga,Barcelona,Osasuna
+69253,21,2009/2010,La Liga,Barcelona,Real Zaragoza
+69244,21,2009/2010,La Liga,Villarreal,Barcelona
+69277,21,2009/2010,La Liga,Osasuna,Barcelona
+69229,21,2009/2010,La Liga,Getafe,Barcelona
+69219,21,2009/2010,La Liga,Tenerife,Barcelona
+69218,21,2009/2010,La Liga,Deportivo La Coruna,Barcelona
+69250,21,2009/2010,La Liga,Barcelona,Mallorca
+69242,21,2009/2010,La Liga,Barcelona,Real Valladolid
+69256,21,2009/2010,La Liga,Barcelona,Almería
+69298,21,2009/2010,La Liga,Mallorca,Barcelona
+69259,21,2009/2010,La Liga,Real Madrid,Barcelona
+69224,21,2009/2010,La Liga,Barcelona,Valencia
+69210,21,2009/2010,La Liga,Real Valladolid,Barcelona
+69220,21,2009/2010,La Liga,Sporting Gijón,Barcelona
+69237,21,2009/2010,La Liga,Atlético Madrid,Barcelona
+69226,21,2009/2010,La Liga,Almería,Barcelona
+69252,21,2009/2010,La Liga,Valencia,Barcelona
+69255,21,2009/2010,La Liga,Málaga,Barcelona
+69214,21,2009/2010,La Liga,Barcelona,Xerez
+69262,21,2009/2010,La Liga,Barcelona,Real Madrid
+69240,21,2009/2010,La Liga,Barcelona,Getafe
+69233,21,2009/2010,La Liga,Barcelona,Racing Santander
+69213,21,2009/2010,La Liga,Espanyol,Barcelona
+69238,21,2009/2010,La Liga,Barcelona,Málaga
+69267,21,2009/2010,La Liga,Xerez,Barcelona
+69288,21,2009/2010,La Liga,Athletic Club,Barcelona
+69254,21,2009/2010,La Liga,Racing Santander,Barcelona
+69292,21,2009/2010,La Liga,Barcelona,Atlético Madrid
+69227,21,2009/2010,La Liga,Real Zaragoza,Barcelona
+69247,21,2009/2010,La Liga,Barcelona,Athletic Club
+69221,21,2009/2010,La Liga,Barcelona,Deportivo La Coruna
+69225,41,2008/2009,La Liga,Barcelona,Real Madrid
+69212,41,2008/2009,La Liga,Barcelona,Atlético Madrid
+69235,41,2008/2009,La Liga,Málaga,Barcelona
+69232,41,2008/2009,La Liga,Barcelona,Almería
+69216,41,2008/2009,La Liga,Barcelona,Athletic Club
+69209,41,2008/2009,La Liga,Racing Santander,Barcelona
+69231,41,2008/2009,La Liga,Barcelona,Sporting Gijón
+69217,41,2008/2009,La Liga,Barcelona,Villarreal
+69273,41,2008/2009,La Liga,Real Valladolid,Barcelona
+69222,41,2008/2009,La Liga,Barcelona,Recreativo Huelva
+69223,41,2008/2009,La Liga,Getafe,Barcelona
+69195,41,2008/2009,La Liga,Real Betis,Barcelona
+69251,41,2008/2009,La Liga,Valencia,Barcelona
+69185,41,2008/2009,La Liga,Atlético Madrid,Barcelona
+69142,41,2008/2009,La Liga,Barcelona,Málaga
+69139,41,2008/2009,La Liga,Barcelona,Espanyol
+69189,41,2008/2009,La Liga,Barcelona,Numancia
+69171,41,2008/2009,La Liga,Sevilla,Barcelona
+69249,41,2008/2009,La Liga,Real Madrid,Barcelona
+69215,41,2008/2009,La Liga,Barcelona,Racing Santander
+69138,41,2008/2009,La Liga,Sporting Gijón,Barcelona
+69147,41,2008/2009,La Liga,Numancia,Barcelona
+69177,41,2008/2009,La Liga,Almería,Barcelona
+69207,41,2008/2009,La Liga,Barcelona,Real Betis
+69228,41,2008/2009,La Liga,Villarreal,Barcelona
+69183,41,2008/2009,La Liga,Barcelona,Deportivo La Coruna
+69279,41,2008/2009,La Liga,Barcelona,Real Valladolid
+69285,41,2008/2009,La Liga,Recreativo Huelva,Barcelona
+69211,41,2008/2009,La Liga,Espanyol,Barcelona
+69230,41,2008/2009,La Liga,Osasuna,Barcelona
+69149,41,2008/2009,La Liga,Barcelona,Valencia
+69151,40,2007/2008,La Liga,Levante,Barcelona
+69144,40,2007/2008,La Liga,Barcelona,Atlético Madrid
+69169,40,2007/2008,La Liga,Barcelona,Athletic Club
+68360,40,2007/2008,La Liga,Barcelona,Levante
+69186,40,2007/2008,La Liga,Real Murcia,Barcelona
+69180,40,2007/2008,La Liga,Racing Santander,Barcelona
+69143,40,2007/2008,La Liga,Barcelona,Real Zaragoza
+69181,40,2007/2008,La Liga,Athletic Club,Barcelona
+68365,40,2007/2008,La Liga,Atlético Madrid,Barcelona
+69178,40,2007/2008,La Liga,Getafe,Barcelona
+68364,40,2007/2008,La Liga,Villarreal,Barcelona
+69170,40,2007/2008,La Liga,Barcelona,Deportivo La Coruna
+68359,40,2007/2008,La Liga,Barcelona,Espanyol
+68356,40,2007/2008,La Liga,Espanyol,Barcelona
+69158,40,2007/2008,La Liga,Barcelona,Almería
+69187,40,2007/2008,La Liga,Barcelona,Osasuna
+68363,40,2007/2008,La Liga,Real Valladolid,Barcelona
+69166,40,2007/2008,La Liga,Barcelona,Real Betis
+68366,40,2007/2008,La Liga,Barcelona,Mallorca
+69148,40,2007/2008,La Liga,Barcelona,Sevilla
+69184,40,2007/2008,La Liga,Barcelona,Recreativo Huelva
+69173,40,2007/2008,La Liga,Barcelona,Racing Santander
+69146,40,2007/2008,La Liga,Sevilla,Barcelona
+69182,40,2007/2008,La Liga,Real Zaragoza,Barcelona
+68358,40,2007/2008,La Liga,Recreativo Huelva,Barcelona
+68361,40,2007/2008,La Liga,Real Madrid,Barcelona
+69141,40,2007/2008,La Liga,Barcelona,Valencia
+69145,40,2007/2008,La Liga,Valencia,Barcelona
+69176,39,2006/2007,La Liga,Atlético Madrid,Barcelona
+69179,39,2006/2007,La Liga,Real Zaragoza,Barcelona
+68334,39,2006/2007,La Liga,Sevilla,Barcelona
+68333,39,2006/2007,La Liga,Barcelona,Athletic Club
+68336,39,2006/2007,La Liga,Gimnàstic Tarragona,Barcelona
+68326,39,2006/2007,La Liga,Celta Vigo,Barcelona
+69162,39,2006/2007,La Liga,Barcelona,Real Betis
+68335,39,2006/2007,La Liga,Barcelona,Real Madrid
+68332,39,2006/2007,La Liga,Valencia,Barcelona
+68330,39,2006/2007,La Liga,Real Madrid,Barcelona
+68329,39,2006/2007,La Liga,Barcelona,Sevilla
+68341,39,2006/2007,La Liga,Recreativo Huelva,Barcelona
+69165,39,2006/2007,La Liga,Barcelona,Espanyol
+69155,39,2006/2007,La Liga,Villarreal,Barcelona
+69154,39,2006/2007,La Liga,Barcelona,Racing Santander
+69156,39,2006/2007,La Liga,Barcelona,Levante
+69159,39,2006/2007,La Liga,Barcelona,Mallorca
+69175,39,2006/2007,La Liga,Barcelona,Deportivo La Coruna
+69160,39,2006/2007,La Liga,Real Sociedad,Barcelona
+68331,39,2006/2007,La Liga,Barcelona,Real Zaragoza
+68328,39,2006/2007,La Liga,Barcelona,Valencia
+68340,39,2006/2007,La Liga,Racing Santander,Barcelona
+69174,39,2006/2007,La Liga,Deportivo La Coruna,Barcelona
+68347,39,2006/2007,La Liga,Athletic Club,Barcelona
+68327,39,2006/2007,La Liga,Barcelona,Osasuna
+69157,39,2006/2007,La Liga,Barcelona,Getafe
+69164,38,2005/2006,La Liga,Barcelona,Málaga
+68324,38,2005/2006,La Liga,Barcelona,Deportivo Alavés
+68320,38,2005/2006,La Liga,Villarreal,Barcelona
+68323,38,2005/2006,La Liga,Barcelona,Celta Vigo
+69172,38,2005/2006,La Liga,Barcelona,Real Betis
+68339,38,2005/2006,La Liga,Getafe,Barcelona
+68348,38,2005/2006,La Liga,Espanyol,Barcelona
+68354,38,2005/2006,La Liga,Barcelona,Racing Santander
+68351,38,2005/2006,La Liga,Real Zaragoza,Barcelona
+68317,38,2005/2006,La Liga,Barcelona,Real Zaragoza
+68350,38,2005/2006,La Liga,Barcelona,Atlético Madrid
+68325,38,2005/2006,La Liga,Mallorca,Barcelona
+68321,38,2005/2006,La Liga,Barcelona,Sevilla
+68319,38,2005/2006,La Liga,Real Madrid,Barcelona
+68342,38,2005/2006,La Liga,Barcelona,Athletic Club
+68322,38,2005/2006,La Liga,Cádiz,Barcelona
+68318,38,2005/2006,La Liga,Barcelona,Osasuna
+68314,37,2004/2005,La Liga,Barcelona,Málaga
+68313,37,2004/2005,La Liga,Barcelona,Osasuna
+68316,37,2004/2005,La Liga,Barcelona,Albacete
+68315,37,2004/2005,La Liga,Barcelona,Levante
+69153,37,2004/2005,La Liga,Albacete,Barcelona
+68352,37,2004/2005,La Liga,Barcelona,Getafe
+68353,37,2004/2005,La Liga,Espanyol,Barcelona
+7494,3,2018,NWSL,Houston Dash,Utah Royals
+7486,3,2018,NWSL,Portland Thorns,Houston Dash
+7497,3,2018,NWSL,Chicago Red Stars,North Carolina Courage
+7430,3,2018,NWSL,Washington Spirit,North Carolina Courage
+7444,3,2018,NWSL,North Carolina Courage,Chicago Red Stars
+7443,3,2018,NWSL,Portland Thorns,OL Reign
+7521,3,2018,NWSL,NJ/NY Gotham FC,Utah Royals
+7492,3,2018,NWSL,Orlando Pride,NJ/NY Gotham FC
+7524,3,2018,NWSL,Houston Dash,Orlando Pride
+7496,3,2018,NWSL,Utah Royals,Washington Spirit
+7523,3,2018,NWSL,OL Reign,Orlando Pride
+7520,3,2018,NWSL,Washington Spirit,Chicago Red Stars
+7493,3,2018,NWSL,OL Reign,Washington Spirit
+7500,3,2018,NWSL,Orlando Pride,Portland Thorns
+7519,3,2018,NWSL,Portland Thorns,North Carolina Courage
+7473,3,2018,NWSL,Utah Royals,NJ/NY Gotham FC
+7522,3,2018,NWSL,Houston Dash,North Carolina Courage
+7484,3,2018,NWSL,NJ/NY Gotham FC,North Carolina Courage
+7475,3,2018,NWSL,North Carolina Courage,Chicago Red Stars
+7457,3,2018,NWSL,Orlando Pride,North Carolina Courage
+7445,3,2018,NWSL,Utah Royals,Washington Spirit
+7490,3,2018,NWSL,NJ/NY Gotham FC,Portland Thorns
+7482,3,2018,NWSL,North Carolina Courage,Washington Spirit
+7479,3,2018,NWSL,Orlando Pride,Washington Spirit
+7478,3,2018,NWSL,OL Reign,Houston Dash
+7456,3,2018,NWSL,NJ/NY Gotham FC,North Carolina Courage
+7471,3,2018,NWSL,Orlando Pride,North Carolina Courage
+7477,3,2018,NWSL,Portland Thorns,Utah Royals
+7472,3,2018,NWSL,OL Reign,Portland Thorns
+7474,3,2018,NWSL,Chicago Red Stars,Washington Spirit
+7487,3,2018,NWSL,Utah Royals,North Carolina Courage
+7485,3,2018,NWSL,Chicago Red Stars,OL Reign
+7483,3,2018,NWSL,Utah Royals,Orlando Pride
+7476,3,2018,NWSL,NJ/NY Gotham FC,Chicago Red Stars
+7451,3,2018,NWSL,North Carolina Courage,Washington Spirit
+7480,3,2018,NWSL,OL Reign,Utah Royals
+3749052,44,2003/2004,Premier League,Wolverhampton Wanderers,Arsenal
+3749522,44,2003/2004,Premier League,Arsenal,Wolverhampton Wanderers
+3749246,44,2003/2004,Premier League,Arsenal,Manchester United
+3749257,44,2003/2004,Premier League,Arsenal,Leicester City
+3749642,44,2003/2004,Premier League,Arsenal,Charlton Athletic
+3749358,44,2003/2004,Premier League,Middlesbrough,Arsenal
+3749346,44,2003/2004,Premier League,Leeds United,Arsenal
+3749253,44,2003/2004,Premier League,Liverpool,Arsenal
+3749079,44,2003/2004,Premier League,Arsenal,Chelsea
+3749465,44,2003/2004,Premier League,Blackburn Rovers,Arsenal
+3749133,44,2003/2004,Premier League,Aston Villa,Arsenal
+3749528,44,2003/2004,Premier League,Arsenal,Newcastle United
+3749233,44,2003/2004,Premier League,Arsenal,Manchester City
+3749462,44,2003/2004,Premier League,Arsenal,Birmingham City
+3749552,44,2003/2004,Premier League,Manchester United,Arsenal
+3749296,44,2003/2004,Premier League,Arsenal,Portsmouth
+3749454,44,2003/2004,Premier League,Manchester City,Arsenal
+3749276,44,2003/2004,Premier League,Chelsea,Arsenal
+3749068,44,2003/2004,Premier League,Tottenham Hotspur,Arsenal
+3749310,44,2003/2004,Premier League,Southampton,Arsenal
+3749493,44,2003/2004,Premier League,Arsenal,Everton
+3749434,44,2003/2004,Premier League,Birmingham City,Arsenal
+3749192,44,2003/2004,Premier League,Arsenal,Fulham
+3749196,44,2003/2004,Premier League,Arsenal,Tottenham Hotspur
+3749448,44,2003/2004,Premier League,Arsenal,Liverpool
+3749360,44,2003/2004,Premier League,Arsenal,Blackburn Rovers
+3749453,44,2003/2004,Premier League,Arsenal,Leeds United
+3749278,44,2003/2004,Premier League,Bolton Wanderers,Arsenal
+3749603,44,2003/2004,Premier League,Fulham,Arsenal
+3749153,44,2003/2004,Premier League,Arsenal,Middlesbrough
+3749403,44,2003/2004,Premier League,Arsenal,Bolton Wanderers
+3749526,44,2003/2004,Premier League,Charlton Athletic,Arsenal
+3749431,44,2003/2004,Premier League,Newcastle United,Arsenal
+3795220,43,2020,UEFA Euro,Italy,Spain
+3788769,43,2020,UEFA Euro,Russia,Denmark
+3788761,43,2020,UEFA Euro,Sweden,Slovakia
+3788766,43,2020,UEFA Euro,Italy,Wales
+3788764,43,2020,UEFA Euro,Portugal,Germany
+3788773,43,2020,UEFA Euro,Portugal,France
+3788755,43,2020,UEFA Euro,Turkey,Wales
+3788754,43,2020,UEFA Euro,Italy,Switzerland
+3788762,43,2020,UEFA Euro,Spain,Poland
+3788760,43,2020,UEFA Euro,Croatia,Czech Republic
+3788747,43,2020,UEFA Euro,Austria,North Macedonia
+3788741,43,2020,UEFA Euro,Turkey,Italy
+3795109,43,2020,UEFA Euro,Czech Republic,Denmark
+3795187,43,2020,UEFA Euro,Ukraine,England
+3795108,43,2020,UEFA Euro,Switzerland,Spain
+3788770,43,2020,UEFA Euro,North Macedonia,Netherlands
+3795506,43,2020,UEFA Euro,Italy,England
+3794688,43,2020,UEFA Euro,England,Germany
+3794692,43,2020,UEFA Euro,Sweden,Ukraine
+3794686,43,2020,UEFA Euro,Croatia,Spain
+3794687,43,2020,UEFA Euro,Belgium,Portugal
+3794685,43,2020,UEFA Euro,Italy,Austria
+3788774,43,2020,UEFA Euro,Germany,Hungary
+3788771,43,2020,UEFA Euro,Croatia,Scotland
+3788772,43,2020,UEFA Euro,Czech Republic,England
+3788768,43,2020,UEFA Euro,Finland,Belgium
+3788767,43,2020,UEFA Euro,Ukraine,Austria
+3788753,43,2020,UEFA Euro,Finland,Russia
+3788765,43,2020,UEFA Euro,Switzerland,Turkey
+3788763,43,2020,UEFA Euro,Hungary,France
+3788759,43,2020,UEFA Euro,England,Scotland
+3788758,43,2020,UEFA Euro,Ukraine,North Macedonia
+3788757,43,2020,UEFA Euro,Denmark,Belgium
+3788745,43,2020,UEFA Euro,England,Croatia
+3795107,43,2020,UEFA Euro,Belgium,Italy
+3795221,43,2020,UEFA Euro,England,Denmark
+3794689,43,2020,UEFA Euro,Wales,Denmark
+3788746,43,2020,UEFA Euro,Netherlands,Ukraine
+3794691,43,2020,UEFA Euro,France,Switzerland
+3794690,43,2020,UEFA Euro,Netherlands,Czech Republic
+3788756,43,2020,UEFA Euro,Netherlands,Austria
+3788749,43,2020,UEFA Euro,Poland,Slovakia
+3788750,43,2020,UEFA Euro,Spain,Sweden
+3788748,43,2020,UEFA Euro,Scotland,Czech Republic
+3788751,43,2020,UEFA Euro,France,Germany
+3788752,43,2020,UEFA Euro,Hungary,Portugal
+3788742,43,2020,UEFA Euro,Denmark,Finland
+3788775,43,2020,UEFA Euro,Slovakia,Spain
+3788776,43,2020,UEFA Euro,Sweden,Poland
+3788743,43,2020,UEFA Euro,Belgium,Russia
+3788744,43,2020,UEFA Euro,Wales,Switzerland
+3847567,106,2022,UEFA Women's Euro,England Women's,Germany Women's
+3845506,106,2022,UEFA Women's Euro,England Women's,Sweden Women's
+3835335,106,2022,UEFA Women's Euro,Northern Ireland,England Women's
+3835323,106,2022,UEFA Women's Euro,Portugal Women's,Switzerland Women's
+3835325,106,2022,UEFA Women's Euro,France Women's,Italy Women's
+3835324,106,2022,UEFA Women's Euro,Netherlands Women's,Sweden Women's
+3835331,106,2022,UEFA Women's Euro,Sweden Women's,Switzerland Women's
+3835320,106,2022,UEFA Women's Euro,Norway Women's,Northern Ireland
+3845507,106,2022,UEFA Women's Euro,Germany Women's,France Women's
+3844387,106,2022,UEFA Women's Euro,France Women's,Netherlands Women's
+3844384,106,2022,UEFA Women's Euro,England Women's,Spain Women's
+3844385,106,2022,UEFA Women's Euro,Germany Women's,Austria Women's
+3844386,106,2022,UEFA Women's Euro,Sweden Women's,Belgium Women's
+3835342,106,2022,UEFA Women's Euro,Iceland Women's,France Women's
+3835337,106,2022,UEFA Women's Euro,Denmark Women's,Spain Women's
+3835338,106,2022,UEFA Women's Euro,WNT Finland,Germany Women's
+3835330,106,2022,UEFA Women's Euro,Germany Women's,Spain Women's
+3835329,106,2022,UEFA Women's Euro,Denmark Women's,WNT Finland
+3835322,106,2022,UEFA Women's Euro,Germany Women's,Denmark Women's
+3835332,106,2022,UEFA Women's Euro,Netherlands Women's,Portugal Women's
+3835327,106,2022,UEFA Women's Euro,England Women's,Norway Women's
+3835326,106,2022,UEFA Women's Euro,Belgium Women's,Iceland Women's
+3835341,106,2022,UEFA Women's Euro,Italy Women's,Belgium Women's
+3835340,106,2022,UEFA Women's Euro,Sweden Women's,Portugal Women's
+3835339,106,2022,UEFA Women's Euro,Switzerland Women's,Netherlands Women's
+3835336,106,2022,UEFA Women's Euro,Austria Women's,Norway Women's
+3835334,106,2022,UEFA Women's Euro,Italy Women's,Iceland Women's
+3835328,106,2022,UEFA Women's Euro,Austria Women's,Northern Ireland
+3835333,106,2022,UEFA Women's Euro,France Women's,Belgium Women's
+3835321,106,2022,UEFA Women's Euro,Spain Women's,WNT Finland
+3835319,106,2022,UEFA Women's Euro,England Women's,Austria Women's
+22963,30,2019,Women's World Cup,Jamaica Women's,Italy Women's
+68311,30,2019,Women's World Cup,Jamaica Women's,Australia Women's
+68357,30,2019,Women's World Cup,Norway Women's,Australia Women's
+22933,30,2019,Women's World Cup,Australia Women's,Italy Women's
+22940,30,2019,Women's World Cup,Argentina Women's,Japan Women's
+22943,30,2019,Women's World Cup,United States Women's,Thailand Women's
+22944,30,2019,Women's World Cup,Chile Women's,Sweden Women's
+22945,30,2019,Women's World Cup,Nigeria Women's,Korea Republic Women's
+22949,30,2019,Women's World Cup,Germany Women's,Spain Women's
+22956,30,2019,Women's World Cup,South Africa Women's,China PR Women's
+22961,30,2019,Women's World Cup,Japan Women's,Scotland Women's
+22964,30,2019,Women's World Cup,Netherlands Women's,Cameroon Women's
+22966,30,2019,Women's World Cup,Canada Women's,New Zealand Women's
+68344,30,2019,Women's World Cup,Netherlands Women's,Canada Women's
+68345,30,2019,Women's World Cup,Sweden Women's,United States Women's
+69163,30,2019,Women's World Cup,Sweden Women's,Canada Women's
+68346,30,2019,Women's World Cup,Cameroon Women's,New Zealand Women's
+68355,30,2019,Women's World Cup,Germany Women's,Nigeria Women's
+69301,30,2019,Women's World Cup,England Women's,Sweden Women's
+69137,30,2019,Women's World Cup,France Women's,Brazil Women's
+69208,30,2019,Women's World Cup,Germany Women's,Sweden Women's
+22936,30,2019,Women's World Cup,England Women's,Scotland Women's
+22973,30,2019,Women's World Cup,Sweden Women's,Thailand Women's
+68337,30,2019,Women's World Cup,Japan Women's,England Women's
+22981,30,2019,Women's World Cup,Korea Republic Women's,Norway Women's
+22974,30,2019,Women's World Cup,United States Women's,Chile Women's
+22924,30,2019,Women's World Cup,Norway Women's,Nigeria Women's
+69321,30,2019,Women's World Cup,United States Women's,Netherlands Women's
+22983,30,2019,Women's World Cup,China PR Women's,Spain Women's
+68312,30,2019,Women's World Cup,Italy Women's,Brazil Women's
+22921,30,2019,Women's World Cup,France Women's,Korea Republic Women's
+22926,30,2019,Women's World Cup,Germany Women's,China PR Women's
+22930,30,2019,Women's World Cup,Spain Women's,South Africa Women's
+22934,30,2019,Women's World Cup,Brazil Women's,Jamaica Women's
+22939,30,2019,Women's World Cup,Canada Women's,Cameroon Women's
+69202,30,2019,Women's World Cup,France Women's,United States Women's
+22942,30,2019,Women's World Cup,New Zealand Women's,Netherlands Women's
+22948,30,2019,Women's World Cup,France Women's,Norway Women's
+22955,30,2019,Women's World Cup,Australia Women's,Brazil Women's
+22962,30,2019,Women's World Cup,England Women's,Argentina Women's
+22980,30,2019,Women's World Cup,Nigeria Women's,France Women's
+22984,30,2019,Women's World Cup,South Africa Women's,Germany Women's
+68338,30,2019,Women's World Cup,Scotland Women's,Argentina Women's
+68343,30,2019,Women's World Cup,Thailand Women's,Chile Women's
+68362,30,2019,Women's World Cup,England Women's,Cameroon Women's
+69191,30,2019,Women's World Cup,Italy Women's,China PR Women's
+69188,30,2019,Women's World Cup,Netherlands Women's,Japan Women's
+69199,30,2019,Women's World Cup,Norway Women's,England Women's
+69258,30,2019,Women's World Cup,England Women's,United States Women's
+69284,30,2019,Women's World Cup,Netherlands Women's,Sweden Women's
+69205,30,2019,Women's World Cup,Italy Women's,Netherlands Women's
+69161,30,2019,Women's World Cup,Spain Women's,United States Women's
