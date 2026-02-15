@@ -268,36 +268,36 @@ def _get_layout():
                                 options=[{'label': c, 'value': c} for c in compname]
                             ),
 
-                        html.P('Season:'),
-                        dcc.Dropdown(id='season'),
+                            html.P('Season:'),
+                            dcc.Dropdown(id='season'),
 
-                        html.P('Match:'),
-                        dcc.Dropdown(id='match'),
+                            html.P('Match:'),
+                            dcc.Dropdown(id='match'),
 
-                        html.Hr(),
-                        html.B('Passing Network', style={'fontSize': 16}),
+                            html.Hr(),
+                            html.B('Passing Network', style={'fontSize': 16}),
 
-                        html.P('Team:'),
-                        dcc.Dropdown(id='team'),
+                            html.P('Team:'),
+                            dcc.Dropdown(id='team'),
 
-                        html.Hr(),
-                        html.B('Player Analysis', style={'fontSize': 16}),
+                            html.Hr(),
+                            html.B('Player Analysis', style={'fontSize': 16}),
 
-                        html.P('Player:'),
-                        dcc.Dropdown(id='player'),
+                            html.P('Player:'),
+                            dcc.Dropdown(id='player'),
 
-                        html.P('Actions:'),
-                        dcc.Checklist(
-                            id='actions',
-                            options=[
-                                {'label': ' Passes',  'value': 'Passes'},
-                                {'label': ' Shots',   'value': 'Shots'},
-                                {'label': ' Tackles', 'value': 'Tackles'},
-                                {'label': ' Heatmap', 'value': 'Heatmap'},
-                            ]
-                        ),
-                    ]
-                ),
+                            html.P('Actions:'),
+                            dcc.Checklist(
+                                id='actions',
+                                options=[
+                                    {'label': ' Passes',  'value': 'Passes'},
+                                    {'label': ' Shots',   'value': 'Shots'},
+                                    {'label': ' Tackles', 'value': 'Tackles'},
+                                    {'label': ' Heatmap', 'value': 'Heatmap'},
+                                ]
+                            ),
+                        ]
+                    ),
 
                     # ── RIGHT PANEL (tabs) ──
                     html.Div(
