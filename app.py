@@ -42,6 +42,101 @@ def get_lineup_data(match_id):
     return sb.lineups(match_id=match_id)
 
 
+def _safe_get(row, col, default=None):
+    """Safely get a value from a row, handling nested dicts."""
+    if col in row.index:
+        val = row[col]
+        if pd.notna(val) if not isinstance(val, dict) else True:
+            return val
+    return default
+
+
+@functools.lru_cache(maxsize=20)
+def get_match_stats(match_id):
+    """Compute match summary statistics for both teams."""
+    events = get_event_data(match_id)
+    teams = events['team'].dropna().unique().tolist()
+    if len(teams) < 2:
+        return None
+
+    stats = {}
+    for team in teams:
+        te = events[events['team'] == team]
+
+        # Possession: count of events as proxy
+        possession_events = len(te)
+
+        # Goals
+        shots = te[te['type'] == 'Shot']
+        goals = 0
+        total_shots = len(shots)
+        shots_on_target = 0
+        for i in shots.index:
+            shot_data = shots.loc[i, 'shot'] if 'shot' in shots.columns else None
+            if isinstance(shot_data, dict):
+                outcome = shot_data.get('outcome', {})
+                outcome_name = outcome.get('name', '') if isinstance(outcome, dict) else str(outcome)
+            else:
+                outcome_name = str(_safe_get(shots.loc[i], 'shot_outcome', ''))
+            if outcome_name == 'Goal':
+                goals += 1
+            if outcome_name in ('Goal', 'Saved', 'Saved to Post'):
+                shots_on_target += 1
+
+        # Passes
+        passes = te[te['type'] == 'Pass']
+        total_passes = len(passes)
+        successful_passes = 0
+        for i in passes.index:
+            pass_data = passes.loc[i, 'pass'] if 'pass' in passes.columns else None
+            if isinstance(pass_data, dict):
+                outcome = pass_data.get('outcome')
+                if outcome is None:
+                    successful_passes += 1
+            else:
+                outcome = _safe_get(passes.loc[i], 'pass_outcome', None)
+                if pd.isna(outcome) if not isinstance(outcome, str) else outcome == '':
+                    successful_passes += 1
+
+        # Fouls
+        fouls = len(te[te['type'] == 'Foul Committed'])
+
+        # Cards
+        yellow = 0
+        red = 0
+        foul_events = te[te['type'] == 'Foul Committed']
+        for i in foul_events.index:
+            fc_data = foul_events.loc[i, 'foul_committed'] if 'foul_committed' in foul_events.columns else None
+            if isinstance(fc_data, dict):
+                card = fc_data.get('card', {})
+                card_name = card.get('name', '') if isinstance(card, dict) else str(card)
+            else:
+                card_name = str(_safe_get(foul_events.loc[i], 'foul_committed_card', ''))
+            if 'Yellow' in card_name:
+                yellow += 1
+            if 'Red' in card_name or 'Second Yellow' in card_name:
+                red += 1
+
+        stats[team] = {
+            'possession_events': possession_events,
+            'goals': goals,
+            'shots': total_shots,
+            'shots_on_target': shots_on_target,
+            'passes': total_passes,
+            'pass_accuracy': round(100 * successful_passes / total_passes, 1) if total_passes > 0 else 0,
+            'fouls': fouls,
+            'yellow_cards': yellow,
+            'red_cards': red,
+        }
+
+    # Calculate possession %
+    total_events = sum(s['possession_events'] for s in stats.values())
+    for team in stats:
+        stats[team]['possession'] = round(100 * stats[team]['possession_events'] / total_events, 1) if total_events > 0 else 0
+
+    return teams, stats
+
+
 @functools.lru_cache(maxsize=20)
 def get_player_data(match_id, player_name):
     """
@@ -91,17 +186,27 @@ def get_player_data(match_id, player_name):
     passes = pd.DataFrame({'x1': px1, 'y1': py1, 'Colors': pcolors, 'Time': ptime})
     passes['Hoverinfo'] = 'Time: ' + passes['Time']
 
-    # ── SHOTS ──
+    # ── SHOTS (with xG) ──
     playershotdata = playerdata[playerdata['type'] == 'Shot']
     shotannotation = []
-    sx1, sy1, scolors, stime = [500], [50], ['black'], ['00:00']
+    sx1, sy1, scolors, stime, sxg, soutcome_list = [500], [50], ['black'], ['00:00'], [0], ['']
 
     for i in playershotdata.index:
-        # shot_outcome is a string like 'Goal', 'Saved', 'Off T', 'Blocked', etc.
-        outcome = playershotdata.loc[i, 'shot_outcome'] if 'shot_outcome' in playershotdata.columns else ''
-        color = 'blue' if outcome == 'Goal' else 'red'
+        shot_data = playershotdata.loc[i, 'shot'] if 'shot' in playershotdata.columns else None
+        if isinstance(shot_data, dict):
+            outcome = shot_data.get('outcome', {})
+            outcome_name = outcome.get('name', '') if isinstance(outcome, dict) else str(outcome)
+            xg = shot_data.get('statsbomb_xg', 0) or 0
+            end_loc = shot_data.get('end_location')
+        else:
+            outcome_name = playershotdata.loc[i, 'shot_outcome'] if 'shot_outcome' in playershotdata.columns else ''
+            xg = playershotdata.loc[i, 'shot_statsbomb_xg'] if 'shot_statsbomb_xg' in playershotdata.columns else 0
+            if pd.isna(xg):
+                xg = 0
+            end_loc = playershotdata.loc[i, 'shot_end_location'] if 'shot_end_location' in playershotdata.columns else None
 
-        end_loc = playershotdata.loc[i, 'shot_end_location'] if 'shot_end_location' in playershotdata.columns else None
+        color = 'blue' if outcome_name == 'Goal' else 'red'
+
         if end_loc is None or (isinstance(end_loc, float) and pd.isna(end_loc)):
             continue
 
@@ -117,9 +222,14 @@ def get_player_data(match_id, player_name):
         sy1.append(80 - start_loc[1])
         scolors.append(color)
         stime.append(f"{playershotdata.loc[i, 'minute']}:{playershotdata.loc[i, 'second']}")
+        sxg.append(round(float(xg), 2))
+        soutcome_list.append(outcome_name)
 
-    shots = pd.DataFrame({'x1': sx1, 'y1': sy1, 'Colors': scolors, 'Time': stime})
-    shots['Hoverinfo'] = 'Time: ' + shots['Time']
+    shots = pd.DataFrame({'x1': sx1, 'y1': sy1, 'Colors': scolors, 'Time': stime, 'xG': sxg, 'Outcome': soutcome_list})
+    shots['Hoverinfo'] = shots.apply(
+        lambda r: f"Time: {r['Time']}<br>xG: {r['xG']}<br>Outcome: {r['Outcome']}" if r['Time'] != '00:00' else '',
+        axis=1
+    )
 
     # ── TACKLES ──
     playerdueldata = playerdata[playerdata['type'] == 'Duel']
@@ -258,9 +368,10 @@ app.layout = html.Div(
                     style={'width': '75%', 'padding': '10px'},
                     children=[
                         dcc.Tabs([
-                            dcc.Tab(label='Goals', children=[
-                                html.Img(id='pitch3', src=EMPTY_PITCH_SRC,
-                                         style={'maxWidth': '100%'})
+                            dcc.Tab(label='Match Stats', children=[
+                                html.Div(id='match-stats-container',
+                                         style={'padding': '20px'},
+                                         children=[html.P('Select a match to view statistics.')])
                             ]),
                             dcc.Tab(label='Passing Network', children=[
                                 html.Img(id='pitch2', src=EMPTY_PITCH_SRC,
@@ -273,6 +384,10 @@ app.layout = html.Div(
                             ]),
                             dcc.Tab(label='Player Analysis', children=[
                                 dcc.Graph(id='pitch1', figure=pitch)
+                            ]),
+                            dcc.Tab(label='Goals', children=[
+                                html.Img(id='pitch3', src=EMPTY_PITCH_SRC,
+                                         style={'maxWidth': '100%'})
                             ]),
                         ])
                     ]
@@ -355,6 +470,61 @@ def update_passing_network(selected_match, selected_team):
     lineups = get_lineup_data(selected_match)
     data = passingnetwork(selected_match, selected_team, events, lineups, 'Count')
     return 'data:image/png;base64,{}'.format(data)
+
+
+@app.callback(Output('match-stats-container', 'children'), Input('match', 'value'))
+def update_match_stats(selected_match):
+    if not selected_match:
+        return [html.P('Select a match to view statistics.')]
+
+    result = get_match_stats(selected_match)
+    if result is None:
+        return [html.P('No stats available for this match.')]
+
+    teams, stats = result
+    t1, t2 = teams[0], teams[1]
+    s1, s2 = stats[t1], stats[t2]
+
+    stat_rows = [
+        ('Possession', f"{s1['possession']}%", f"{s2['possession']}%"),
+        ('Goals', s1['goals'], s2['goals']),
+        ('Shots', s1['shots'], s2['shots']),
+        ('Shots on Target', s1['shots_on_target'], s2['shots_on_target']),
+        ('Passes', s1['passes'], s2['passes']),
+        ('Pass Accuracy', f"{s1['pass_accuracy']}%", f"{s2['pass_accuracy']}%"),
+        ('Fouls', s1['fouls'], s2['fouls']),
+        ('Yellow Cards', s1['yellow_cards'], s2['yellow_cards']),
+        ('Red Cards', s1['red_cards'], s2['red_cards']),
+    ]
+
+    header_style = {'padding': '12px 16px', 'fontWeight': 'bold', 'fontSize': '16px',
+                    'borderBottom': '2px solid #ddd', 'textAlign': 'center'}
+    cell_style = {'padding': '10px 16px', 'textAlign': 'center', 'fontSize': '15px',
+                  'borderBottom': '1px solid #eee'}
+    label_style = {**cell_style, 'fontWeight': '500', 'color': '#555'}
+
+    table = html.Table(
+        style={'width': '100%', 'borderCollapse': 'collapse', 'maxWidth': '700px', 'margin': '0 auto'},
+        children=[
+            html.Thead(html.Tr([
+                html.Th(t1, style=header_style),
+                html.Th('', style=header_style),
+                html.Th(t2, style=header_style),
+            ])),
+            html.Tbody([
+                html.Tr([
+                    html.Td(str(v1), style=cell_style),
+                    html.Td(label, style=label_style),
+                    html.Td(str(v2), style=cell_style),
+                ]) for label, v1, v2 in stat_rows
+            ])
+        ]
+    )
+
+    return [
+        html.H3(f"{t1} vs {t2}", style={'textAlign': 'center', 'marginBottom': '20px'}),
+        table
+    ]
 
 
 @app.callback(Output('pitch3', 'src'), Input('match', 'value'))
