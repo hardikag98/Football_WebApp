@@ -531,7 +531,8 @@ def update_match_stats(selected_match):
 def update_goals(selected_match):
     if not selected_match:
         return EMPTY_PITCH_SRC
-    data = plotaction(selected_match, w=10, h=8, zoom=False)
+    events = get_event_data(selected_match)
+    data = plotaction(selected_match, events=events, w=10, h=8, zoom=False)
     return 'data:image/png;base64,{}'.format(data)
 
 
