@@ -224,11 +224,9 @@ def plotaction(match_id, events=None, number=5, w=10, h=8, zoom=False):
                                'Kick Off'):
                 break
 
-            # Only collect on-ball actions by the scoring team with valid locations
+            # Collect any on-ball action (either team) with a valid location
             loc = row.get('location')
-            row_team = str(row.get('team', ''))
-            if (row_team == scoring_team
-                    and event_type in _ON_BALL_TYPES
+            if (event_type in _ON_BALL_TYPES
                     and isinstance(loc, (list, tuple)) and len(loc) >= 2):
                 preceding.append(idx_list[i])
 
