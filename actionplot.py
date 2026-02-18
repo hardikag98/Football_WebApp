@@ -199,15 +199,14 @@ def plotaction(match_id, events=None, number=5, w=10, h=8, zoom=False):
                 awayscore += 1
 
         # Get preceding on-ball actions + the goal itself.
-        # Strategy: walk BACKWARDS from the goal event, collecting on-ball
-        # actions that belong to the same attacking sequence. Stop when we
-        # hit a possession-resetting event (clearance by opponent, keeper
-        # save, another shot, etc.) or collect enough actions.
+        # Walk BACKWARDS from the goal, collecting on-ball actions by the
+        # SCORING TEAM only. Stop when we hit a hard possession reset or
+        # collect enough actions.
         pos = idx_list.index(goal_idx)
         goal_period = goal_row.get('period', 1)
 
         preceding = []
-        for i in range(pos - 1, max(0, pos - 80) - 1, -1):
+        for i in range(pos - 1, max(0, pos - 150) - 1, -1):
             row = events.loc[idx_list[i]]
 
             # Don't cross period boundaries
@@ -216,18 +215,21 @@ def plotaction(match_id, events=None, number=5, w=10, h=8, zoom=False):
 
             event_type = str(row.get('type', ''))
 
-            # Stop at any other shot (separate attacking move)
+            # Hard stop: another shot means a completely separate attacking move
             if event_type == 'Shot':
                 break
 
-            # Stop at possession-resetting events
+            # Hard stop: play was restarted from a set piece or half
             if event_type in ('Starting XI', 'Half Start', 'Referee Ball-Drop',
-                               'Kick Off', 'Corner Awarded', 'Free Kick'):
+                               'Kick Off'):
                 break
 
-            # Only include on-ball actions with valid locations
+            # Only collect on-ball actions by the scoring team with valid locations
             loc = row.get('location')
-            if event_type in _ON_BALL_TYPES and isinstance(loc, (list, tuple)) and len(loc) >= 2:
+            row_team = str(row.get('team', ''))
+            if (row_team == scoring_team
+                    and event_type in _ON_BALL_TYPES
+                    and isinstance(loc, (list, tuple)) and len(loc) >= 2):
                 preceding.append(idx_list[i])
 
             if len(preceding) >= number:
