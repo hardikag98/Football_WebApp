@@ -199,25 +199,43 @@ def plotaction(match_id, events=None, number=5, w=10, h=8, zoom=False):
                 awayscore += 1
 
         # Get preceding on-ball actions + the goal itself.
-        # We look back further in the raw index to find enough meaningful actions,
-        # since many events (Pressure, Camera On, etc.) aren't on-ball plays.
+        # Strategy: walk BACKWARDS from the goal event, collecting on-ball
+        # actions that belong to the same attacking sequence. Stop when we
+        # hit a possession-resetting event (clearance by opponent, keeper
+        # save, another shot, etc.) or collect enough actions.
         pos = idx_list.index(goal_idx)
-        # Search back up to 50 raw events to find N on-ball actions
-        search_start = max(0, pos - 50)
-        candidate_indices = idx_list[search_start:pos + 1]
-        candidates = events.loc[candidate_indices].copy()
+        goal_period = goal_row.get('period', 1)
 
-        # Filter to on-ball events with valid locations
-        actions = candidates[
-            (candidates['type'].isin(_ON_BALL_TYPES)) &
-            (candidates['location'].apply(
-                lambda x: isinstance(x, (list, tuple)) and len(x) >= 2
-            ))
-        ].copy()
+        preceding = []
+        for i in range(pos - 1, max(0, pos - 80) - 1, -1):
+            row = events.loc[idx_list[i]]
 
-        # Take the last (number) actions + the goal shot
-        if len(actions) > number + 1:
-            actions = actions.iloc[-(number + 1):]
+            # Don't cross period boundaries
+            if row.get('period') != goal_period:
+                break
+
+            event_type = str(row.get('type', ''))
+
+            # Stop at any other shot (separate attacking move)
+            if event_type == 'Shot':
+                break
+
+            # Stop at possession-resetting events
+            if event_type in ('Starting XI', 'Half Start', 'Referee Ball-Drop',
+                               'Kick Off', 'Corner Awarded', 'Free Kick'):
+                break
+
+            # Only include on-ball actions with valid locations
+            loc = row.get('location')
+            if event_type in _ON_BALL_TYPES and isinstance(loc, (list, tuple)) and len(loc) >= 2:
+                preceding.append(idx_list[i])
+
+            if len(preceding) >= number:
+                break
+
+        # Reverse to get chronological order, append the goal
+        action_indices = list(reversed(preceding)) + [goal_idx]
+        actions = events.loc[action_indices].copy()
 
         if len(actions) == 0:
             continue
