@@ -3,34 +3,93 @@
 Football Analytics Dashboard
 Author: Hardy Agarwal
 Refactored: 2025 — removed VAEP/DB dependencies, simplified for Render deployment
+Performance optimised: lazy loading of heavy dependencies to minimise cold-start time
 """
 
-import matplotlib
-matplotlib.use('Agg')
-
-from statsbombpy import sb
+# ── Minimal imports at startup ──────────────────────────────────────────────
+import functools
 import dash
 from dash import dcc, html
 from dash.dependencies import Input, Output
-import pandas as pd
-import functools
-import io
-import base64
-import matplotlib.pyplot as plt
 
-import field
-import MPS
-from graph import passingnetwork
-from actionplot import plotaction
+# ── Lazy-loaded module-level globals ────────────────────────────────────────
+_imports_loaded = False
+_comp_data = None
+_empty_pitch_src = None
+
+# These are populated by _load_heavy_imports() on first use
+sb = pd = io = base64 = plt = field = MPS = passingnetwork = plotaction = None
 
 
-# ─────────────────────────────────────────────
-# DATA HELPERS (cached for performance)
-# ─────────────────────────────────────────────
+def _load_heavy_imports():
+    """Import all heavy dependencies once, on first user interaction."""
+    global _imports_loaded
+    global sb, pd, io, base64, plt, field, MPS, passingnetwork, plotaction
+
+    if _imports_loaded:
+        return
+
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as _plt
+
+    from statsbombpy import sb as _sb
+    import pandas as _pd
+    import io as _io
+    import base64 as _b64
+
+    import field as _field
+    import MPS as _MPS
+    from graph import passingnetwork as _pn
+    from actionplot import plotaction as _pa
+
+    sb = _sb
+    pd = _pd
+    io = _io
+    base64 = _b64
+    plt = _plt
+    field = _field
+    MPS = _MPS
+    passingnetwork = _pn
+    plotaction = _pa
+
+    _imports_loaded = True
+
+
+def _get_comp():
+    """Lazy-load games.csv on first access."""
+    global _comp_data
+    if _comp_data is None:
+        _load_heavy_imports()
+        _comp_data = pd.read_csv('games.csv')
+    return _comp_data
+
+
+def _get_empty_pitch():
+    """Generate the empty pitch image once, on first use."""
+    global _empty_pitch_src
+    if _empty_pitch_src is None:
+        _load_heavy_imports()
+        fig = plt.figure()
+        fig.set_size_inches(6.7 * 1.5, 6.7, forward=False)
+        MPS.drawactionfield(ax=fig.add_subplot(111), color='white',
+                            linecolor='lightgrey', show=False)
+        plt.tight_layout()
+        buf = io.BytesIO()
+        plt.savefig(buf, format='png')
+        _empty_pitch_src = 'data:image/png;base64,{}'.format(
+            base64.b64encode(buf.getbuffer()).decode('utf8')
+        )
+        plt.close()
+    return _empty_pitch_src
+
+
+# ── Data helpers (cached for performance) ───────────────────────────────────
 
 @functools.lru_cache(maxsize=20)
 def get_event_data(match_id):
     """Fetch and lightly process StatsBomb event data for a match."""
+    _load_heavy_imports()
     events = sb.events(match_id=match_id)
     events['timestamp'] = pd.to_datetime(events['timestamp']).dt.time
     return events
@@ -39,6 +98,7 @@ def get_event_data(match_id):
 @functools.lru_cache(maxsize=20)
 def get_lineup_data(match_id):
     """Fetch StatsBomb lineup data for a match."""
+    _load_heavy_imports()
     return sb.lineups(match_id=match_id)
 
 
@@ -63,10 +123,8 @@ def get_match_stats(match_id):
     for team in teams:
         te = events[events['team'] == team]
 
-        # Possession: count of events as proxy
         possession_events = len(te)
 
-        # Goals
         shots = te[te['type'] == 'Shot']
         goals = 0
         total_shots = len(shots)
@@ -83,7 +141,6 @@ def get_match_stats(match_id):
             if outcome_name in ('Goal', 'Saved', 'Saved to Post'):
                 shots_on_target += 1
 
-        # Passes
         passes = te[te['type'] == 'Pass']
         total_passes = len(passes)
         successful_passes = 0
@@ -98,10 +155,7 @@ def get_match_stats(match_id):
                 if pd.isna(outcome) if not isinstance(outcome, str) else outcome == '':
                     successful_passes += 1
 
-        # Fouls
         fouls = len(te[te['type'] == 'Foul Committed'])
-
-        # Cards
         yellow = 0
         red = 0
         foul_events = te[te['type'] == 'Foul Committed']
@@ -129,33 +183,24 @@ def get_match_stats(match_id):
             'red_cards': red,
         }
 
-    # Calculate possession %
     total_events = sum(s['possession_events'] for s in stats.values())
     for team in stats:
-        stats[team]['possession'] = round(100 * stats[team]['possession_events'] / total_events, 1) if total_events > 0 else 0
+        stats[team]['possession'] = round(
+            100 * stats[team]['possession_events'] / total_events, 1
+        ) if total_events > 0 else 0
 
     return teams, stats
 
 
 @functools.lru_cache(maxsize=20)
 def get_player_data(match_id, player_name):
-    """
-    Build all visualisation data for a single player in a match.
-    Returns pitch figure + pass/shot/tackle/heatmap data.
-    """
+    """Build all visualisation data for a single player in a match."""
+    _load_heavy_imports()
     fig = field.drawfield()
     events = get_event_data(match_id)
     playerdata = events[events['player'] == player_name].copy()
 
-    # Pad seconds to always be 2 digits
-    playerdata['second'] = playerdata['second'].apply(
-        lambda s: str(s).zfill(2)
-    )
-
-    # Current statsbombpy uses flat columns:
-    #   pass_end_location (list), pass_outcome (string), pass_recipient (string)
-    #   shot_end_location (list), shot_outcome (string like 'Goal', 'Off T', etc.)
-    #   duel_type (string like 'Tackle'), duel_outcome (string like 'Won', 'Lost')
+    playerdata['second'] = playerdata['second'].apply(lambda s: str(s).zfill(2))
 
     # ── PASSES ──
     playerpassdata = playerdata[playerdata['type'] == 'Pass']
@@ -163,14 +208,11 @@ def get_player_data(match_id, player_name):
     px1, py1, pcolors, ptime = [500], [50], ['black'], ['00:00']
 
     for i in playerpassdata.index:
-        # pass_outcome is NaN for successful passes, a string like 'Incomplete' for failed
         outcome = playerpassdata.loc[i, 'pass_outcome'] if 'pass_outcome' in playerpassdata.columns else None
         color = 'red' if pd.notna(outcome) else 'blue'
-
         end_loc = playerpassdata.loc[i, 'pass_end_location'] if 'pass_end_location' in playerpassdata.columns else None
         if end_loc is None or (isinstance(end_loc, float) and pd.isna(end_loc)):
             continue
-
         start_loc = playerpassdata.loc[i, 'location']
         passannotation.append(dict(
             x=end_loc[0], y=80 - end_loc[1],
@@ -206,10 +248,8 @@ def get_player_data(match_id, player_name):
             end_loc = playershotdata.loc[i, 'shot_end_location'] if 'shot_end_location' in playershotdata.columns else None
 
         color = 'blue' if outcome_name == 'Goal' else 'red'
-
         if end_loc is None or (isinstance(end_loc, float) and pd.isna(end_loc)):
             continue
-
         start_loc = playerdata.loc[i, 'location']
         shotannotation.append(dict(
             x=end_loc[0], y=80 - end_loc[1],
@@ -225,10 +265,11 @@ def get_player_data(match_id, player_name):
         sxg.append(round(float(xg), 2))
         soutcome_list.append(outcome_name)
 
-    shots = pd.DataFrame({'x1': sx1, 'y1': sy1, 'Colors': scolors, 'Time': stime, 'xG': sxg, 'Outcome': soutcome_list})
+    shots = pd.DataFrame({'x1': sx1, 'y1': sy1, 'Colors': scolors, 'Time': stime,
+                          'xG': sxg, 'Outcome': soutcome_list})
     shots['Hoverinfo'] = shots.apply(
-        lambda r: f"Time: {r['Time']}<br>xG: {r['xG']}<br>Outcome: {r['Outcome']}" if r['Time'] != '00:00' else '',
-        axis=1
+        lambda r: f"Time: {r['Time']}<br>xG: {r['xG']}<br>Outcome: {r['Outcome']}"
+        if r['Time'] != '00:00' else '', axis=1
     )
 
     # ── TACKLES ──
@@ -237,10 +278,8 @@ def get_player_data(match_id, player_name):
 
     for i in playerdueldata.index:
         try:
-            # duel_type is a string like 'Tackle', 'Aerial Lost', etc.
             duel_type = playerdueldata.loc[i, 'duel_type'] if 'duel_type' in playerdueldata.columns else ''
             duel_outcome = playerdueldata.loc[i, 'duel_outcome'] if 'duel_outcome' in playerdueldata.columns else ''
-
             if duel_type == 'Tackle':
                 color = 'red' if duel_outcome in ('Lost In Play', 'Lost Out') else 'blue'
                 tcolors.append(color)
@@ -260,162 +299,149 @@ def get_player_data(match_id, player_name):
     return fig, passannotation, passes, shotannotation, shots, tackles, heatmap
 
 
-# ─────────────────────────────────────────────
-# APP SETUP
-# ─────────────────────────────────────────────
+# ── App setup ────────────────────────────────────────────────────────────────
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-comp = pd.read_csv('games.csv')
-compname = comp['competition_name'].unique()
-
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-server = app.server  # Expose server for gunicorn
+server = app.server  # Expose for gunicorn
 app.config['suppress_callback_exceptions'] = True
 
 COLORS = {'background': '#F9F9F9'}
 
-# Generate empty pitch image for initial tab display
-_fig = plt.figure()
-_fig.set_size_inches(6.7 * 1.5, 6.7, forward=False)
-MPS.drawactionfield(ax=_fig.add_subplot(111), color='white', linecolor='lightgrey', show=False)
-plt.tight_layout()
-_buf = io.BytesIO()
-plt.savefig(_buf, format='png')
-EMPTY_PITCH_SRC = 'data:image/png;base64,{}'.format(
-    base64.b64encode(_buf.getbuffer()).decode('utf8')
-)
-plt.close()
 
-pitch = field.drawfield()
+# ── Layout (built lazily on first request) ───────────────────────────────────
 
+def _build_layout():
+    """Build the full layout with competition options loaded from games.csv."""
+    comp = _get_comp()
+    compname = comp['competition_name'].unique()
 
-# ─────────────────────────────────────────────
-# LAYOUT
-# ─────────────────────────────────────────────
+    return html.Div(
+        style={'backgroundColor': COLORS['background']},
+        children=[
+            # Header
+            html.Div(
+                style={'textAlign': 'center', 'margin': -2, 'padding': -10, 'fontSize': 48},
+                children=[html.B('Football Analytics')]
+            ),
+            html.H4(
+                'Visualizing football event data',
+                style={'textAlign': 'center', 'margin': -2, 'padding': -10}
+            ),
+            html.Div(
+                style={'textAlign': 'center', 'margin': -2, 'padding': -10, 'fontSize': 26},
+                children=[html.A('Hardik Agarwal',
+                                 href='https://www.linkedin.com/in/hardy-agarwal/',
+                                 target='_blank')]
+            ),
 
-app.layout = html.Div(
-    style={'backgroundColor': COLORS['background']},
-    children=[
-        # Header
-        html.Div(
-            style={'textAlign': 'center', 'margin': -2, 'padding': -10, 'fontSize': 48},
-            children=[html.B('Football Analytics')]
-        ),
-        html.H4(
-            'Visualizing football event data',
-            style={'textAlign': 'center', 'margin': -2, 'padding': -10}
-        ),
-        html.Div(
-            style={'textAlign': 'center', 'margin': -2, 'padding': -10, 'fontSize': 26},
-            children=[html.A('Hardik Agarwal',
-                             href='https://www.linkedin.com/in/hardy-agarwal/',
-                             target='_blank')]
-        ),
+            # Main content: sidebar + tabs
+            html.Div(
+                style={'display': 'flex', 'flexDirection': 'row',
+                       'backgroundColor': COLORS['background']},
+                children=[
 
-        # Main content: sidebar + tabs
-        html.Div(
-            style={'display': 'flex', 'flexDirection': 'row',
-                   'backgroundColor': COLORS['background']},
-            children=[
+                    # ── LEFT SIDEBAR ──
+                    html.Div(
+                        style={'width': '25%', 'border': 'thin lightgrey solid', 'padding': '10px'},
+                        children=[
+                            html.H3('Choose a team and player to analyse!'),
+                            html.P('Note: Player dropdown options may take a few seconds to load.'),
 
-                # ── LEFT SIDEBAR ──
-                html.Div(
-                    style={'width': '25%', 'border': 'thin lightgrey solid', 'padding': '10px'},
-                    children=[
-                        html.H3('Choose a team and player to analyse!'),
-                        html.P('Note: Player dropdown options may take a few seconds to load.'),
+                            html.P('Competition:'),
+                            dcc.Dropdown(
+                                id='competition',
+                                options=[{'label': c, 'value': c} for c in compname]
+                            ),
 
-                        html.P('Competition:'),
-                        dcc.Dropdown(
-                            id='competition',
-                            options=[{'label': c, 'value': c} for c in compname]
-                        ),
+                            html.P('Season:'),
+                            dcc.Dropdown(id='season'),
 
-                        html.P('Season:'),
-                        dcc.Dropdown(id='season'),
+                            html.P('Match:'),
+                            dcc.Dropdown(id='match'),
 
-                        html.P('Match:'),
-                        dcc.Dropdown(id='match'),
+                            html.Hr(),
+                            html.B('Passing Network', style={'fontSize': 16}),
 
-                        html.Hr(),
-                        html.B('Passing Network', style={'fontSize': 16}),
+                            html.P('Team:'),
+                            dcc.Dropdown(id='team'),
 
-                        html.P('Team:'),
-                        dcc.Dropdown(id='team'),
+                            html.Hr(),
+                            html.B('Player Analysis', style={'fontSize': 16}),
 
-                        html.Hr(),
-                        html.B('Player Analysis', style={'fontSize': 16}),
+                            html.P('Player:'),
+                            dcc.Dropdown(id='player'),
 
-                        html.P('Player:'),
-                        dcc.Dropdown(id='player'),
+                            html.P('Actions:'),
+                            dcc.Checklist(
+                                id='actions',
+                                options=[
+                                    {'label': ' Passes',  'value': 'Passes'},
+                                    {'label': ' Shots',   'value': 'Shots'},
+                                    {'label': ' Tackles', 'value': 'Tackles'},
+                                    {'label': ' Heatmap', 'value': 'Heatmap'},
+                                ]
+                            ),
+                        ]
+                    ),
 
-                        html.P('Actions:'),
-                        dcc.Checklist(
-                            id='actions',
-                            options=[
-                                {'label': ' Passes',  'value': 'Passes'},
-                                {'label': ' Shots',   'value': 'Shots'},
-                                {'label': ' Tackles', 'value': 'Tackles'},
-                                {'label': ' Heatmap', 'value': 'Heatmap'},
-                            ]
-                        ),
-                    ]
-                ),
+                    # ── RIGHT PANEL (tabs) ──
+                    html.Div(
+                        style={'width': '75%', 'padding': '10px'},
+                        children=[
+                            dcc.Tabs([
+                                dcc.Tab(label='Match Stats', children=[
+                                    html.Div(id='match-stats-container',
+                                             style={'padding': '20px'},
+                                             children=[html.P('Select a match to view statistics.')])
+                                ]),
+                                dcc.Tab(label='Passing Network', children=[
+                                    html.Img(id='pitch2', src='',
+                                             style={'maxWidth': '100%'}),
+                                    html.P(
+                                        'Passing network for the starting lineup. '
+                                        'Only successful passes before the first substitution '
+                                        'or red card are shown. Node size = number of passes.'
+                                    )
+                                ]),
+                                dcc.Tab(label='Player Analysis', children=[
+                                    dcc.Graph(id='pitch1', figure={})
+                                ]),
+                                dcc.Tab(label='Goals', children=[
+                                    html.Img(id='pitch3', src='',
+                                             style={'maxWidth': '100%'})
+                                ]),
+                            ])
+                        ]
+                    ),
+                ]
+            ),
 
-                # ── RIGHT PANEL (tabs) ──
-                html.Div(
-                    style={'width': '75%', 'padding': '10px'},
-                    children=[
-                        dcc.Tabs([
-                            dcc.Tab(label='Match Stats', children=[
-                                html.Div(id='match-stats-container',
-                                         style={'padding': '20px'},
-                                         children=[html.P('Select a match to view statistics.')])
-                            ]),
-                            dcc.Tab(label='Passing Network', children=[
-                                html.Img(id='pitch2', src=EMPTY_PITCH_SRC,
-                                         style={'maxWidth': '100%'}),
-                                html.P(
-                                    'Passing network for the starting lineup. '
-                                    'Only successful passes before the first substitution '
-                                    'or red card are shown. Node size = number of passes.'
-                                )
-                            ]),
-                            dcc.Tab(label='Player Analysis', children=[
-                                dcc.Graph(id='pitch1', figure=pitch)
-                            ]),
-                            dcc.Tab(label='Goals', children=[
-                                html.Img(id='pitch3', src=EMPTY_PITCH_SRC,
-                                         style={'maxWidth': '100%'})
-                            ]),
-                        ])
-                    ]
-                ),
-            ]
-        ),
-
-        # Footer
-        html.Div(
-            ['Data Source: ', html.A(
-                'StatsBomb Open Data',
-                href='https://statsbomb.com/what-we-do/hub/free-data/',
-                target='_blank'
-            )],
-            style={'textAlign': 'left', 'fontSize': '18px', 'padding': '10px'}
-        ),
-    ]
-)
+            # Footer
+            html.Div(
+                ['Data Source: ', html.A(
+                    'StatsBomb Open Data',
+                    href='https://statsbomb.com/what-we-do/hub/free-data/',
+                    target='_blank'
+                )],
+                style={'textAlign': 'left', 'fontSize': '18px', 'padding': '10px'}
+            ),
+        ]
+    )
 
 
-# ─────────────────────────────────────────────
-# CALLBACKS
-# ─────────────────────────────────────────────
+# Pass the function (not the result) so Dash calls it per-request
+app.layout = _build_layout
+
+
+# ── Callbacks ────────────────────────────────────────────────────────────────
 
 @app.callback(Output('season', 'options'), Input('competition', 'value'))
 def set_season_options(selected_comp):
     if not selected_comp:
         return []
+    comp = _get_comp()
     seasons = (comp[comp['competition_name'] == selected_comp]
                [['season_name', 'season_id']].drop_duplicates())
     return [{'label': row['season_name'], 'value': row['season_id']}
@@ -429,6 +455,7 @@ def set_season_options(selected_comp):
 def set_match_options(selected_comp, selected_season):
     if not selected_comp or selected_season is None:
         return []
+    comp = _get_comp()
     matches = comp[
         (comp['competition_name'] == selected_comp) &
         (comp['season_id'] == selected_season)
@@ -465,7 +492,8 @@ def set_player_options(selected_match, selected_team):
 )
 def update_passing_network(selected_match, selected_team):
     if not selected_match or not selected_team:
-        return EMPTY_PITCH_SRC
+        return _get_empty_pitch()
+    _load_heavy_imports()
     events = get_event_data(selected_match)
     lineups = get_lineup_data(selected_match)
     data = passingnetwork(selected_match, selected_team, events, lineups, 'Count')
@@ -530,7 +558,8 @@ def update_match_stats(selected_match):
 @app.callback(Output('pitch3', 'src'), Input('match', 'value'))
 def update_goals(selected_match):
     if not selected_match:
-        return EMPTY_PITCH_SRC
+        return _get_empty_pitch()
+    _load_heavy_imports()
     events = get_event_data(selected_match)
     data = plotaction(selected_match, events=events, w=10, h=8, zoom=False)
     return 'data:image/png;base64,{}'.format(data)
@@ -542,6 +571,7 @@ def update_goals(selected_match):
 )
 def update_player_figure(selected_player, selected_actions, selected_match):
     if not selected_player or not selected_match:
+        _load_heavy_imports()
         return field.drawfield()
 
     selected_actions = selected_actions or []
@@ -598,9 +628,7 @@ def update_player_figure(selected_player, selected_actions, selected_match):
     return fig
 
 
-# ─────────────────────────────────────────────
-# ENTRY POINT
-# ─────────────────────────────────────────────
+# ── Entry point ──────────────────────────────────────────────────────────────
 
 if __name__ == '__main__':
     app.run(debug=True)
