@@ -31,6 +31,19 @@ _TYPE_MAP = {
     'Dispossessed': 'pass',
 }
 
+# Event types that represent meaningful on-ball actions (for selecting preceding actions)
+_ON_BALL_TYPES = {
+    'Pass', 'Ball Receipt*', 'Carry', 'Dribble', 'Shot',
+    'Ball Recovery', 'Interception', 'Clearance', 'Foul Won',
+    'Goal Keeper', 'Block',
+}
+
+# MPS.actionsplot applies scaling factors (1.1428x, 1.1765x) to convert
+# from SPADL's 105x68 pitch to the 120x80 display. StatsBomb data is
+# already in 120x80, so we need to scale DOWN before passing to actionsplot.
+_SB_TO_SPADL_X = 105.0 / 120.0  # ≈ 0.875
+_SB_TO_SPADL_Y = 68.0 / 80.0    # ≈ 0.85
+
 
 def _get_shot_outcome(row):
     """Extract shot outcome from StatsBomb event row, handling both dict and flat formats."""
@@ -185,16 +198,26 @@ def plotaction(match_id, events=None, number=5, w=10, h=8, zoom=False):
             else:
                 awayscore += 1
 
-        # Get preceding N actions + the goal itself
+        # Get preceding on-ball actions + the goal itself.
+        # We look back further in the raw index to find enough meaningful actions,
+        # since many events (Pressure, Camera On, etc.) aren't on-ball plays.
         pos = idx_list.index(goal_idx)
-        start_pos = max(0, pos - number)
-        action_indices = idx_list[start_pos:pos + 1]
-        actions = events.loc[action_indices].copy()
+        # Search back up to 50 raw events to find N on-ball actions
+        search_start = max(0, pos - 50)
+        candidate_indices = idx_list[search_start:pos + 1]
+        candidates = events.loc[candidate_indices].copy()
 
-        # Filter to only events with locations (skip events like Half Start, etc.)
-        actions = actions[actions['location'].apply(
-            lambda x: isinstance(x, (list, tuple)) and len(x) >= 2
-        )].copy()
+        # Filter to on-ball events with valid locations
+        actions = candidates[
+            (candidates['type'].isin(_ON_BALL_TYPES)) &
+            (candidates['location'].apply(
+                lambda x: isinstance(x, (list, tuple)) and len(x) >= 2
+            ))
+        ].copy()
+
+        # Take the last (number) actions + the goal shot
+        if len(actions) > number + 1:
+            actions = actions.iloc[-(number + 1):]
 
         if len(actions) == 0:
             continue
@@ -213,11 +236,14 @@ def plotaction(match_id, events=None, number=5, w=10, h=8, zoom=False):
         for i in actions.index:
             row = actions.loc[i]
             loc = row['location']
-            sx, sy = loc[0], loc[1]
+            # Scale StatsBomb 120x80 coords → SPADL 105x68 coords
+            # (MPS.actionsplot will scale them back up to 120x80 for display)
+            sx, sy = loc[0] * _SB_TO_SPADL_X, loc[1] * _SB_TO_SPADL_Y
 
             ex, ey = _get_end_location(row)
             if ex is None:
-                ex, ey = sx, sy
+                ex, ey = loc[0], loc[1]
+            ex, ey = ex * _SB_TO_SPADL_X, ey * _SB_TO_SPADL_Y
 
             start_x.append(sx)
             start_y.append(sy)
