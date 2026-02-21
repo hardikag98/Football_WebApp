@@ -370,26 +370,29 @@ def actionsplot(
         else:
             return "red"
 
-    colors = np.array([get_color(ty, te) for ty, te in zip(action_type, team)])
-    blue_n = np.sum(colors == "blue")
-    red_n = np.sum(colors == "red")
-    blue_markers = iter(list(cm.Blues(np.linspace(0.1, 0.8, blue_n))))
-    red_markers = iter(list(cm.Reds(np.linspace(0.1, 0.8, red_n))))
+    colors = [get_color(ty, te) for ty, te in zip(action_type, team)]
 
     cnt = 1
-    for ty, r, loc, color, line in zip(action_type, result, location, colors, lines):
+    prev_ex, prev_ey = None, None
+    for ty, r, loc, c, line in zip(action_type, result, location, colors, lines):
         [sx, sy, ex, ey] = loc
+        # Scale StatsBomb coordinates to SPADL pitch display
         sx, ex = sx*1.1428, ex*1.1428
         sy, ey = sy*1.1765, ey*1.1765
-        plt.text(sx + text_offset, sy, str(cnt))
+        
+        # Draw transition line from previous action's end
+        if prev_ex is not None:
+            ax.plot(
+                [prev_ex, sx], [prev_ey, sy],
+                color="#707070", # Darker gray transition
+                linestyle=":",
+                alpha=0.6,
+                zorder=zaction - 1
+            )
+        
+        plt.text(sx + text_offset, sy + (2.5 if cnt % 2 else -2.5), str(cnt))
         cnt += 1
-        if color == "blue":
-            c = next(blue_markers)
-        elif color == "red":
-            c = next(red_markers)
-        else:
-            c = "black"
-
+        
         if ty == "dribble":
             ax.plot(
                 [sx, ex],
@@ -424,11 +427,13 @@ def actionsplot(
                     head_width=arrowsize,
                     head_length=arrowsize,
                     linewidth=1,
-                    fc=ec,
+                    fc=ec, # Arrow color based on success
                     ec=ec,
                     length_includes_head=True,
                     zorder=zaction,
                 )
+        
+        prev_ex, prev_ey = ex, ey
     #leg = plt.legend(loc=9,prop={'family': 'monospace','size':9})
     if show_legend:
         if legloc == "top":

@@ -117,8 +117,9 @@ def passingnetwork(match_id, teamname, events, lineups, passvalue='count'):
     ax = draw_pitch()
     ax = draw_pass_map(ax, player_position, player_pass_count, player_pass_value,
                        pair_pass_count, pair_pass_value, title='', legend=plot_legend)
+    fig = ax.figure
     buf = io.BytesIO()
-    plt.savefig(buf, format="png")
+    fig.savefig(buf, format="png")
     data = base64.b64encode(buf.getbuffer()).decode("utf8")
-    plt.close()
+    plt.close(fig)
     return data

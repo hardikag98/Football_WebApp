@@ -71,16 +71,17 @@ def _get_empty_pitch():
     if _empty_pitch_src is None:
         _load_heavy_imports()
         fig = plt.figure()
-        fig.set_size_inches(6.7 * 1.5, 6.7, forward=False)
-        MPS.drawactionfield(ax=fig.add_subplot(111), color='white',
+        ax = fig.add_subplot(111)
+        MPS.drawactionfield(ax=ax, color='white',
                             linecolor='lightgrey', show=False)
-        plt.tight_layout()
+        ax.axis('off')
+        fig.tight_layout()
         buf = io.BytesIO()
-        plt.savefig(buf, format='png')
+        fig.savefig(buf, format='png')
         _empty_pitch_src = 'data:image/png;base64,{}'.format(
             base64.b64encode(buf.getbuffer()).decode('utf8')
         )
-        plt.close()
+        plt.close(fig)
     return _empty_pitch_src
 
 

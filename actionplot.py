@@ -10,32 +10,32 @@ import io
 import base64
 import MPS
 import matplotlib.pyplot as plt
+from statsbombpy import sb as _sb
 
+
+# StatsBomb event types that correspond to SPADL actions.
+# These are the only types that exist in the main branch's SPADL HDF5 data,
+# plus fouls/tackles/handball for richer goal-sequence context.
+_SPADL_TYPES = {
+    'Pass', 'Carry', 'Dribble', 'Shot', 'Interception',
+    'Clearance', 'Miscontrol', 'Goal Keeper',
+    'Block', 'Foul Committed', 'Tackle', 'Bad Behaviour',
+}
 
 # Map StatsBomb event types to SPADL-style type names for MPS.actionsplot
 _TYPE_MAP = {
     'Pass': 'pass',
-    'Ball Receipt*': 'pass',
     'Carry': 'dribble',
     'Dribble': 'dribble',
     'Shot': 'shot',
-    'Ball Recovery': 'pass',
-    'Interception': 'pass',
-    'Clearance': 'pass',
-    'Pressure': 'pass',
-    'Foul Won': 'pass',
-    'Duel': 'pass',
-    'Miscontrol': 'pass',
-    'Goal Keeper': 'pass',
-    'Block': 'pass',
-    'Dispossessed': 'pass',
-}
-
-# Event types that represent meaningful on-ball actions (for selecting preceding actions)
-_ON_BALL_TYPES = {
-    'Pass', 'Ball Receipt*', 'Carry', 'Dribble', 'Shot',
-    'Ball Recovery', 'Interception', 'Clearance', 'Foul Won',
-    'Goal Keeper', 'Block',
+    'Interception': 'interception',
+    'Clearance': 'clearance',
+    'Miscontrol': 'miscontrol',
+    'Goal Keeper': 'save',
+    'Block': 'block',
+    'Foul Committed': 'foul',
+    'Tackle': 'tackle',
+    'Bad Behaviour': 'handball',
 }
 
 # MPS.actionsplot applies scaling factors (1.1428x, 1.1765x) to convert
@@ -94,6 +94,8 @@ def plotaction(match_id, events=None, number=5, w=10, h=8, zoom=False):
     Plot goal sequences using StatsBomb event data.
 
     For each goal in the match, shows the N preceding actions on a pitch.
+    Mimics the main branch behavior: a simple slice of the N rows before
+    each goal, regardless of action type.
 
     Parameters
     ----------
@@ -117,19 +119,43 @@ def plotaction(match_id, events=None, number=5, w=10, h=8, zoom=False):
         # No events provided — show placeholder
         fig = plt.figure()
         fig.set_size_inches(6.7 * 1.5, 6.7, forward=False)
+        ax = fig.add_subplot(111)
         MPS.drawactionfield(
-            ax=fig.add_subplot(111),
+            ax=ax,
             color='white', linecolor='lightgrey', show=False,
             title="Select a match to view goal sequences"
         )
-        plt.tight_layout()
+        ax.axis('off')
+        fig.tight_layout()
         buf = io.BytesIO()
-        plt.savefig(buf, format="png")
+        fig.savefig(buf, format="png")
         data = base64.b64encode(buf.getbuffer()).decode("utf8")
-        plt.close()
+        plt.close(fig)
         return data
 
-    # ── Identify teams ──
+    # ── Sort events chronologically ──
+    # Sort by period, minute, second to ensure correct chronological order.
+    if 'index' in events.columns:
+        events = events.sort_values('index').reset_index(drop=True)
+    else:
+        events = events.sort_values(
+            ['period', 'minute', 'second'], ascending=True
+        ).reset_index(drop=True)
+
+    # ── Build nickname lookup from lineups ──
+    _nickname_map = {}
+    try:
+        lineups = _sb.lineups(match_id=match_id)
+        for _team_name, roster in lineups.items():
+            for _, p in roster.iterrows():
+                full = p.get('player_name', '')
+                nick = p.get('player_nickname')
+                if nick and str(nick) not in ('None', 'nan', ''):
+                    _nickname_map[full] = str(nick)
+    except Exception:
+        pass  # graceful fallback — use full names
+
+    # ── Identify teams (before filtering) ──
     teams = events['team'].dropna().unique().tolist()
     if len(teams) >= 2:
         hometeam, awayteam = teams[0], teams[1]
@@ -137,8 +163,25 @@ def plotaction(match_id, events=None, number=5, w=10, h=8, zoom=False):
         hometeam = teams[0] if teams else "Home"
         awayteam = "Away"
 
+    # ── Filter to SPADL-equivalent actions with valid locations ──
+    # Main branch uses SPADL data which only contains specific action types.
+    # We must filter to the same types to get matching preceding-action slices.
+    # Also exclude penalty shootout (period 5).
+    spadl_actions = events[
+        (events['type'].isin(_SPADL_TYPES)) &
+        (events['location'].apply(lambda x: isinstance(x, (list, tuple)) and len(x) >= 2)) &
+        (events['period'] < 5)
+    ].copy()
+    # Remove passive GK events (observations, not actual plays)
+    _PASSIVE_GK = {'Shot Faced', 'Goal Conceded', 'Penalty Conceded'}
+    spadl_actions = spadl_actions[
+        ~((spadl_actions['type'] == 'Goal Keeper') &
+          (spadl_actions['goalkeeper_type'].isin(_PASSIVE_GK) if 'goalkeeper_type' in spadl_actions.columns else False))
+    ]
+    spadl_actions = spadl_actions.reset_index(drop=True)
+
     # ── Find all goals ──
-    shot_events = events[events['type'] == 'Shot'].copy()
+    shot_events = spadl_actions[spadl_actions['type'] == 'Shot'].copy()
     goal_indices = []
     for idx in shot_events.index:
         outcome = _get_shot_outcome(shot_events.loc[idx])
@@ -148,16 +191,18 @@ def plotaction(match_id, events=None, number=5, w=10, h=8, zoom=False):
     if len(goal_indices) == 0:
         fig = plt.figure()
         fig.set_size_inches(6.7 * 1.5, 6.7, forward=False)
+        ax = fig.add_subplot(111)
         MPS.drawactionfield(
-            ax=fig.add_subplot(111), color='white',
+            ax=ax, color='white',
             linecolor='lightgrey', show=False,
             title="Match ended goalless!"
         )
-        plt.tight_layout()
+        ax.axis('off')
+        fig.tight_layout()
         buf = io.BytesIO()
-        plt.savefig(buf, format="png")
+        fig.savefig(buf, format="png")
         data = base64.b64encode(buf.getbuffer()).decode("utf8")
-        plt.close()
+        plt.close(fig)
         return data
 
     # ── Build figure with one subplot per goal ──
@@ -169,78 +214,72 @@ def plotaction(match_id, events=None, number=5, w=10, h=8, zoom=False):
     homescore = 0
     awayscore = 0
 
-    # Get positional index of each row for slicing preceding actions
-    idx_list = events.index.tolist()
-
     for goal_num, goal_idx in enumerate(goal_indices, start=1):
-        # Determine which team scored
-        goal_row = events.loc[goal_idx]
-        scoring_team = goal_row.get('team', '')
-
-        # Get goal location to determine direction (home attacks right: x > 60)
-        goal_loc = goal_row.get('location', [0, 0])
-        if isinstance(goal_loc, (list, tuple)) and len(goal_loc) >= 2:
-            if goal_loc[0] > 60:
-                # Shot towards right goal — home team convention
-                if scoring_team == hometeam:
-                    homescore += 1
-                else:
-                    awayscore += 1
-            else:
-                if scoring_team == awayteam:
-                    awayscore += 1
-                else:
-                    homescore += 1
+        # ── Score tracking ──
+        goal_row = spadl_actions.loc[goal_idx]
+        scoring_team = str(goal_row.get('team', ''))
+        if scoring_team == hometeam:
+            homescore += 1
         else:
-            # Fallback: just use team name
-            if scoring_team == hometeam:
-                homescore += 1
-            else:
-                awayscore += 1
+            awayscore += 1
 
-        # Get preceding on-ball actions + the goal itself.
-        # Walk BACKWARDS from the goal, collecting on-ball actions by the
-        # SCORING TEAM only. Stop when we hit a hard possession reset or
-        # collect enough actions.
-        pos = idx_list.index(goal_idx)
-        goal_period = goal_row.get('period', 1)
+        # ── Helper: normalise coords to scoring-team reference frame ──
+        def _normalise(x, y, team):
+            """Flip opposing-team coords so everything is in scoring-team's frame."""
+            if team != scoring_team:
+                return 120.0 - x, 80.0 - y
+            return x, y
 
-        preceding = []
-        for i in range(pos - 1, max(0, pos - 150) - 1, -1):
-            row = events.loc[idx_list[i]]
+        def _row_coords(row):
+            """Return (sx, sy, ex, ey) normalised to scoring-team frame."""
+            loc = row['location']
+            team = str(row.get('team', ''))
+            sx, sy = _normalise(loc[0], loc[1], team)
+            ex, ey = _get_end_location(row)
+            if ex is None:
+                ex, ey = loc[0], loc[1]
+            ex, ey = _normalise(ex, ey, team)
+            return sx, sy, ex, ey
 
-            # Don't cross period boundaries
-            if row.get('period') != goal_period:
+        # ── Walk backward from goal, picking preceding actions ──
+        # We take the N preceding on-ball actions. 
+        # Trivial carries (< 1 yard) and redundant technical artifacts 
+        # (Block/GK Shot Faced) sharing a timestamp with a primary action are skipped.
+        chain = [goal_idx]
+        # Track timestamps of selected events to skip simultaneous technical artifacts
+        chain_timestamps = {(int(goal_row.get('minute', 0)), int(goal_row.get('second', 0)))}
+
+        search_start = max(0, goal_idx - 50)  # look-back window
+        for candidate_idx in range(goal_idx - 1, search_start - 1, -1):
+            if len(chain) > number:
                 break
+            cand = spadl_actions.loc[candidate_idx]
+            
+            # 1. Skip trivial carries/dribbles (< 1 yard movement)
+            cand_type = str(cand.get('type', ''))
+            if cand_type in ('Carry', 'Dribble'):
+                csx, csy, cex_c, cey_c = _row_coords(cand)
+                carry_dist = ((cex_c - csx) ** 2 + (cey_c - csy) ** 2) ** 0.5
+                if carry_dist < 1.0:
+                    continue
+            
+            # 2. Skip simultaneous technical artifacts (Block, Goal Keeper) 
+            # if we already have a primary action at this timestamp.
+            cand_ts = (int(cand.get('minute', 0)), int(cand.get('second', 0)))
+            if cand_ts in chain_timestamps and cand_type in ('Block', 'Goal Keeper'):
+                continue
+                
+            # No spatial filtering - just take the action
+            chain.append(candidate_idx)
+            chain_timestamps.add(cand_ts)
 
-            event_type = str(row.get('type', ''))
-
-            # Hard stop: another shot means a completely separate attacking move
-            if event_type == 'Shot':
-                break
-
-            # Hard stop: play was restarted from a set piece or half
-            if event_type in ('Starting XI', 'Half Start', 'Referee Ball-Drop',
-                               'Kick Off'):
-                break
-
-            # Collect any on-ball action (either team) with a valid location
-            loc = row.get('location')
-            if (event_type in _ON_BALL_TYPES
-                    and isinstance(loc, (list, tuple)) and len(loc) >= 2):
-                preceding.append(idx_list[i])
-
-            if len(preceding) >= number:
-                break
-
-        # Reverse to get chronological order, append the goal
-        action_indices = list(reversed(preceding)) + [goal_idx]
-        actions = events.loc[action_indices].copy()
+        chain.reverse()
+        actions = spadl_actions.loc[chain].copy()
 
         if len(actions) == 0:
             continue
 
-        # Build SPADL-like columns for MPS.actionsplot
+        # ── Build SPADL-like columns for MPS.actionsplot ──
         start_x = []
         start_y = []
         end_x = []
@@ -253,29 +292,30 @@ def plotaction(match_id, events=None, number=5, w=10, h=8, zoom=False):
 
         for i in actions.index:
             row = actions.loc[i]
-            loc = row['location']
-            # Scale StatsBomb 120x80 coords → SPADL 105x68 coords
-            # (MPS.actionsplot will scale them back up to 120x80 for display)
-            sx, sy = loc[0] * _SB_TO_SPADL_X, loc[1] * _SB_TO_SPADL_Y
+            sx, sy, ex, ey = _row_coords(row)
 
-            ex, ey = _get_end_location(row)
-            if ex is None:
-                ex, ey = loc[0], loc[1]
-            ex, ey = ex * _SB_TO_SPADL_X, ey * _SB_TO_SPADL_Y
-
-            start_x.append(sx)
-            start_y.append(sy)
-            end_x.append(ex)
-            end_y.append(ey)
+            # Scale StatsBomb 120x80 → SPADL 105x68
+            start_x.append(sx * _SB_TO_SPADL_X)
+            start_y.append(sy * _SB_TO_SPADL_Y)
+            end_x.append(ex * _SB_TO_SPADL_X)
+            end_y.append(ey * _SB_TO_SPADL_Y)
 
             sb_type = str(row.get('type', 'pass'))
-            type_names.append(_TYPE_MAP.get(sb_type, 'pass'))
+            # Distinguish penalties from open-play shots
+            if sb_type == 'Shot' and str(row.get('shot_type', '')) == 'Penalty':
+                type_names.append('penalty')
+            elif sb_type == 'Goal Keeper':
+                gk_type = str(row.get('goalkeeper_type', ''))
+                type_names.append(gk_type.lower() if gk_type else 'save')
+            else:
+                type_names.append(_TYPE_MAP.get(sb_type, 'pass'))
             team_names.append(str(row.get('team', '')))
             nice_times.append(_nice_time(row))
-            player_names.append(str(row.get('player', '')))
+            # Use nickname from lineups, fall back to full name
+            full_name = str(row.get('player', ''))
+            player_names.append(_nickname_map.get(full_name, full_name))
 
-            # Determine success: passes with no outcome are successful,
-            # shots with Goal outcome are successful
+            # Determine success
             if sb_type == 'Shot':
                 result_flags.append(_get_shot_outcome(row) == 'Goal')
             elif sb_type == 'Pass':
@@ -316,9 +356,9 @@ def plotaction(match_id, events=None, number=5, w=10, h=8, zoom=False):
             ax=fig.add_subplot(num_goals, 1, goal_num)
         )
 
-    plt.tight_layout()
+    fig.tight_layout()
     buf = io.BytesIO()
-    plt.savefig(buf, format="png")
+    fig.savefig(buf, format="png")
     data = base64.b64encode(buf.getbuffer()).decode("utf8")
-    plt.close()
+    plt.close(fig)
     return data
