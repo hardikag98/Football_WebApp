@@ -291,7 +291,7 @@ def create_xg_flow_fig(xg_flow, goals_markers):
         hovermode='x unified',
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
         margin=dict(l=40, r=40, t=60, b=40),
-        height=350
+        height=500,
     )
     return fig
 
@@ -386,8 +386,7 @@ def create_shot_map_fig(shots):
         xaxis=dict(range=[-5, 85], showgrid=False, zeroline=False, visible=False),
         yaxis=dict(range=[-5, 125], showgrid=False, zeroline=False, visible=False),
         template='plotly_white',
-        height=600,
-        width=400,
+        height=700,
         margin=dict(l=20, r=20, t=60, b=20),
         showlegend=True,
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5, font=dict(size=14)),
@@ -521,18 +520,18 @@ def _build_layout():
         children=[
             # Header
             html.Div(
-                style={'textAlign': 'center', 'margin': -2, 'padding': -10, 'fontSize': 48},
-                children=[html.B('Football Analytics')]
-            ),
-            html.H4(
-                'Visualizing football event data',
-                style={'textAlign': 'center', 'margin': -2, 'padding': -10}
-            ),
-            html.Div(
-                style={'textAlign': 'center', 'margin': -2, 'padding': -10, 'fontSize': 26},
-                children=[html.A('Hardik Agarwal',
-                                 href='https://www.linkedin.com/in/hardy-agarwal/',
-                                 target='_blank')]
+                style={'textAlign': 'center', 'padding': '20px 0', 'backgroundColor': 'white', 'borderBottom': '1px solid #eee', 'marginBottom': '20px'},
+                children=[
+                    html.H1('Football Analytics', style={'margin': '0', 'fontSize': 'calc(24px + 2vw)', 'fontWeight': 'bold', 'color': '#2c3e50'}),
+                    html.P('Visualizing football event data', style={'margin': '5px 0', 'fontSize': '1.2rem', 'color': '#7f8c8d'}),
+                    html.Div(
+                        style={'fontSize': '1.1rem'},
+                        children=[html.A('Hardik Agarwal',
+                                         href='https://www.linkedin.com/in/hardy-agarwal/',
+                                         target='_blank',
+                                         style={'textDecoration': 'none', 'color': '#3498db', 'fontWeight': '500'})]
+                    ),
+                ]
             ),
 
             # Main content: sidebar + tabs
@@ -614,7 +613,7 @@ def _build_layout():
                                             html.Div(style={'flex': '2', 'minWidth': '400px'}, children=[
                                                 dcc.Graph(id='xg-flow-chart', config={'displayModeBar': False})
                                             ]),
-                                            html.Div(style={'flex': '1', 'maxWidth': '450px', 'minWidth': '350px'}, children=[
+                                            html.Div(style={'flex': '1', 'minWidth': '350px'}, children=[
                                                 dcc.Graph(id='shot-map', config={'displayModeBar': False})
                                             ]),
                                         ]),
@@ -743,14 +742,14 @@ def update_match_stats(selected_match):
         ('Red Cards', s1['red_cards'], s2['red_cards']),
     ]
 
-    header_style = {'padding': '12px 16px', 'fontWeight': 'bold', 'fontSize': '16px',
-                    'borderBottom': '2px solid #ddd', 'textAlign': 'center'}
-    cell_style = {'padding': '10px 16px', 'textAlign': 'center', 'fontSize': '15px',
+    header_style = {'padding': '2vh 1vw', 'fontWeight': 'bold', 'fontSize': 'calc(14px + 0.5vw)',
+                    'borderBottom': '3px solid #ddd', 'textAlign': 'center', 'backgroundColor': '#f8f9fa'}
+    cell_style = {'padding': '1.5vh 1vw', 'textAlign': 'center', 'fontSize': 'calc(12px + 0.5vw)',
                   'borderBottom': '1px solid #eee'}
-    label_style = {**cell_style, 'fontWeight': '500', 'color': '#555'}
+    label_style = {**cell_style, 'fontWeight': 'bold', 'color': '#333', 'backgroundColor': '#fcfcfc'}
 
     table = html.Table(
-        style={'width': '100%', 'borderCollapse': 'collapse', 'maxWidth': '700px', 'margin': '0 auto'},
+        style={'width': '100%', 'borderCollapse': 'collapse', 'maxWidth': '1200px', 'margin': '20px auto', 'boxShadow': '0 4px 6px rgba(0,0,0,0.05)'},
         children=[
             html.Thead(html.Tr([
                 html.Th(t1, style=header_style),
@@ -768,7 +767,7 @@ def update_match_stats(selected_match):
     )
 
     return [
-        html.H3(f"{t1} vs {t2}", style={'textAlign': 'center', 'marginBottom': '20px'}),
+        html.H2(f"{t1} vs {t2}", style={'textAlign': 'center', 'marginBottom': '30px', 'marginTop': '10px', 'fontSize': 'calc(20px + 1vw)'}),
         table
     ]
 
