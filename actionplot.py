@@ -89,32 +89,7 @@ def _nice_time(row):
     return f"{minute}m{second}s"
 
 
-def plotaction(match_id, events=None, number=5, w=10, h=8, zoom=False):
-    """
-    Plot goal sequences using StatsBomb event data.
-
-    For each goal in the match, shows the N preceding actions on a pitch.
-    Mimics the main branch behavior: a simple slice of the N rows before
-    each goal, regardless of action type.
-
-    Parameters
-    ----------
-    match_id : int
-        StatsBomb match ID.
-    events : DataFrame, optional
-        Pre-fetched event data. If None, a placeholder is shown.
-    number : int
-        Number of actions before the goal to display (default 5).
-    w, h : int
-        Figure width and base height per goal subplot.
-    zoom : bool
-        Whether to zoom into the action area.
-
-    Returns
-    -------
-    str
-        Base64-encoded PNG image.
-    """
+def plotaction(match_id, events=None, number=5, w=10, h=8, zoom=False, shot_idx=None):
     if events is None:
         # No events provided — show placeholder
         fig = plt.figure()
@@ -128,19 +103,22 @@ def plotaction(match_id, events=None, number=5, w=10, h=8, zoom=False):
         ax.axis('off')
         fig.tight_layout()
         buf = io.BytesIO()
-        fig.savefig(buf, format="png")
+        fig.savefig(buf, format="png", bbox_inches='tight')
         data = base64.b64encode(buf.getbuffer()).decode("utf8")
         plt.close(fig)
         return data
 
     # ── Sort events chronologically ──
     # Sort by period, minute, second to ensure correct chronological order.
+    # Preserve original index for lookup
     if 'index' in events.columns:
-        events = events.sort_values('index').reset_index(drop=True)
+        events = events.sort_values('index')
     else:
-        events = events.sort_values(
-            ['period', 'minute', 'second'], ascending=True
-        ).reset_index(drop=True)
+        events = events.sort_values(['period', 'minute', 'second'], ascending=True)
+    
+    # Store original index before reset for shot_idx lookup
+    events['original_index'] = events.index
+    events = events.reset_index(drop=True)
 
     # ── Build nickname lookup from lineups ──
     _nickname_map = {}
@@ -180,13 +158,21 @@ def plotaction(match_id, events=None, number=5, w=10, h=8, zoom=False):
     ]
     spadl_actions = spadl_actions.reset_index(drop=True)
 
-    # ── Find all goals ──
-    shot_events = spadl_actions[spadl_actions['type'] == 'Shot'].copy()
-    goal_indices = []
-    for idx in shot_events.index:
-        outcome = _get_shot_outcome(shot_events.loc[idx])
-        if outcome == 'Goal':
-            goal_indices.append(idx)
+    # ── Find all goals (or specific shot_idx) ──
+    if shot_idx is not None:
+        # Find the index in spadl_actions that matches the original event index
+        match = spadl_actions[spadl_actions['original_index'] == shot_idx]
+        if not match.empty:
+            goal_indices = [match.index[0]]
+        else:
+            goal_indices = []
+    else:
+        shot_events = spadl_actions[spadl_actions['type'] == 'Shot'].copy()
+        goal_indices = []
+        for idx in shot_events.index:
+            outcome = _get_shot_outcome(shot_events.loc[idx])
+            if outcome == 'Goal':
+                goal_indices.append(idx)
 
     if len(goal_indices) == 0:
         fig = plt.figure()
@@ -197,31 +183,61 @@ def plotaction(match_id, events=None, number=5, w=10, h=8, zoom=False):
             linecolor='lightgrey', show=False,
             title="Match ended goalless!"
         )
-        ax.axis('off')
+        ax.set_axis_off()
         fig.tight_layout()
         buf = io.BytesIO()
-        fig.savefig(buf, format="png")
+        fig.savefig(buf, format="png", bbox_inches='tight')
         data = base64.b64encode(buf.getbuffer()).decode("utf8")
         plt.close(fig)
         return data
 
     # ── Build figure with one subplot per goal ──
     num_goals = len(goal_indices)
-    total_h = h * num_goals
+    
+    # Adjust sizing for single trace
+    if shot_idx is not None:
+        fig_w, fig_h = w, h
+    else:
+        fig_w, fig_h = w, h * num_goals
+        
     fig = plt.figure()
-    fig.set_size_inches(w, total_h, forward=False)
+    fig.set_size_inches(fig_w, fig_h, forward=False)
 
-    homescore = 0
-    awayscore = 0
+    for goal_num, current_shot_idx in enumerate(goal_indices, start=1):
+        # ── Score calculation (at the moment of the shot) ──
+        # We need the score BEFORE this shot happened.
+        current_shots_so_far = spadl_actions.iloc[:current_shot_idx]
+        current_goals_so_far = 0
+        h_score, a_score = 0, 0
+        
+        # Count goals in all actions BEFORE this one
+        for _, r in current_shots_so_far[current_shots_so_far['type'] == 'Shot'].iterrows():
+            if _get_shot_outcome(r) == 'Goal':
+                if str(r.get('team', '')) == hometeam: h_score += 1
+                else: a_score += 1
 
-    for goal_num, goal_idx in enumerate(goal_indices, start=1):
-        # ── Score tracking ──
-        goal_row = spadl_actions.loc[goal_idx]
+        goal_row = spadl_actions.loc[current_shot_idx]
         scoring_team = str(goal_row.get('team', ''))
-        if scoring_team == hometeam:
-            homescore += 1
+        outcome = _get_shot_outcome(goal_row)
+        
+        # If this is a goal, the display should show the score AFTER it's scored
+        display_h, display_a = h_score, a_score
+        if outcome == 'Goal':
+            if scoring_team == hometeam: display_h += 1
+            else: display_a += 1
+        
+        # Title logic
+        player_name = str(goal_row.get('player', ''))
+        player_nick = _nickname_map.get(player_name, player_name)
+        time_str = _nice_time(goal_row)
+        
+        if shot_idx is not None:
+            # Hover-to-trace preview
+            status = "GOAL" if outcome == 'Goal' else "ATTEMPT"
+            header = f"[{status}] {player_nick} ({time_str})"
         else:
-            awayscore += 1
+            # Static goals tab
+            header = f"Goal {goal_num}: {player_nick} ({time_str})"
 
         # ── Helper: normalise coords to scoring-team reference frame ──
         def _normalise(x, y, team):
@@ -243,14 +259,12 @@ def plotaction(match_id, events=None, number=5, w=10, h=8, zoom=False):
 
         # ── Walk backward from goal, picking preceding actions ──
         # We take the N preceding on-ball actions. 
-        # Trivial carries (< 1 yard) and redundant technical artifacts 
-        # (Block/GK Shot Faced) sharing a timestamp with a primary action are skipped.
-        chain = [goal_idx]
+        chain = [current_shot_idx]
         # Track timestamps of selected events to skip simultaneous technical artifacts
         chain_timestamps = {(int(goal_row.get('minute', 0)), int(goal_row.get('second', 0)))}
 
-        search_start = max(0, goal_idx - 50)  # look-back window
-        for candidate_idx in range(goal_idx - 1, search_start - 1, -1):
+        search_start = max(0, current_shot_idx - 50)  # look-back window
+        for candidate_idx in range(current_shot_idx - 1, search_start - 1, -1):
             if len(chain) > number:
                 break
             cand = spadl_actions.loc[candidate_idx]
@@ -294,11 +308,11 @@ def plotaction(match_id, events=None, number=5, w=10, h=8, zoom=False):
             row = actions.loc[i]
             sx, sy, ex, ey = _row_coords(row)
 
-            # Scale StatsBomb 120x80 → SPADL 105x68
-            start_x.append(sx * _SB_TO_SPADL_X)
-            start_y.append(sy * _SB_TO_SPADL_Y)
-            end_x.append(ex * _SB_TO_SPADL_X)
-            end_y.append(ey * _SB_TO_SPADL_Y)
+            # StatsBomb coordinates are already 120x80, no scaling needed
+            start_x.append(sx)
+            start_y.append(sy)
+            end_x.append(ex)
+            end_y.append(ey)
 
             sb_type = str(row.get('type', 'pass'))
             # Distinguish penalties from open-play shots
@@ -343,10 +357,10 @@ def plotaction(match_id, events=None, number=5, w=10, h=8, zoom=False):
             location=location_df[['start_x', 'start_y', 'end_x', 'end_y']],
             action_type=pd.Series(type_names),
             team=pd.Series(team_names),
-            title=f"{hometeam} {homescore} - {awayscore} {awayteam}",
+            title=f"{header} | {hometeam} {display_h} - {display_a} {awayteam}",
             result=pd.Series(result_flags),
             label=labels,
-            figsize=(w, total_h),
+            figsize=(fig_w, fig_h),
             labeltitle=["time", "actiontype", "player", "team"],
             zoom=zoom,
             color='white',
@@ -358,7 +372,7 @@ def plotaction(match_id, events=None, number=5, w=10, h=8, zoom=False):
 
     fig.tight_layout()
     buf = io.BytesIO()
-    fig.savefig(buf, format="png")
+    fig.savefig(buf, format="png", bbox_inches='tight')
     data = base64.b64encode(buf.getbuffer()).decode("utf8")
     plt.close(fig)
     return data

@@ -89,7 +89,8 @@ def _field(
         ax = fig.gca()
 
     if title is not None:
-        plt.title(title,loc='left',fontdict={'fontsize': 18})
+        # Move title up slightly to avoid overlap with pitch
+        ax.set_title(title, loc='left', fontdict={'fontsize': 16}, pad=20)
 
     # Pitch Outline & Centre Line
     x1, y1, x2, y2 = (
@@ -208,9 +209,9 @@ def _field(
     '''
 
     # Tidy Axes
-    ax.set_xlim(-0.7,120.7)
-    ax.set_ylim(-0.2,80.2)
-    plt.axis("off")
+    ax.set_xlim(-0.7, 120.7)
+    ax.set_ylim(80.2, -0.2) # Flip Y to match StatsBomb (0 at top, 80 at bottom)
+    ax.set_axis_off()
     
     if show:
         plt.show()
@@ -257,10 +258,9 @@ def actionsplot(
 ):
     ax = drawactionfield(ax=ax, color=color, linecolor=linecolor, figsize=figsize, show=False)
     fig = plt.gcf()
-    figsize, _ = figsize
-    arrowsize = math.sqrt(figsize)/1.9
+    arrowsize = math.sqrt(figsize[0])/1.9
 
-    plt.title(title,loc='left',fontdict={'fontsize': 18})
+    ax.set_title(title, loc='left', fontdict={'fontsize': 16}, pad=20)
     # SANITIZING INPUT
     location = np.asarray(location)
 
@@ -300,8 +300,8 @@ def actionsplot(
         label = np.concatenate([labeltitle, label])
         lines = get_lines(label)
         titleline = lines[0]
-        plt.plot(np.NaN, np.NaN, "-", color="none", label=titleline)
-        plt.plot(np.NaN, np.NaN, "-", color="none", label="-" * len(titleline))
+        ax.plot(np.NaN, np.NaN, "-", color="none", label=titleline)
+        ax.plot(np.NaN, np.NaN, "-", color="none", label="-" * len(titleline))
         lines = lines[1:]
     else:
         lines = get_lines(label)
@@ -359,7 +359,7 @@ def actionsplot(
         if eventtype != "pass":
             eventmarkerdict[eventtype] = next(eventmarkers)
 
-    markersize = figsize * 0.9
+    markersize = figsize[0] * 0.9  # figsize is a (w, h) tuple; use width scalar
 
     def get_color(type_name, te):
         home_team = team[0]
@@ -376,9 +376,7 @@ def actionsplot(
     prev_ex, prev_ey = None, None
     for ty, r, loc, c, line in zip(action_type, result, location, colors, lines):
         [sx, sy, ex, ey] = loc
-        # Scale StatsBomb coordinates to SPADL pitch display
-        sx, ex = sx*1.1428, ex*1.1428
-        sy, ey = sy*1.1765, ey*1.1765
+        # StatsBomb coordinates are already 120x80, no scaling needed for SPADL pitch
         
         # Draw transition line from previous action's end
         if prev_ex is not None:
@@ -390,7 +388,7 @@ def actionsplot(
                 zorder=zaction - 1
             )
         
-        plt.text(sx + text_offset, sy + (2.5 if cnt % 2 else -2.5), str(cnt))
+        ax.text(sx + text_offset, sy + (2.5 if cnt % 2 else -2.5), str(cnt), zorder=ztext)
         cnt += 1
         
         if ty == "dribble":
@@ -437,23 +435,25 @@ def actionsplot(
     #leg = plt.legend(loc=9,prop={'family': 'monospace','size':9})
     if show_legend:
         if legloc == "top":
-            leg = plt.legend(
-                bbox_to_anchor=(0.5, 1.05),
+            leg = ax.legend(
+                bbox_to_anchor=(0.5, 1.15),
                 loc="lower center",
                 prop={"family": "monospace",'size':9},
             )
         elif legloc == "right":
-            leg = plt.legend(
+            leg = ax.legend(
                 bbox_to_anchor=(1.05, 0.5),
                 loc="center left",
                 prop={"family": "monospace",'size':9},
             )
         elif legloc == "bottom":
-            leg = plt.legend(
-                bbox_to_anchor=(0.05, 0.5),
-                loc="center left",
+            leg = ax.legend(
+                bbox_to_anchor=(0.5, -0.15),
+                loc="upper center",
                 prop={"family": "monospace",'size':9},
             )
+    
+    ax.set_axis_off() # Final guarantee to hide axes
 
     if show:
         plt.show()

@@ -194,8 +194,206 @@ def get_match_stats(match_id):
 
 
 @functools.lru_cache(maxsize=20)
-def get_player_data(match_id, player_name):
-    """Build all visualisation data for a single player in a match."""
+def get_xg_data(match_id):
+    """
+    Compute cumulative xG flow and extract a flat list of all shots.
+    Returns: (xg_flow_dict, shots_df, goals_markers)
+    """
+    events = get_event_data(match_id)
+    teams = events['team'].dropna().unique().tolist()
+    if len(teams) < 2:
+        return None, None, None
+
+    # 1. Filter and process shots (Exclude penalties - period 5)
+    shots = events[(events['type'] == 'Shot') & (events['period'] <= 4)].copy()
+    
+    # Extract xG and Outcome from nested or flat columns
+    def get_shot_metrics(row):
+        xg, outcome = 0, ''
+        if 'shot' in row and isinstance(row['shot'], dict):
+            xg = row['shot'].get('statsbomb_xg', 0)
+            outcome = row['shot'].get('outcome', {}).get('name', '')
+        else:
+            xg = row.get('shot_statsbomb_xg', 0)
+            outcome = row.get('shot_outcome', '')
+        return pd.Series([xg if pd.notna(xg) else 0, outcome])
+
+    shots[['xg', 'outcome']] = shots.apply(get_shot_metrics, axis=1)
+    shots['time_in_seconds'] = shots['minute'] * 60 + shots['second']
+    shots = shots.sort_values('time_in_seconds')
+
+    # 2. Build cumulative flow data
+    xg_flow = {}
+    goals_markers = []
+    
+    # Ensure lines start at zero
+    for team in teams:
+        team_shots = shots[shots['team'] == team]
+        
+        # Timeline: 0, then every shot time, then end of match (max time or 90/120)
+        times = [0] + team_shots['time_in_seconds'].tolist()
+        vals = [0] + team_shots['xg'].cumsum().tolist()
+        
+        # Add goal marker metadata
+        for _, row in team_shots[team_shots['outcome'] == 'Goal'].iterrows():
+            goals_markers.append({
+                'team': team,
+                'time': row['time_in_seconds'],
+                'minute': row['minute'],
+                'player': row.get('player', 'Unknown'),
+                'xg': round(row['xg'], 2)
+            })
+            
+        xg_flow[team] = {'times': times, 'vals': vals}
+
+    return xg_flow, shots, goals_markers
+    return xg_flow, shots, goals_markers
+
+
+def create_xg_flow_fig(xg_flow, goals_markers):
+    """Create a Plotly xG Flow Chart."""
+    import plotly.graph_objects as go
+    
+    fig = go.Figure()
+    
+    colors = ['#1f77b4', '#d62728'] # Blue, Red
+    for i, (team, data) in enumerate(xg_flow.items()):
+        # Step line for xG flow
+        fig.add_trace(go.Scatter(
+            x=[t/60 for t in data['times']], # Minutes
+            y=data['vals'],
+            mode='lines',
+            name=team,
+            line=dict(shape='hv', color=colors[i % len(colors)], width=3),
+            hovertemplate='%{y:.2f} xG at %{x:.1f} min<extra></extra>'
+        ))
+        
+        # Add Goal markers (Consolidated legend entry)
+        team_goals = [g for g in goals_markers if g['team'] == team]
+        if team_goals:
+            fig.add_trace(go.Scatter(
+                x=[g['time']/60 for g in team_goals],
+                y=[xg_flow[team]['vals'][xg_flow[team]['times'].index(g['time'])] for g in team_goals],
+                mode='markers',
+                marker=dict(symbol='star', size=12, color='gold', 
+                            line=dict(color='black', width=1)),
+                name='Goal',
+                text=[f"Goal: {g['player']} ({g['minute']}')<br>Value: {g['xg']} xG" for g in team_goals],
+                hoverinfo='text',
+                showlegend=(i == 0) # Only show in legend once
+            ))
+
+    fig.update_layout(
+        title='Match xG Flow',
+        xaxis_title='Minute',
+        yaxis_title='Cumulative xG',
+        template='plotly_white',
+        hovermode='x unified',
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        margin=dict(l=40, r=40, t=60, b=40),
+        height=350
+    )
+    return fig
+
+
+def create_shot_map_fig(shots):
+    """Create a vertical interactive Plotly Shot Map with team-separated halves."""
+    import plotly.graph_objects as go
+    import numpy as np
+
+    fig = go.Figure()
+
+    # Draw Pitch using shapes (Vertical 80x120)
+    # Pitch Outline
+    fig.add_shape(type="rect", x0=0, y0=0, x1=80, y1=120, line=dict(color="black"))
+    # Centre Line
+    fig.add_shape(type="line", x0=0, y0=60, x1=80, y1=60, line=dict(color="black"))
+    # Centre Circle
+    fig.add_shape(type="circle", x0=31, y0=51, x1=49, y1=69, line=dict(color="black"))
+    
+    # Penalty boxes (Vertical)
+    # Bottom penn box
+    fig.add_shape(type="rect", x0=18, y0=0, x1=62, y1=18, line=dict(color="black"))
+    # Top penn box
+    fig.add_shape(type="rect", x0=18, y0=102, x1=62, y1=120, line=dict(color="black"))
+
+    # Add dummy traces for non-team-specific legend
+    fig.add_trace(go.Scatter(
+        x=[None], y=[None],
+        mode='markers',
+        name='Goal',
+        marker=dict(symbol='circle', color='gray', size=14),
+        showlegend=True
+    ))
+    fig.add_trace(go.Scatter(
+        x=[None], y=[None],
+        mode='markers',
+        name='No Goal',
+        marker=dict(symbol='x', color='gray', size=14),
+        showlegend=True
+    ))
+
+    # Identify teams and colors
+    teams = shots['team'].dropna().unique().tolist()
+    team_colors = ['blue', '#d62728'] # Blue, Red
+    
+    # Plot Shots
+    for i, team in enumerate(teams):
+        ts = shots[shots['team'] == team]
+        flip = (i == 1) # Flip the second team to the opposite half (top half)
+        color = team_colors[i % len(team_colors)]
+        
+        ts_goals = ts[ts['outcome'] == 'Goal']
+        ts_misses = ts[ts['outcome'] != 'Goal']
+
+        for df, name, symbol in [(ts_goals, 'Goal', 'circle'), 
+                                 (ts_misses, 'No Goal', 'x')]:
+            if df.empty: continue
+            
+            # Vertical mapping:
+            # StatsBomb (0-120, 0-80). 
+            # Vert display (0-80, 0-120).
+            if flip:
+                # Top half (attacking down towards y=0)
+                xv = [loc[1] for loc in df['location']]
+                yv = [120 - loc[0] for loc in df['location']]
+            else:
+                # Bottom half (attacking up towards y=120)
+                xv = [80 - loc[1] for loc in df['location']]
+                yv = [loc[0] for loc in df['location']]
+            
+            fig.add_trace(go.Scatter(
+                x=xv,
+                y=yv,
+                mode='markers',
+                name=f"{team} ({name})",
+                marker=dict(
+                    size=np.sqrt(df['xg']) * 20 + 5,
+                    color=color,
+                    opacity=0.6,
+                    symbol=symbol,
+                    line=dict(width=1, color='DarkSlateGrey')
+                ),
+                text=[f"<b>{team}</b><br>{row['player']}<br>{row['minute']}' | {row['xg']:.2f} xG<br>Outcome: {row['outcome']}" 
+                      for _, row in df.iterrows()],
+                customdata=df.index.tolist(), 
+                hovertemplate='%{text}<br><i>Hover to trace buildup</i><extra></extra>',
+                showlegend=False # Legend handled by dummy traces
+            ))
+
+    fig.update_layout(
+        title='Match Shot Map',
+        xaxis=dict(range=[-5, 85], showgrid=False, zeroline=False, visible=False),
+        yaxis=dict(range=[-5, 125], showgrid=False, zeroline=False, visible=False),
+        template='plotly_white',
+        height=600,
+        width=400,
+        margin=dict(l=20, r=20, t=60, b=20),
+        showlegend=True,
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5, font=dict(size=14)),
+        clickmode='event+select'
+    )
+    return fig
     _load_heavy_imports()
     fig = field.drawfield()
     events = get_event_data(match_id)
@@ -410,8 +608,27 @@ def _build_layout():
                                     dcc.Graph(id='pitch1', figure={})
                                 ]),
                                 dcc.Tab(label='Goals', children=[
-                                    html.Img(id='pitch3', src='',
-                                             style={'maxWidth': '100%'})
+                                    html.Div(style={'padding': '20px'}, children=[
+                                        html.H3('Match Offensive Overview', style={'textAlign': 'center'}),
+                                        html.Div(style={'display': 'flex', 'flexWrap': 'wrap', 'justifyContent': 'center', 'gap': '20px'}, children=[
+                                            html.Div(style={'flex': '2', 'minWidth': '400px'}, children=[
+                                                dcc.Graph(id='xg-flow-chart', config={'displayModeBar': False})
+                                            ]),
+                                            html.Div(style={'flex': '1', 'maxWidth': '450px', 'minWidth': '350px'}, children=[
+                                                dcc.Graph(id='shot-map', config={'displayModeBar': False})
+                                            ]),
+                                        ]),
+                                        html.Hr(),
+                                        html.Div(id='shot-trace-container', children=[
+                                            html.H4('Shot Trace Preview (Hover over a shot)', style={'textAlign': 'center'}),
+                                            html.Img(id='shot-trace-img', src='', 
+                                                     style={'display': 'block', 'margin': '0 auto', 'maxWidth': '600px', 'border': '1px solid #ddd'})
+                                        ]),
+                                        html.Hr(),
+                                        html.H4('Key Goal Moments (Timed Build-ups)', style={'textAlign': 'center'}),
+                                        html.Img(id='pitch3', src='',
+                                                 style={'maxWidth': '100%', 'display': 'block', 'margin': '0 auto'})
+                                    ])
                                 ]),
                             ])
                         ]
@@ -556,14 +773,81 @@ def update_match_stats(selected_match):
     ]
 
 
-@app.callback(Output('pitch3', 'src'), Input('match', 'value'))
+@app.callback(
+    [Output('pitch3', 'src'), 
+     Output('xg-flow-chart', 'figure'),
+     Output('shot-map', 'figure')],
+    Input('match', 'value')
+)
 def update_goals(selected_match):
     if not selected_match:
-        return _get_empty_pitch()
+        return _get_empty_pitch(), {}, {}
+    
     _load_heavy_imports()
+    
+    # 1. Existing timed build-ups plot
     events = get_event_data(selected_match)
-    data = plotaction(selected_match, events=events, w=10, h=8, zoom=False)
-    return 'data:image/png;base64,{}'.format(data)
+    goals_data = plotaction(selected_match, events=events, w=10, h=8, zoom=False)
+    
+    # 2. xG Data and Plots
+    xg_flow, shots, goals_markers = get_xg_data(selected_match)
+    if xg_flow is None:
+        return 'data:image/png;base64,{}'.format(goals_data), {}, {}
+        
+    flow_fig = create_xg_flow_fig(xg_flow, goals_markers)
+    shot_map_fig = create_shot_map_fig(shots)
+    
+    return 'data:image/png;base64,{}'.format(goals_data), flow_fig, shot_map_fig
+
+
+# Global cache for traces to avoid duplicate computation
+_shot_trace_cache = {}
+
+@app.callback(
+    Output('shot-trace-img', 'src'),
+    [Input('shot-map', 'hoverData'), Input('match', 'value')]
+)
+def update_shot_trace(hoverData, selected_match):
+    if not hoverData or not selected_match:
+        return ''
+    
+    try:
+        # dash.callback_context can trigger multiple times. 
+        # Check if customdata exists in the first point
+        pt = hoverData['points'][0]
+        if 'customdata' not in pt or pt['customdata'] is None:
+            return ''
+            
+        event_idx = pt['customdata']
+        
+        # Check cache
+        cache_key = f"{selected_match}_{event_idx}"
+        if cache_key in _shot_trace_cache:
+            return _shot_trace_cache[cache_key]
+        
+        _load_heavy_imports()
+        events = get_event_data(selected_match)
+        
+        # Filter for SPADL types similar to how plotaction does it
+        # (This logic should ideally be shared, but for now we re-implement a minimal version)
+        # Note: actionplot.py already has a plotaction which we can't easily repurpose 
+        # for a single index without modification. 
+        # We will use plotaction but we need to modify it to accept a specific index.
+        # For now, let's call a slightly modified plotaction or implement the slice here.
+        
+        # Let's try to use plotaction if we can pass a specific goal_idx. 
+        # I'll check if I can modify plotaction to support this.
+        
+        # For a quick implementation, I will implement a single-shot trace generator here.
+        # w=10, h=10 provides enough room for the legend table at the top without overlapping the pitch.
+        data = plotaction(selected_match, events=events, number=5, w=10, h=10, zoom=False, shot_idx=event_idx)
+        
+        src = 'data:image/png;base64,{}'.format(data)
+        _shot_trace_cache[cache_key] = src
+        return src
+    except Exception as e:
+        print(f"Error generating trace: {e}")
+        return ''
 
 
 @app.callback(
