@@ -22,8 +22,16 @@ def _statsbomb_to_point(location, max_width=120, max_height=80):
 
 def passingnetwork(match_id, teamname, events, lineups, passvalue='count'):
     # Build names dict from lineups
-    names_dict = {player[1]["player_name"]: player[1]["player_name"]
-                  for team in lineups for player in lineups[team].iterrows()}
+    # Build names dict from lineups using nicknames if available
+    names_dict = {}
+    for team in lineups:
+        for _, p in lineups[team].iterrows():
+            full = p.get('player_name', '')
+            nick = p.get('player_nickname')
+            if pd.notna(nick) and str(nick).strip() != '':
+                names_dict[full] = str(nick)
+            else:
+                names_dict[full] = full
 
     df_events = events.copy()
 
@@ -92,12 +100,16 @@ def passingnetwork(match_id, teamname, events, lineups, passvalue='count'):
     if passvalue == 'Count':
         player_pass_count = df_passes.groupby("player_name").size().to_frame("num_passes")
         player_pass_value = df_passes.groupby("player_name").size().to_frame("pass_value")
+        
+        if not df_passes.empty:
+            df_passes["pair_key"] = df_passes.apply(
+                lambda x: "_".join(sorted([str(x["player_name"]), str(x["pass_recipient_name"])])), axis=1)
+            pair_pass_count = df_passes.groupby("pair_key").size().to_frame("num_passes")
+            pair_pass_value = df_passes.groupby("pair_key").size().to_frame("pass_value")
+        else:
+            pair_pass_count = pd.DataFrame(columns=["num_passes"])
+            pair_pass_value = pd.DataFrame(columns=["pass_value"])
 
-        df_passes["pair_key"] = df_passes.apply(
-            lambda x: "_".join(sorted([x["player_name"], x["pass_recipient_name"]])), axis=1)
-
-        pair_pass_count = df_passes.groupby("pair_key").size().to_frame("num_passes")
-        pair_pass_value = df_passes.groupby("pair_key").size().to_frame("pass_value")
         plot_legend = "Location: Pass origin\nSize: Number of passes\nColor: Number of passes"
     else:
         # VAEP path (currently disabled, kept for future use)

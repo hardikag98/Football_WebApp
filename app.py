@@ -103,6 +103,25 @@ def get_lineup_data(match_id):
     return sb.lineups(match_id=match_id)
 
 
+@functools.lru_cache(maxsize=10)
+def get_nickname_map(match_id):
+    """Build a mapping from full player name to nickname."""
+    try:
+        lineups = get_lineup_data(match_id)
+        nick_map = {}
+        for team, df in lineups.items():
+            for _, row in df.iterrows():
+                full = row.get('player_name', '')
+                nick = row.get('player_nickname')
+                if pd.notna(nick) and str(nick).strip() != '':
+                    nick_map[full] = str(nick)
+                else:
+                    nick_map[full] = full
+        return nick_map
+    except Exception:
+        return {}
+
+
 def _safe_get(row, col, default=None):
     """Safely get a value from a row, handling nested dicts."""
     if col in row.index:
@@ -226,21 +245,31 @@ def get_xg_data(match_id):
     xg_flow = {}
     goals_markers = []
     
-    # Ensure lines start at zero
+    # Determine end of match time (at least 90 or 120 if extra time)
+    max_period = events[events['period'] <= 4]['period'].max()
+    base_end_min = 120 if max_period > 2 else 90
+    match_end_time = max(base_end_min * 60, events[events['period'] <= 4]['minute'].max() * 60)
+    
+    nicknames = get_nickname_map(match_id)
+    shots['player'] = shots['player'].apply(lambda x: nicknames.get(x, x))
+    
+    # Ensure lines start at zero and end at match end
     for team in teams:
         team_shots = shots[shots['team'] == team]
         
-        # Timeline: 0, then every shot time, then end of match (max time or 90/120)
-        times = [0] + team_shots['time_in_seconds'].tolist()
-        vals = [0] + team_shots['xg'].cumsum().tolist()
+        # Timeline: 0, then every shot time, then end of match
+        times = [0] + team_shots['time_in_seconds'].tolist() + [match_end_time]
+        cumulative_xg = team_shots['xg'].cumsum().tolist()
+        vals = [0] + cumulative_xg + [cumulative_xg[-1] if cumulative_xg else 0]
         
         # Add goal marker metadata
         for _, row in team_shots[team_shots['outcome'] == 'Goal'].iterrows():
+            player_full = row.get('player', 'Unknown')
             goals_markers.append({
                 'team': team,
                 'time': row['time_in_seconds'],
                 'minute': row['minute'],
-                'player': row.get('player', 'Unknown'),
+                'player': nicknames.get(player_full, player_full),
                 'xg': round(row['xg'], 2)
             })
             
@@ -383,13 +412,13 @@ def create_shot_map_fig(shots):
 
     fig.update_layout(
         title='Match Shot Map',
-        xaxis=dict(range=[-5, 85], showgrid=False, zeroline=False, visible=False),
+        xaxis=dict(range=[-5, 85], showgrid=False, zeroline=False, visible=False, scaleanchor="y", scaleratio=1),
         yaxis=dict(range=[-5, 125], showgrid=False, zeroline=False, visible=False),
         template='plotly_white',
         height=700,
         margin=dict(l=20, r=20, t=60, b=20),
         showlegend=True,
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5, font=dict(size=14)),
+        legend=dict(orientation="h", yanchor="top", y=-0.02, xanchor="center", x=0.5, font=dict(size=14)),
         clickmode='event+select'
     )
     return fig
@@ -522,10 +551,10 @@ def _build_layout():
             html.Div(
                 style={'textAlign': 'center', 'padding': '20px 0', 'backgroundColor': 'white', 'borderBottom': '1px solid #eee', 'marginBottom': '20px'},
                 children=[
-                    html.H1('Football Analytics', style={'margin': '0', 'fontSize': 'calc(24px + 2vw)', 'fontWeight': 'bold', 'color': '#2c3e50'}),
-                    html.P('Visualizing football event data', style={'margin': '5px 0', 'fontSize': '1.2rem', 'color': '#7f8c8d'}),
+                    html.H1('Football Analytics', style={'margin': '0', 'fontSize': 'calc(24px + 1.5vw)', 'fontWeight': 'bold', 'color': '#2c3e50'}),
+                    html.P('Visualizing football event data', style={'margin': '5px 0', 'fontSize': 'calc(14px + 0.5vw)', 'color': '#7f8c8d'}),
                     html.Div(
-                        style={'fontSize': '1.1rem'},
+                        style={'fontSize': 'calc(12px + 0.4vw)'},
                         children=[html.A('Hardik Agarwal',
                                          href='https://www.linkedin.com/in/hardy-agarwal/',
                                          target='_blank',
@@ -550,7 +579,7 @@ def _build_layout():
                             html.P('Competition:'),
                             dcc.Dropdown(
                                 id='competition',
-                                options=[{'label': c, 'value': c} for c in compname]
+                                options=[{'label': 'Bundesliga' if c == '1. Bundesliga' else c, 'value': c} for c in compname]
                             ),
 
                             html.P('Season:'),
@@ -591,43 +620,16 @@ def _build_layout():
                             dcc.Tabs([
                                 dcc.Tab(label='Match Stats', children=[
                                     html.Div(id='match-stats-container',
-                                             style={'padding': '20px'},
-                                             children=[html.P('Select a match to view statistics.')])
+                                             style={'padding': '20px'})
                                 ]),
                                 dcc.Tab(label='Passing Network', children=[
-                                    html.Img(id='pitch2', src='',
-                                             style={'maxWidth': '100%'}),
-                                    html.P(
-                                        'Passing network for the starting lineup. '
-                                        'Only successful passes before the first substitution '
-                                        'or red card are shown. Node size = number of passes.'
-                                    )
+                                    html.Div(id='passing-network-container', style={'padding': '20px'})
                                 ]),
                                 dcc.Tab(label='Player Analysis', children=[
-                                    dcc.Graph(id='pitch1', figure={})
+                                    html.Div(id='player-analysis-container', style={'padding': '20px'})
                                 ]),
                                 dcc.Tab(label='Goals', children=[
-                                    html.Div(style={'padding': '20px'}, children=[
-                                        html.H3('Match Offensive Overview', style={'textAlign': 'center'}),
-                                        html.Div(style={'display': 'flex', 'flexWrap': 'wrap', 'justifyContent': 'center', 'gap': '20px'}, children=[
-                                            html.Div(style={'flex': '2', 'minWidth': '400px'}, children=[
-                                                dcc.Graph(id='xg-flow-chart', config={'displayModeBar': False})
-                                            ]),
-                                            html.Div(style={'flex': '1', 'minWidth': '350px'}, children=[
-                                                dcc.Graph(id='shot-map', config={'displayModeBar': False})
-                                            ]),
-                                        ]),
-                                        html.Hr(),
-                                        html.Div(id='shot-trace-container', children=[
-                                            html.H4('Shot Trace Preview (Hover over a shot)', style={'textAlign': 'center'}),
-                                            html.Img(id='shot-trace-img', src='', 
-                                                     style={'display': 'block', 'margin': '0 auto', 'maxWidth': '600px', 'border': '1px solid #ddd'})
-                                        ]),
-                                        html.Hr(),
-                                        html.H4('Key Goal Moments (Timed Build-ups)', style={'textAlign': 'center'}),
-                                        html.Img(id='pitch3', src='',
-                                                 style={'maxWidth': '100%', 'display': 'block', 'margin': '0 auto'})
-                                    ])
+                                    html.Div(id='goals-container', style={'padding': '20px'})
                                 ]),
                             ])
                         ]
@@ -697,30 +699,49 @@ def set_player_options(selected_match, selected_team):
         return []
     events = get_event_data(selected_match)
     lineups = get_lineup_data(selected_match)[selected_team]
+    nicknames = get_nickname_map(selected_match)
+    
     active_players = set(events[events['team'] == selected_team]['player'].dropna().unique())
     squad = set(lineups['player_name'])
     players = active_players.intersection(squad)
-    return [{'label': p, 'value': p} for p in sorted(players)]
+    
+    return [{'label': nicknames.get(p, p), 'value': p} for p in sorted(players)]
 
 
 @app.callback(
-    Output('pitch2', 'src'),
+    Output('passing-network-container', 'children'),
     [Input('match', 'value'), Input('team', 'value')]
 )
 def update_passing_network(selected_match, selected_team):
     if not selected_match or not selected_team:
-        return _get_empty_pitch()
+        return html.Div(style={'textAlign': 'center', 'padding': '100px 20px'}, children=[
+            html.H2('Select a match and a team to view the passing network.', 
+                    style={'color': '#7f8c8d', 'fontWeight': '300', 'fontSize': 'calc(18px + 1vw)'})
+        ])
+    
     _load_heavy_imports()
     events = get_event_data(selected_match)
     lineups = get_lineup_data(selected_match)
     data = passingnetwork(selected_match, selected_team, events, lineups, 'Count')
-    return 'data:image/png;base64,{}'.format(data)
+    
+    return [
+        html.Img(src='data:image/png;base64,{}'.format(data), style={'maxWidth': '100%', 'display': 'block', 'margin': '0 auto'}),
+        html.P(
+            'Passing network for the starting lineup. '
+            'Only successful passes before the first substitution '
+            'or red card are shown. Node size = number of passes.',
+            style={'textAlign': 'center', 'marginTop': '20px', 'color': '#555'}
+        )
+    ]
 
 
 @app.callback(Output('match-stats-container', 'children'), Input('match', 'value'))
 def update_match_stats(selected_match):
     if not selected_match:
-        return [html.P('Select a match to view statistics.')]
+        return html.Div(style={'textAlign': 'center', 'padding': '100px 20px'}, children=[
+            html.H2('Select a match to view statistics.', 
+                    style={'color': '#7f8c8d', 'fontWeight': '300', 'fontSize': 'calc(18px + 1vw)'})
+        ])
 
     result = get_match_stats(selected_match)
     if result is None:
@@ -767,36 +788,176 @@ def update_match_stats(selected_match):
     )
 
     return [
-        html.H2(f"{t1} vs {t2}", style={'textAlign': 'center', 'marginBottom': '30px', 'marginTop': '10px', 'fontSize': 'calc(20px + 1vw)'}),
+        html.Div(style={'textAlign': 'center', 'marginBottom': '30px', 'marginTop': '10px'}, children=[
+            html.H2(f"{t1} vs {t2}", style={'fontSize': 'calc(18px + 1vw)', 'marginBottom': '10px'}),
+            html.H1(f"{s1['goals']} - {s2['goals']}", style={'fontSize': 'calc(40px + 2vw)', 'fontWeight': 'bold', 'color': '#2c3e50', 'margin': '0'})
+        ]),
         table
     ]
 
 
 @app.callback(
-    [Output('pitch3', 'src'), 
-     Output('xg-flow-chart', 'figure'),
-     Output('shot-map', 'figure')],
+    Output('goals-container', 'children'),
     Input('match', 'value')
 )
 def update_goals(selected_match):
     if not selected_match:
-        return _get_empty_pitch(), {}, {}
+        return html.Div(style={'textAlign': 'center', 'padding': '100px 20px'}, children=[
+            html.H2('Select a match to view offensive analysis and goals.', 
+                    style={'color': '#7f8c8d', 'fontWeight': '300', 'fontSize': 'calc(18px + 1vw)'})
+        ])
     
     _load_heavy_imports()
     
-    # 1. Existing timed build-ups plot
+    # Existing timed build-ups plot
     events = get_event_data(selected_match)
     goals_data = plotaction(selected_match, events=events, w=10, h=8, zoom=False)
+    pitch3_src = 'data:image/png;base64,{}'.format(goals_data)
     
-    # 2. xG Data and Plots
+    # xG Flow and Shot Map
     xg_flow, shots, goals_markers = get_xg_data(selected_match)
-    if xg_flow is None:
-        return 'data:image/png;base64,{}'.format(goals_data), {}, {}
-        
-    flow_fig = create_xg_flow_fig(xg_flow, goals_markers)
-    shot_map_fig = create_shot_map_fig(shots)
+    xg_fig = create_xg_flow_fig(xg_flow, goals_markers)
+    shot_fig = create_shot_map_fig(shots)
     
-    return 'data:image/png;base64,{}'.format(goals_data), flow_fig, shot_map_fig
+    return [
+        html.H3('Match Offensive Overview', style={'textAlign': 'center'}),
+        html.Div(style={'display': 'flex', 'flexWrap': 'wrap', 'justifyContent': 'center', 'gap': '20px'}, children=[
+            html.Div(style={'flex': '2', 'minWidth': '400px'}, children=[
+                dcc.Graph(id='xg-flow-chart', figure=xg_fig, config={'displayModeBar': False})
+            ]),
+            html.Div(style={'flex': '1', 'minWidth': '350px'}, children=[
+                dcc.Graph(id='shot-map', figure=shot_fig, config={'displayModeBar': False})
+            ]),
+        ]),
+        html.Hr(),
+        html.Div(id='shot-trace-container', children=[
+            html.H4('Shot Trace Preview (Hover over a shot)', style={'textAlign': 'center'}),
+            html.Img(id='shot-trace-img', src='', 
+                     style={'display': 'block', 'margin': '0 auto', 'maxWidth': '750px', 'border': '1px solid #ddd'})
+        ]),
+        html.Hr(),
+        html.H4('Key Goal Moments (Timed Build-ups)', style={'textAlign': 'center'}),
+        html.Img(id='pitch3', src=pitch3_src,
+                 style={'maxWidth': '100%', 'display': 'block', 'margin': '0 auto'})
+    ]
+
+
+@functools.lru_cache(maxsize=10)
+def get_player_data(match_id, player_name):
+    _load_heavy_imports()
+    fig = field.drawfield()
+    events = get_event_data(match_id)
+    playerdata = events[events['player'] == player_name].copy()
+    
+    # Handle time formatting
+    playerdata['second'] = [str(int(s)).zfill(2) if pd.notna(s) else '00' for s in playerdata['second']]
+    
+    # Helper to get nested or flat values safely
+    def _extract(row, prefix, key):
+        if prefix in row and isinstance(row[prefix], dict):
+            return row[prefix].get(key)
+        flat_key = f"{prefix}_{key}"
+        if flat_key in row:
+            return row[flat_key]
+        return None
+
+    # PASS DATA
+    playerpassdata = playerdata[playerdata['type'] == "Pass"]
+    passannotation = []
+    px1, py1, pcolors, ptime = [500], [50], ['black'], ['00:00']
+
+    for i in playerpassdata.index:
+        row = playerpassdata.loc[i]
+        outcome = _extract(row, 'pass', 'outcome')
+        # StatsBomb id 9 is usually Incomplete / Out / etc. depending on context
+        # But we check for existence of outcome (NaN/None usually means success)
+        color = "red" if pd.notna(outcome) and outcome is not None else "blue"
+        
+        loc = row.get('location')
+        end_loc = _extract(row, 'pass', 'end_location')
+        
+        if loc and end_loc:
+            passannotation.append(dict(
+                x=end_loc[0], y=80 - end_loc[1], text="",
+                ax=loc[0], ay=80 - loc[1],
+                xref="x", yref="y", axref="x", ayref="y",
+                showarrow=True, arrowhead=2, arrowcolor=color, opacity=0.7
+            ))
+            px1.append(loc[0])
+            py1.append(80 - loc[1])
+            pcolors.append(color)
+            ptime.append(f"{row['minute']}:{row['second']}")
+    
+    passes = pd.DataFrame({'x1': px1, 'y1': py1, 'Colors': pcolors, 'Time': ptime})
+    passes['Hoverinfo'] = 'Time: ' + passes['Time'].astype(str)
+
+    # SHOT DATA
+    playershotdata = playerdata[playerdata['type'] == "Shot"]
+    shotannotation = []
+    sx1, sy1, scolors, stime = [500], [50], ['black'], ['00:00']
+
+    for i in playershotdata.index:
+        row = playershotdata.loc[i]
+        outcome = _extract(row, 'shot', 'outcome')
+        # StatsBomb id 97 is Goal
+        outcome_id = outcome.get('id') if isinstance(outcome, dict) else outcome
+        color = 'blue' if outcome_id == 97 or outcome == 'Goal' else 'red'
+            
+        loc = row.get('location')
+        end_loc = _extract(row, 'shot', 'end_location')
+        
+        if loc and end_loc:
+            shotannotation.append(dict(
+                x=end_loc[0], y=80 - end_loc[1],
+                ax=loc[0], ay=80 - loc[1],
+                xref="x", yref="y", axref="x", ayref="y", showarrow=True,
+                arrowcolor=color, arrowsize=1, arrowwidth=4, arrowhead=4, text="", opacity=0.7
+            ))
+            sx1.append(loc[0])
+            sy1.append(80 - loc[1])
+            scolors.append(color)
+            stime.append(f"{row['minute']}:{row['second']}")
+    
+    shots = pd.DataFrame({'x1': sx1, 'y1': sy1, 'Colors': scolors, 'Time': stime})
+    shots['Hoverinfo'] = 'Time: ' + shots['Time'].astype(str)
+
+    # TACKLE DATA
+    # Find duels or specific 'Tackle' events depending on data version
+    playerdueldata = playerdata[playerdata['type'].isin(["Duel", "Tackle"])]
+    tx1, ty1, tcolors, ttime = [500], [50], ['black'], ['00:00']
+    
+    for i in playerdueldata.index:
+        row = playerdueldata.loc[i]
+        is_tackle = False
+        if row['type'] == 'Tackle':
+            is_tackle = True
+        else:
+            duel_type = _extract(row, 'duel', 'type')
+            duel_type_id = duel_type.get('id') if isinstance(duel_type, dict) else duel_type
+            if duel_type_id == 11 or duel_type == 'Tackle':
+                is_tackle = True
+        
+        if is_tackle:
+            outcome = _extract(row, 'duel', 'outcome')
+            outcome_id = outcome.get('id') if isinstance(outcome, dict) else outcome
+            # Success logic varies, but usually id 14 or None is success
+            color = 'red' if outcome_id == 14 or outcome == 'Lost' else 'blue'
+            loc = row.get('location')
+            if loc:
+                tcolors.append(color)
+                tx1.append(loc[0])
+                ty1.append(80 - loc[1])
+                ttime.append(f"{row['minute']}:{row['second']}")
+            
+    tackles = pd.DataFrame({'x1': tx1, 'y1': ty1, 'Colors': tcolors, 'Time': ttime})
+    tackles['Hoverinfo'] = 'Time: ' + tackles['Time'].astype(str)
+            
+    locs = playerdata.location.dropna()
+    x2 = [l[0] for l in locs]
+    y2 = [80 - l[1] for l in locs]
+    heatmap = [x2, y2]
+    
+    return (fig, passannotation, passes, shotannotation, shots, tackles, heatmap)
 
 
 # Global cache for traces to avoid duplicate computation
@@ -838,8 +999,8 @@ def update_shot_trace(hoverData, selected_match):
         # I'll check if I can modify plotaction to support this.
         
         # For a quick implementation, I will implement a single-shot trace generator here.
-        # w=10, h=10 provides enough room for the legend table at the top without overlapping the pitch.
-        data = plotaction(selected_match, events=events, number=5, w=10, h=10, zoom=False, shot_idx=event_idx)
+        # Increased size from w=10, h=10 to w=12.5, h=12.5 to match the 25% UI increase and maintain resolution.
+        data = plotaction(selected_match, events=events, number=5, w=12.5, h=12.5, zoom=False, shot_idx=event_idx)
         
         src = 'data:image/png;base64,{}'.format(data)
         _shot_trace_cache[cache_key] = src
@@ -850,14 +1011,17 @@ def update_shot_trace(hoverData, selected_match):
 
 
 @app.callback(
-    Output('pitch1', 'figure'),
+    Output('player-analysis-container', 'children'),
     [Input('player', 'value'), Input('actions', 'value'), Input('match', 'value')]
 )
-def update_player_figure(selected_player, selected_actions, selected_match):
+def update_player_analysis(selected_player, selected_actions, selected_match):
     if not selected_player or not selected_match:
-        _load_heavy_imports()
-        return field.drawfield()
-
+        return html.Div(style={'textAlign': 'center', 'padding': '100px 20px'}, children=[
+            html.H2('Select a match, a team, and a player to view the player analysis.', 
+                    style={'color': '#7f8c8d', 'fontWeight': '300', 'fontSize': 'calc(18px + 1vw)'})
+        ])
+    
+    _load_heavy_imports()
     selected_actions = selected_actions or []
     fig, passannotation, passes, shotannotation, shots, tackles, heatmap = \
         get_player_data(selected_match, selected_player)
@@ -908,8 +1072,8 @@ def update_player_figure(selected_player, selected_actions, selected_match):
         fig.layout.annotations = shotannotation
     else:
         fig.layout.annotations = []
-
-    return fig
+        
+    return dcc.Graph(figure=fig, id='pitch1')
 
 
 # ── Entry point ──────────────────────────────────────────────────────────────

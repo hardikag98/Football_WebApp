@@ -137,7 +137,9 @@ def draw_pitch(min_x=0, max_x=1,empty_pitch=False):
     ax.add_patch(patches.Wedge((52.5, 34), 9.5, 0, 360, fill=True, edgecolor=lines_color,
                                facecolor=lines_color, zorder=4, width=0.02, alpha=0.8))
 
-    plt.axis('off')
+    ax.axis('off')
+    ax.get_xaxis().set_visible(False)
+    ax.get_yaxis().set_visible(False)
     f.tight_layout()
     
     if empty_pitch==True:
